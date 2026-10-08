@@ -201,7 +201,7 @@ export const uiSurfaceCoverage = [
             'tests/unit/ui/content/messageToolbarOrchestrator.fold-action.test.ts',
             'tests/unit/ui/export/saveMessagesDialog.test.ts',
         ],
-        visualEvidence: { status: 'direct-mock', mockPath: 'mocks/components/workflow-dialogs' },
+        visualEvidence: { status: 'direct-mock', mockPath: 'mocks/components/message-export' },
     },
     {
         id: 'send-surfaces', family: 'sending', userEntry: 'Reader or detached Reader send action',

@@ -43,6 +43,8 @@ mocks/components/*
 !mocks/components/prompt-family/**
 !mocks/components/workflow-dialogs/
 !mocks/components/workflow-dialogs/**
+!mocks/components/message-export/
+!mocks/components/message-export/**
 !mocks/components/overlay-host/
 !mocks/components/overlay-host/**
 !mocks/components/reader-comments/

@@ -47,6 +47,7 @@ import {
 } from '../../services/reader/readerContentSource';
 import { setCanonicalMarkdownCopyFormulaFormat } from '../../services/copy/canonicalMarkdownCopy';
 import { buildReaderSessionSnapshot } from '../../services/reader/readerSessionSnapshot';
+import { matchesReaderRichBlockVersions } from '../../services/reader/readerRichAssetProtocol';
 import { sendText } from '../../services/sending/sendService';
 import { readComposer, writeComposer } from '../../drivers/content/sending/composerPort';
 import { armChatGPTSendPositionRestore } from '../../drivers/content/chatgpt/sendPositionRestoreEvents';
@@ -71,6 +72,7 @@ import {
     createLazyReaderPanel,
     createLazyRunFormulaAssetAction,
     createLazySaveMessagesDialog,
+    createLazyReaderRichAssetSessions,
     scheduleLazyContentFeaturePrewarm,
     setLazyContentFeatureLocale,
 } from './lazyContentFeatures';
@@ -120,6 +122,8 @@ if (adapter) {
         runFormulaAssetAction: createLazyRunFormulaAssetAction(),
     });
     const readerPanel = createLazyReaderPanel();
+    const readerRichAssets = createLazyReaderRichAssetSessions();
+    window.addEventListener('pagehide', () => { void readerRichAssets.dispose(); });
     const saveMessagesDialog = createLazySaveMessagesDialog();
     const bookmarkSaveDialog = createLazyBookmarkSaveDialog();
     const copyMessagePng = createLazyCopyMessagePng();
@@ -669,6 +673,7 @@ if (adapter) {
     const disableRuntime = () => {
         if (!runtimeEnabled) return;
         runtimeEnabled = false;
+        void readerRichAssets.dispose();
         writeDebugState({ RuntimeEnabled: runtimeEnabled });
         messageToolbars.dispose();
         conversationNavigation?.cancelActive();
@@ -796,6 +801,19 @@ if (adapter) {
 
     const handleDetachedReaderRequest = async (request: ExtRequest): Promise<ExtResponse> => {
         try {
+            if (request.type === 'readerSession:assets') {
+                const item = request.payload.sourceItem;
+                if (!runtimeEnabled || !item || item.id !== request.payload.itemId || !request.payload.sourceUrl
+                    || !matchesReaderRichBlockVersions(item.richBlocks ?? [], request.payload.blockVersions)) {
+                    return { v: PROTOCOL_VERSION, id: request.id, type: request.type, ok: false, error: { code: 'INVALID_REQUEST', message: 'Missing bound Reader asset source' } };
+                }
+                const data = await readerRichAssets.prepare(request.payload.sessionId, item, request.payload.sourceUrl, request.payload.leaseId ?? crypto.randomUUID());
+                return { v: PROTOCOL_VERSION, id: request.id, type: request.type, ok: true, data };
+            }
+            if (request.type === 'readerSession:releaseAssets') {
+                await readerRichAssets.release(request.payload.sessionId, request.payload.leaseId);
+                return { v: PROTOCOL_VERSION, id: request.id, type: request.type, ok: true, data: { released: true } };
+            }
             if (request.type === 'readerSession:refresh') {
                 const result = await collectFreshReaderContent(adapter, null, {
                     conversationContentSource,
@@ -924,6 +942,15 @@ if (adapter) {
 
     browser.runtime.onMessage.addListener((msg: unknown, _sender: unknown, sendResponse?: (response: unknown) => void) => {
         if (!isExtRequest(msg)) return;
+        if (msg.type === 'readerSession:assets' || msg.type === 'readerSession:releaseAssets') {
+            const sender = _sender as { id?: string; tab?: unknown } | null;
+            if (!sender || typeof sender.id !== 'string' || !browser.runtime.id || sender.id !== browser.runtime.id || sender.tab !== undefined) {
+                sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, type: msg.type, ok: false, error: { code: 'PERMISSION_DENIED', message: 'Reader assets require the bound background relay' } });
+                return true;
+            }
+            void handleDetachedReaderRequest(msg).then(response => sendResponse?.(response));
+            return true;
+        }
         if (msg.type === 'ping') {
             sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: true, type: msg.type, data: { pong: true } });
             return true;

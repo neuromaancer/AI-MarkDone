@@ -176,6 +176,8 @@ ${scopedMarkdownCss}
             index: section.sourceIndex,
             user: section.userText,
             assistant: section.assistantMarkdown,
+            richBlocks: section.richBlocks,
+            richImages: section.richImages,
         }, index + 1, (key, args) => {
             if (key === 'pdfMessagePrefix') return section.heading;
             if (key === 'pdfUserLabel') return document.labels.user;

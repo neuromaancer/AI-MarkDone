@@ -25,6 +25,11 @@
 
 编号递增，标题保持简短。
 
+ChatGPT 富内容与安全内容池生命周期的已接受实施决策见
+[ADR-0032](ADR-0032-chatgpt-rich-content-and-safe-lifecycle.md)。逐阶段实施与验证
+记录见[执行计划](../plans/2026-10-08-chatgpt-rich-content-lifecycle.md)；未完成的
+能力不视为当前已交付行为。
+
 当前 ChatGPT 内容生命周期见 [ADR-0024-chatgpt-dom-authoritative-content-pool.md](ADR-0024-chatgpt-dom-authoritative-content-pool.md)、[ADR-0025-chatgpt-stable-message-identity-and-local-actions.md](ADR-0025-chatgpt-stable-message-identity-and-local-actions.md)、[ADR-0026-chatgpt-persistent-host-slot-order.md](ADR-0026-chatgpt-persistent-host-slot-order.md)、[ADR-0027-chatgpt-bounded-monotonic-navigation.md](ADR-0027-chatgpt-bounded-monotonic-navigation.md)、[ADR-0028-chatgpt-staged-slot-hydration.md](ADR-0028-chatgpt-staged-slot-hydration.md) 与 [ADR-0030-chatgpt-get-seed-dom-completion.md](ADR-0030-chatgpt-get-seed-dom-completion.md)：5.3 的 bridge/source 只负责初始 `get` seed，渲染 DOM 是最终正文与 slot 顺序权威。Repository 内部保留 source order 与 DOM slot 骨架的同一池投影；公共 V1 只发布稠密 turns，不伪造未知历史。`get` snapshot 可供 Directory、Reader、Export 使用；当前 runtime 不通过页面进入时的全量 DOM sweep 制造 `complete`。`conversation-turn-N` 不是持久序号；公式、当前消息动作与工具栏继续保持 DOM-local。页面注释入口的选区、Prompt 组合和管理器边界见 [ADR-0023-page-annotation-interaction.md](ADR-0023-page-annotation-interaction.md)。
 
 2026-08-26 的当前补充规则：Chrome/Firefox 普通进入先复用 5.3 document-start bridge/source seed；成功时同一 Repository 发布可用的 `historyStatus=get`，没有 source 时保持 DOM `partial`。空 `?message=` 只用于让 ChatGPT 创建官方导航骨架，不再启动逐 slot 全量 DOM 滚动。Directory、同页书签、Stepper 与跨页 bookmark restore 均通过同一个 `ConversationNavigationCoordinator` 和 target materialization executor；跨页书签仅在必要时保存 pending target 并刷新页面。已有 assistant identity 的 DOM 正文始终覆盖 GET 正文，DOM 外层 slot 顺序最终覆盖 provisional source order。旧 `ChatGPTTopScrollController`、`autoTopTimeoutMs` 与全量逐 slot discovery controller 已删除。

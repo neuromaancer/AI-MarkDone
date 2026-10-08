@@ -9,6 +9,7 @@ import { AIMD_VIEWPORT_RESIZE_IDLE_EVENT } from '@/ui/content/controllers/Viewpo
 import { setLocale } from '@/ui/content/components/i18n';
 import { ChatGPTConversationSurface } from '@/drivers/content/chatgpt/ChatGPTConversationSurface';
 import type { ConversationSurfacePortV1 } from '@/contracts/conversationSurface';
+import { richSvgBlock } from '../../../../helpers/richContentFixtures';
 import {
     createConversationContentSource,
     readyConversationState,
@@ -924,6 +925,37 @@ describe('ChatGPTDirectoryController', () => {
         (controller as any).render();
         expect(railRoot?.querySelector<HTMLButtonElement>('.rail__item')?.getAttribute('aria-label'))
             .toContain('Updated assistant-only content');
+    });
+
+    it('projects assistant-only rich placeholders for labels and previews without altering canonical targets', async () => {
+        const adapter = new ChatGPTTestAdapter();
+        const state = readyConversationState(buildSnapshot());
+        const first = state.snapshot.turns[0]!;
+        const source = createConversationContentSource({ ...state, snapshot: { ...state.snapshot, turns: [
+            { ...first, userText: '', identity: { ...first.identity, userMessageId: null }, assistantMarkdown: '![Diagram](aimd-rich:block-1)', assistantRichBlocks: [richSvgBlock({ fallbackMarkdown: 'Diagram preview is available as an image.' })] },
+            state.snapshot.turns[1]!,
+        ] } });
+        const surface = new ChatGPTConversationSurface({ adapter, content: source });
+        const navigate = vi.fn(async () => ({ ok: false, reason: 'target-unresolved' }));
+        const controller = new ChatGPTDirectoryController(adapter, null, { surface, navigation: { navigate } as any });
+        directorySurfaces.add(surface);
+        directoryControllers.add(controller);
+        controller.init('light');
+        controller.setDisplayMode('expanded');
+        controller.render();
+        const shadow = document.getElementById('aimd-chatgpt-directory-rail')!.shadowRoot!;
+        const items = Array.from(shadow.querySelectorAll<HTMLButtonElement>('.rail__item'));
+        expect(items.map(item => item.dataset.position)).toEqual(['1', '2']);
+        expect(items[0]?.textContent).toContain('Diagram preview');
+        expect(items[0]?.getAttribute('aria-label')).not.toContain('aimd-rich:');
+        items[0]!.dispatchEvent(new Event('pointerover', { bubbles: true }));
+        const preview = document.getElementById('aimd-chatgpt-directory-preview')!;
+        expect(preview.textContent).toContain('Diagram preview');
+        expect(preview.textContent).not.toContain('aimd-rich:');
+        items[0]!.click();
+        await Promise.resolve();
+        expect(navigate).toHaveBeenCalledWith(expect.objectContaining({ assistantMessageId: first.identity.assistantMessageId, position: first.ordinal }), expect.any(Object));
+        expect(source.read().snapshot?.turns[0]?.assistantMarkdown).toBe('![Diagram](aimd-rich:block-1)');
     });
 
     it('shows the same bounded preview in expanded mode and preserves Unicode characters', () => {

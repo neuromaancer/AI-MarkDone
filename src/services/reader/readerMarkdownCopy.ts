@@ -30,7 +30,7 @@ export async function copyReaderItemMarkdownToClipboard(
     const markdown = !settings.preserveLinks && settings.includeCodeBlocks
         ? await resolveContent(item.content)
         : await resolveReaderItemOutputMarkdown(item, settings);
-    return copyCanonicalMarkdownToClipboard(markdown);
+    return copyCanonicalMarkdownToClipboard(markdown, false, item.richBlocks);
 }
 
 export async function copyReaderPromptReplyToClipboard(
@@ -41,5 +41,5 @@ export async function copyReaderPromptReplyToClipboard(
     if (item.meta?.sourceQuality === 'reconstructed' || !item.userPrompt.trim()) return false;
     const reply = await resolveReaderItemOutputMarkdown(item, settings);
     if (!reply.trim() || (isCurrent && !isCurrent())) return false;
-    return copyTextToClipboard(`## Question\n\n${item.userPrompt}\n\n## AI Reply\n\n${formatCanonicalMarkdownForCopy(reply)}`);
+    return copyTextToClipboard(`## Question\n\n${item.userPrompt}\n\n## AI Reply\n\n${formatCanonicalMarkdownForCopy(reply, false, item.richBlocks)}`);
 }

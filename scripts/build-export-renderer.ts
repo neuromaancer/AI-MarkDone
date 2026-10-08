@@ -34,6 +34,7 @@ async function buildRendererHost(target: ExtensionTarget): Promise<void> {
             rollupOptions: {
                 input: {
                     'export-renderer': resolve(process.cwd(), 'src/runtimes/export-renderer/entry.ts'),
+                    'rich-asset-relay': resolve(process.cwd(), 'src/runtimes/rich-asset-relay/entry.ts'),
                 },
                 output: {
                     entryFileNames: '[name].js',

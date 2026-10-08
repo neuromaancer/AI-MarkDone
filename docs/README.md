@@ -63,6 +63,9 @@ These documents record bounded refactor execution and closeout evidence. They do
 ### Decisions
 
 - `docs/adr/README.md`
+- `docs/adr/ADR-0032-chatgpt-rich-content-and-safe-lifecycle.md`
+  - rich-block source bindings, safe message replacement and transient asset ownership
+
 - `docs/adr/ADR-0024-chatgpt-dom-authoritative-content-pool.md`
   - current mounted-DOM content authority and page-level admission lifecycle
 - `docs/adr/ADR-0018-chatgpt-identity-proven-single-content-pool.md`
@@ -76,6 +79,9 @@ These documents record bounded refactor execution and closeout evidence. They do
 
 ADR-0009 through ADR-0017 are historical inputs where ADR-0018 says they are
 superseded. They are not alternate current ChatGPT architectures.
+
+Current implementation/verification record:
+[ChatGPT rich content and lifecycle](plans/2026-10-08-chatgpt-rich-content-lifecycle.md).
 
 ### Style
 

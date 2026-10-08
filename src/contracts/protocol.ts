@@ -1,6 +1,8 @@
 import { isMarkLibraryOperation, type MarkLibraryOperation } from './markLibrary';
 import { isHighlightRecord, type HighlightRecord } from './highlights';
 import { isAnnotationDraftIdentity, type AnnotationDraftPayload } from './annotationDrafts';
+import { isRichBlocksV1, type RichBlockV1 } from './richContent';
+import type { RichAssetRelayRef } from './richContentAssets';
 import {
     isReaderAnnotationDocument,
     isReaderAnnotationRecord,
@@ -207,6 +209,7 @@ export type ReaderSessionSerializableItem = {
     userPrompt: string;
     content: string;
     sourceContent?: string;
+    richBlocks?: readonly RichBlockV1[];
     meta?: {
         platformId?: string;
         messageId?: string | null;
@@ -236,6 +239,33 @@ export type ReaderSessionCreatePayload = {
 };
 
 export type ReaderSessionByIdPayload = { sessionId: string };
+export type ReaderSessionAssetsPayload = {
+    version: 1;
+    sessionId: string;
+    itemId: string;
+    leaseId?: string;
+    blockVersions: readonly { blockId: string; visualDigest: string }[];
+    /** Background supplies this from the sender-bound session, never from the Reader request. */
+    sourceItem?: ReaderSessionSerializableItem;
+    sourceUrl?: string;
+};
+export type ReaderSessionReleaseAssetsPayload = { version: 1; sessionId: string; leaseId?: string };
+export type ReaderSessionAssetsResultV1 = { version: 1; leaseId: string | null; refs: readonly RichAssetRelayRef[] };
+
+export function isReaderSessionRichContentWithinBudget(snapshot: { items: readonly unknown[] }): boolean {
+    let blockCount = 0;
+    let bytes = 0;
+    for (const item of snapshot.items) {
+        if (!item || typeof item !== 'object') return false;
+        const blocks = (item as { richBlocks?: unknown }).richBlocks;
+        if (blocks === undefined) continue;
+        if (!isRichBlocksV1(blocks)) return false;
+        blockCount += blocks.length;
+        bytes += new TextEncoder().encode(JSON.stringify(blocks)).byteLength;
+        if (blockCount > 512 || bytes > 2 * 1024 * 1024) return false;
+    }
+    return true;
+}
 export type ReaderSessionDraftPayload = { sessionId: string; text?: string };
 export type ReaderSessionBeforeSendPayload = { sessionId: string };
 export type ReaderSessionSendPayload = { sessionId: string; text: string };
@@ -285,6 +315,8 @@ export type ExtRequest =
     | { v: ProtocolVersion; id: RequestId; type: 'readerSession:send'; payload: ReaderSessionSendPayload }
     | { v: ProtocolVersion; id: RequestId; type: 'readerSession:locate'; payload: ReaderSessionLocatePayload }
     | { v: ProtocolVersion; id: RequestId; type: 'readerSession:close'; payload: ReaderSessionByIdPayload }
+    | { v: ProtocolVersion; id: RequestId; type: 'readerSession:assets'; payload: ReaderSessionAssetsPayload }
+    | { v: ProtocolVersion; id: RequestId; type: 'readerSession:releaseAssets'; payload: ReaderSessionReleaseAssetsPayload }
     | { v: ProtocolVersion; id: RequestId; type: 'markLibrary:get' }
     | { v: ProtocolVersion; id: RequestId; type: 'markLibrary:mutate'; payload: { operation: MarkLibraryOperation; expectedRevision: number } }
     | { v: ProtocolVersion; id: RequestId; type: 'highlights:list'; payload?: { document?: ReaderAnnotationDocument } }
@@ -429,6 +461,8 @@ export function isExtRequest(value: unknown): value is ExtRequest {
         'readerSession:send',
         'readerSession:locate',
         'readerSession:close',
+        'readerSession:assets',
+        'readerSession:releaseAssets',
         'markLibrary:get', 'markLibrary:mutate',
         'highlights:list', 'highlights:create', 'highlights:update', 'highlights:remove',
         'annotations:list',
@@ -515,6 +549,9 @@ export function isExtRequest(value: unknown): value is ExtRequest {
             const snapshot = sessionPayload.snapshot as Record<string, unknown> | null;
             return !!snapshot
                 && Array.isArray(snapshot.items)
+                && snapshot.items.every(item => item && typeof item === 'object'
+                    && (item.richBlocks === undefined || isRichBlocksV1(item.richBlocks)))
+                && isReaderSessionRichContentWithinBudget(snapshot as ReaderSessionSnapshot)
                 && typeof snapshot.startIndex === 'number'
                 && typeof snapshot.sourceUrl === 'string'
                 && (snapshot.theme === 'light' || snapshot.theme === 'dark')
@@ -523,6 +560,21 @@ export function isExtRequest(value: unknown): value is ExtRequest {
                 && (snapshot.annotationDocument === undefined || isReaderAnnotationDocument(snapshot.annotationDocument));
         }
         if (typeof sessionPayload.sessionId !== 'string' || sessionPayload.sessionId.trim().length === 0) return false;
+        if (type === 'readerSession:assets') {
+            return sessionPayload.version === 1 && typeof sessionPayload.itemId === 'string'
+                && sessionPayload.itemId.trim().length > 0 && sessionPayload.itemId.length <= 512
+                && Array.isArray(sessionPayload.blockVersions) && sessionPayload.blockVersions.length <= 128
+                && sessionPayload.blockVersions.every(version => version && typeof version === 'object'
+                    && typeof version.blockId === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,255}$/.test(version.blockId)
+                    && typeof version.visualDigest === 'string' && /^[A-Za-z0-9._-]{1,256}$/.test(version.visualDigest))
+                && new Set(sessionPayload.blockVersions.map(version => version.blockId)).size === sessionPayload.blockVersions.length
+                && (sessionPayload.leaseId === undefined || (typeof sessionPayload.leaseId === 'string'
+                    && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,511}$/.test(sessionPayload.leaseId)));
+        }
+        if (type === 'readerSession:releaseAssets') {
+            return sessionPayload.version === 1 && (sessionPayload.leaseId === undefined
+                || (typeof sessionPayload.leaseId === 'string' && /^[A-Za-z0-9][A-Za-z0-9._:-]{0,511}$/.test(sessionPayload.leaseId)));
+        }
         if (type === 'readerSession:draft' && sessionPayload.text !== undefined) {
             return typeof sessionPayload.text === 'string';
         }

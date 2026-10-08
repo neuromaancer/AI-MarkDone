@@ -75,6 +75,18 @@ describe('printPdf', () => {
         expect(frame()).toBeNull();
     });
 
+    it('retains visual resource ownership until actual print context cleanup', async () => {
+        const release = vi.fn();
+        await printPdf({ html: '<div>rich output</div>' }, { onCleanup: release });
+        expect(release).not.toHaveBeenCalled();
+        window.dispatchEvent(new Event('afterprint'));
+        expect(release).not.toHaveBeenCalled();
+        const printWindow = frame()!.contentWindow!;
+        printWindow.dispatchEvent(new Event('afterprint'));
+        printWindow.dispatchEvent(new Event('afterprint'));
+        expect(release).toHaveBeenCalledTimes(1);
+    });
+
     it('embeds local KaTeX CSS and fonts into the print document', async () => {
         mockKatexFetch();
         await printPdf({ html: '<span class="katex">x</span>' });

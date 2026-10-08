@@ -69,6 +69,85 @@ describe('ChatGPTPageIndex', () => {
         expect(host.style.marginLeft).toBe('auto');
     });
 
+    it('reports a native sibling action row that mounts after the assistant body', async () => {
+        document.querySelector('main')!.innerHTML = `
+            <div data-turn-key="user-1"><div data-content-search-turn-key="round-1">
+                <div data-chatgpt-search-unit-key="round-1:0:user" data-chatgpt-search-message-ids="user-1">Question</div>
+                <div class="native-owner"><div data-chatgpt-search-unit-key="round-1:2:assistant" data-chatgpt-search-message-ids="assistant-1">Answer</div></div>
+            </div></div>`;
+        const batches: Array<{ kinds: readonly string[] }> = [];
+        const unsubscribe = getChatGPTPageIndex(adapter).subscribeObservations(batch => batches.push(batch));
+        getChatGPTPageIndex(adapter).getSnapshot();
+        document.querySelector('.native-owner')!.insertAdjacentHTML('beforeend', '<div class="turn-action-controls"><button aria-label="复制">Copy</button></div>');
+        await deliverMutations();
+        expect(batches.some(batch => batch.kinds.includes('lifecycle'))).toBe(true);
+        unsubscribe();
+    });
+
+    it('dirties only owning visual content for SVG attributes and image sources, excluding formula and UI icons', async () => {
+        const message = document.querySelector('[data-message-author-role="assistant"]')!;
+        message.querySelector('.markdown')!.innerHTML = '<svg><path d="M0 0" fill="red"/></svg><img src="data:image/png;base64,AA=="><span class="katex"><svg><path d="M1 1"/></svg></span><button><svg><path d="M2 2"/></svg></button>';
+        const index = getChatGPTPageIndex(adapter);
+        index.getSnapshot();
+        const batches: Array<{ kinds: readonly string[]; assistantMessageIds: readonly string[] }> = [];
+        const unsubscribe = index.subscribeObservations(batch => batches.push(batch));
+        message.querySelector('path')!.setAttribute('fill', 'blue');
+        message.querySelector('img')!.setAttribute('src', 'data:image/png;base64,AQ==');
+        await deliverMutations();
+        expect(batches).toHaveLength(1);
+        expect(batches[0]?.kinds).toEqual(['content']);
+        expect(batches[0]?.assistantMessageIds).toEqual(['assistant-1']);
+        batches.length = 0;
+        message.querySelector('.katex path')!.setAttribute('d', 'M3 3');
+        message.querySelector('button path')!.setAttribute('d', 'M4 4');
+        await deliverMutations();
+        expect(batches).toHaveLength(0);
+        unsubscribe();
+    });
+
+    it('dirties an owned chart when its aria-hidden drawing changes without observing hidden UI drawings', async () => {
+        const message = document.querySelector('[data-message-author-role="assistant"]')!;
+        message.querySelector('.markdown')!.innerHTML = `
+            <div data-testid="chatgpt-chart-content-reference"><svg aria-hidden="true"><path d="M0 0"/></svg>
+                <button><svg aria-hidden="true"><path d="M1 1"/></svg></button>
+                <span class="katex"><svg aria-hidden="true"><path d="M2 2"/></svg></span>
+                <span data-d-component="icon"><svg aria-hidden="true"><path d="M3 3"/></svg></span>
+                <span data-aimd-role="test"><svg aria-hidden="true"><path d="M4 4"/></svg></span>
+            </div><svg aria-hidden="true" class="unowned-hidden-drawing"><path d="M5 5"/></svg>`;
+        const index = getChatGPTPageIndex(adapter);
+        index.getSnapshot();
+        const batches: Array<{ kinds: readonly string[]; assistantMessageIds: readonly string[] }> = [];
+        const unsubscribe = index.subscribeObservations(batch => batches.push(batch));
+        message.querySelector('[data-testid="chatgpt-chart-content-reference"] > svg > path')!.setAttribute('d', 'M10 10');
+        await deliverMutations();
+        expect(batches).toHaveLength(1);
+        expect(batches[0]?.kinds).toEqual(['content']);
+        expect(batches[0]?.assistantMessageIds).toEqual(['assistant-1']);
+        batches.length = 0;
+        for (const path of message.querySelectorAll('button path, .katex path, [data-d-component="icon"] path, [data-aimd-role] path, .unowned-hidden-drawing path')) path.setAttribute('d', 'M20 20');
+        await deliverMutations();
+        expect(batches).toHaveLength(0);
+        unsubscribe();
+    });
+
+    it('does not report an identity replacement or generation completion across routes with a reused owner', async () => {
+        const batches: Array<{ assistantIdentityReplacements: readonly unknown[]; generationCompletedAssistantMessageIds: readonly string[] }> = [];
+        const index = getChatGPTPageIndex(adapter);
+        const unsubscribe = index.subscribeObservations(batch => batches.push(batch));
+        index.getSnapshot();
+        document.body.insertAdjacentHTML('beforeend', '<button data-testid="stop-button">Stop</button>');
+        await deliverMutations();
+        batches.length = 0;
+        history.pushState({}, '', '/c/another-conversation');
+        document.querySelector('[data-testid="stop-button"]')!.remove();
+        document.querySelector('[data-message-author-role="assistant"]')!.setAttribute('data-message-id', 'assistant-other-route');
+        await deliverMutations();
+        expect(batches).toHaveLength(1);
+        expect(batches[0]?.assistantIdentityReplacements).toEqual([]);
+        expect(batches[0]?.generationCompletedAssistantMessageIds).toEqual([]);
+        unsubscribe();
+    });
+
     it('keeps old and current message shapes in one ordered surface during host transition', () => {
         document.querySelector('main')!.insertAdjacentHTML('beforeend', `
             <div data-content-search-turn-key="round-2">

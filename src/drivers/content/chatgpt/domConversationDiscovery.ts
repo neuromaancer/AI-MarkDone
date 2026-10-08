@@ -736,7 +736,8 @@ function hasUncoveredAssistantSurface(
 
 function discoverChatGPTDomRoundRefs(adapter: SiteAdapter): ChatGPTDomRoundRef[] {
     const root = getDiscoveryRoot(adapter);
-    const turnWrapperRounds = collectTurnWrapperRoundRefs(adapter, root);
+    const available = (round: ChatGPTDomRoundRef) => adapter.isMessageContentAvailable?.(round.assistantMessageEl) !== false;
+    const turnWrapperRounds = collectTurnWrapperRoundRefs(adapter, root).filter(available);
     if (!hasUncoveredAssistantSurface(adapter, root, turnWrapperRounds)) return turnWrapperRounds;
 
     // A changed ChatGPT subtree can mix a stable historical wrapper with a
@@ -748,7 +749,7 @@ function discoverChatGPTDomRoundRefs(adapter: SiteAdapter): ChatGPTDomRoundRef[]
         ...collectLegacyContainerRoundRefs(adapter, root),
         ...collectRoleRoundRefs(adapter, root),
         ...collectSearchUnitRoundRefs(adapter, root),
-    ]);
+    ]).filter(available);
 }
 
 const pageIndexByAdapter = new WeakMap<SiteAdapter, ChatGPTPageIndex>();

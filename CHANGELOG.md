@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Recover unfinished annotation drafts in this browser, with separate controls to keep or discard them.
+- Save supported ChatGPT diagrams, charts and cards in an offline Markdown bundle with image attachments and an export manifest.
+- Choose static images or readable placeholders for rich content in PDF and PNG exports.
 
 ### Changed
 - Show the message directory by default on new installations while preserving every existing user's setting.
@@ -16,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refined Chinese and English labels, help, errors, and first-use guidance with clearer actions and saving details.
 
 ### Fixed
+- Keep regenerated replies bound to the correct message, prevent stale history from restoring replaced content, and detect delayed message controls.
+- Keep visual-only replies available in the message directory and preserve chart data when copying Markdown.
+- Release cancelled Reader image jobs and retain print images until their print context closes.
+- Keep numeric metric cards out of article headings, and clean up image resources after repeated page visits or runtime shutdown.
 - Fixed blank PDF message exports when ChatGPT prepares its own print view.
 - Keep selected messages in the same order without duplicates across Markdown, PDF, and PNG exports.
 - Preserve code fences, language, indentation, blank lines, and inline code when copying and rendering Markdown.

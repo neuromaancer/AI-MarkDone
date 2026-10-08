@@ -4,6 +4,7 @@ import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import type { ContentCleanupSettings } from '../settings/content';
 import { normalizeMarkdownWhitespace, protectMarkdownCode } from './markdownCodeProtection';
+import { isRichContentUrl } from '../../contracts/richContent';
 
 export type ChatGPTReferenceNoiseOptions = {
     stripCitationMarkers?: boolean;
@@ -28,6 +29,7 @@ type MarkdownAstNode = {
     type?: string;
     value?: string;
     alt?: string;
+    url?: string;
     position?: {
         start?: { offset?: number };
         end?: { offset?: number };
@@ -165,7 +167,7 @@ function normalizeChatGPTAnnotationToken(kind: string, payloadSource: string): s
 
     if (normalizedKind === 'genui') {
         const math = readGenUiMathAnnotation(payload);
-        if (!math) return '';
+        if (!math) return '\n\n> [Dynamic content: static representation unavailable]\n\n';
         return math.display === 'inline'
             ? `$${math.content}$`
             : `\n\n$$\n${math.content}\n$$\n\n`;
@@ -222,10 +224,27 @@ export function cleanChatGPTReferenceNoise(
 
 export function normalizeChatGPTReaderMarkdown(markdown: string, cleanupOptions?: ChatGPTReferenceNoiseOptions): string {
     const source = markdown || '';
-    const cleaned = cleanChatGPTReferenceNoise(source, cleanupOptions);
+    // Image-label escapes are Markdown syntax, not TeX delimiters.
+    const richReferences = protectRichReferences(source);
+    const cleaned = cleanChatGPTReferenceNoise(richReferences.masked, cleanupOptions);
     const withLatexDelimiters = normalizeLatexDelimiters(cleaned);
     const withMathDelimiters = normalizeMarkdownMathDelimiters(withLatexDelimiters);
-    return normalizeMarkdownWhitespace(withMathDelimiters);
+    return richReferences.restore(normalizeMarkdownWhitespace(withMathDelimiters));
+}
+
+function protectRichReferences(source: string): { masked: string; restore: (value: string) => string } {
+    let suffix = 0;
+    while (source.includes(`\uE100AIMDRICH${suffix}X`)) suffix += 1;
+    const prefix = `\uE100AIMDRICH${suffix}X`;
+    const references: string[] = [];
+    const masked = source.replace(/!\[((?:\\.|[^\]\\\n])*)\]\((aimd-rich:[A-Za-z0-9][A-Za-z0-9._-]{0,255})\)/g, match => {
+        const index = references.push(match) - 1;
+        return `${prefix}${index}\uE101`;
+    });
+    return {
+        masked,
+        restore: value => references.reduce((result, reference, index) => result.split(`${prefix}${index}\uE101`).join(reference), value),
+    };
 }
 
 /** Preserve the captured source; apply reader/copy/export preferences only at output. */
@@ -269,6 +288,7 @@ function stripMarkdownImages(markdown: string): string {
         const replacements: Array<{ start: number; end: number; value: string }> = [];
         visitMarkdownAst(tree, (node) => {
             if (node.type !== 'image' && node.type !== 'imageReference') return;
+            if (node.type === 'image' && node.url && isRichContentUrl(node.url)) return;
             const start = node.position?.start?.offset;
             const end = node.position?.end?.offset;
             if (typeof start === 'number' && typeof end === 'number' && end > start) {
@@ -293,7 +313,8 @@ function stripCitationMarkers(markdown: string): string {
 }
 
 function stripMarkdownLinks(markdown: string): string {
-    return markdown.replace(/!?\[([^\]\n]*)\]\(([^)\n]+)\)/g, (_match, label: string) => {
+    return markdown.replace(/!?\[((?:\\.|[^\]\\\n])*)\]\(([^)\n]+)\)/g, (match, label: string, url: string) => {
+        if (match.startsWith('!') && isRichContentUrl(url)) return match;
         const text = String(label || '').trim();
         return text;
     });

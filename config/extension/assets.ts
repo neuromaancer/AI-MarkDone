@@ -7,6 +7,7 @@ const sharedNonIconWebAccessibleResources = [
     'vendor/katex/fonts/*',
     'vendor/latex-workshop/formula-snippets.json',
     'export-renderer.html',
+    'rich-asset-relay.html',
     'content-features.js',
     'content-feature-chunks/*.js',
 ] as const;
@@ -29,6 +30,7 @@ export const extensionAssets = {
     contentEntry: 'content.js',
     contentFeaturesEntry: 'content-features.js',
     exportRendererPath: 'export-renderer.html',
+    richAssetRelayPath: 'rich-asset-relay.html',
     formulaSnippetCatalog: 'vendor/latex-workshop/formula-snippets.json',
     backgroundEntry: 'background.js',
     popupPath: 'src/popup/popup.html',

@@ -15,6 +15,7 @@ import type {
 } from '../../contracts/conversationDiscovery';
 import type { DiscoveryRepositoryFactsV1 } from '../../contracts/conversationDiscoveryDiagnostics';
 import type { ConversationTargetV1 } from '../../contracts/conversationMaterialization';
+import { freezeRichBlocks, isRichBlocksV1 } from '../../contracts/richContent';
 
 export type ConversationHostTurnObservationV1 = Readonly<{
     turn: ConversationTurnV1;
@@ -25,6 +26,14 @@ export type ConversationHostTurnObservationV1 = Readonly<{
 export type ConversationHostSlotIdentityV1 = Readonly<{
     hostSlotId: string;
     assistantMessageId: string;
+    userMessageId: string | null;
+}>;
+
+export type ConversationHostAssistantReplacementV1 = Readonly<{
+    documentKey: string;
+    hostSlotId: string;
+    previousAssistantMessageId: string;
+    nextAssistantMessageId: string;
     userMessageId: string | null;
 }>;
 
@@ -60,6 +69,7 @@ type ConversationPool = {
     digests: Map<string, string>;
     acquisitionModeByAssistantId: Map<string, 'get' | 'dom-fallback'>;
     domObservedAssistantIds: Set<string>;
+    supersededAssistantIds: Set<string>;
     documentKeys: Set<string>;
 };
 
@@ -192,7 +202,11 @@ export class ConversationContentRepository implements ConversationContentSourceV
         const document = this.currentDocument;
         if (!pool || !document || candidate.document.key !== document.key || candidate.origin === 'host') return this.state;
 
-        const incomingTurns = candidate.turns.map((turn, index) => normalizeTurn(turn, index + 1));
+        // A stale source capture cannot restore a branch that live ownership
+        // replaced. Only another explicit mounted replacement may reactivate it.
+        const incomingTurns = candidate.turns
+            .filter(turn => !pool.supersededAssistantIds.has(turn.identity.assistantMessageId.trim()))
+            .map((turn, index) => normalizeTurn(turn, index + 1));
         if (incomingTurns.some((turn) => !turn)) return this.state;
         const turns = incomingTurns.filter((turn): turn is ConversationTurnV1 => Boolean(turn));
         if (turns.length === 0) return this.state;
@@ -266,6 +280,7 @@ export class ConversationContentRepository implements ConversationContentSourceV
         observedHostSlotOrder: readonly string[] = observations.map(observation => observation.hostSlotId),
         slotIdentities: readonly ConversationHostSlotIdentityV1[] = [],
         placement?: 'before' | 'after',
+        replacements: readonly ConversationHostAssistantReplacementV1[] = [],
     ): ConversationHostBatchAdmissionV1 {
         const result = (admittedAssistantMessageIds: readonly string[], rejectionReason: ConversationHostBatchAdmissionV1['rejectionReason']): ConversationHostBatchAdmissionV1 => Object.freeze({
             state: this.state,
@@ -275,8 +290,12 @@ export class ConversationContentRepository implements ConversationContentSourceV
         if (this.disposed) return result([], 'unbound');
         if (observations.length === 0 && observedHostSlotOrder.length === 0) return result([], null);
         this.bindCurrentDocument();
-        const pool = this.activePool;
-        if (!pool || !this.currentDocument) return result([], 'unbound');
+        const activePool = this.activePool;
+        if (!activePool || !this.currentDocument) return result([], 'unbound');
+        const pool = replacements.length > 0
+            ? stageHostReplacements(activePool, this.currentDocument.key, observations, replacements)
+            : activePool;
+        if (!pool) return result([], 'identity-conflict');
 
         const retainedSlotOrder = pool.slotOrder;
         const previousHistoryStatus = pool.historyStatus;
@@ -299,6 +318,7 @@ export class ConversationContentRepository implements ConversationContentSourceV
             const rawSlotId = fact.hostSlotId.trim();
             const assistantMessageId = fact.assistantMessageId.trim();
             if (!assistantMessageId || !knownSlots.has(rawSlotId)) continue;
+            if (pool.supersededAssistantIds.has(assistantMessageId)) return result([], 'identity-conflict');
             const existingProof = nextSlotProofs.get(assistantMessageId);
             const existingTurn = pool.turnsByAssistantId.get(assistantMessageId);
             const knownUserId = existingProof?.userMessageId || existingTurn?.identity.userMessageId || null;
@@ -463,9 +483,10 @@ export class ConversationContentRepository implements ConversationContentSourceV
         }
         const historyStatusChanged = pool.historyStatus !== previousHistoryStatus;
         const admittedIds = pendingObservations.map(observation => observation.assistantMessageId);
+        if (pool !== activePool) Object.assign(activePool, pool);
         if (!turnProjectionChanged && !historyStatusChanged) return result(admittedIds, null);
 
-        pool.turns = nextTurns;
+        activePool.turns = nextTurns;
         this.publishProjection();
         return result(admittedIds, null);
     }
@@ -593,6 +614,7 @@ export class ConversationContentRepository implements ConversationContentSourceV
             digests: new Map(),
             acquisitionModeByAssistantId: new Map(),
             domObservedAssistantIds: new Set(),
+            supersededAssistantIds: new Set(),
             documentKeys: new Set([documentKey]),
         };
     }
@@ -631,11 +653,62 @@ export class ConversationContentRepository implements ConversationContentSourceV
     }
 }
 
+/** Stage every identity transition before the normal batch checks commit it. */
+function stageHostReplacements(
+    current: ConversationPool,
+    documentKey: string,
+    observations: readonly ConversationHostTurnObservationV1[],
+    replacements: readonly ConversationHostAssistantReplacementV1[],
+): ConversationPool | null {
+    const pool: ConversationPool = {
+        ...current,
+        hostSlotAliases: new Map(current.hostSlotAliases),
+        hostSlotProofByAssistantId: new Map(current.hostSlotProofByAssistantId),
+        turnsByAssistantId: new Map(current.turnsByAssistantId),
+        slotIdByAssistantId: new Map(current.slotIdByAssistantId),
+        assistantIdBySlotId: new Map(current.assistantIdBySlotId),
+        digests: new Map(current.digests),
+        acquisitionModeByAssistantId: new Map(current.acquisitionModeByAssistantId),
+        domObservedAssistantIds: new Set(current.domObservedAssistantIds),
+        supersededAssistantIds: new Set(current.supersededAssistantIds),
+    };
+    const replacedSlots = new Set<string>();
+    for (const proof of replacements) {
+        const previous = proof.previousAssistantMessageId.trim();
+        const next = proof.nextAssistantMessageId.trim();
+        const user = proof.userMessageId?.trim() ?? '';
+        const slot = pool.hostSlotAliases.get(proof.hostSlotId.trim()) ?? proof.hostSlotId.trim();
+        const previousTurn = pool.turnsByAssistantId.get(previous);
+        const incoming = observations.filter(observation => observation.turn.identity.assistantMessageId === next);
+        if (
+            proof.documentKey !== documentKey || !previous || !next || previous === next || !user
+            || replacedSlots.has(slot) || !previousTurn || previousTurn.identity.userMessageId !== user
+            || pool.slotIdByAssistantId.get(previous) !== slot || pool.assistantIdBySlotId.get(slot) !== previous
+            || pool.turnsByAssistantId.has(next) || pool.slotIdByAssistantId.has(next)
+            || incoming.length !== 1 || incoming[0]!.turn.identity.userMessageId !== user
+            || (pool.hostSlotAliases.get(incoming[0]!.hostSlotId) ?? incoming[0]!.hostSlotId) !== slot
+        ) return null;
+        replacedSlots.add(slot);
+        pool.sourceOrder = Object.freeze(pool.sourceOrder.map(id => id === previous ? next : id));
+        pool.hostSlotProofByAssistantId.delete(previous);
+        pool.turnsByAssistantId.delete(previous);
+        pool.slotIdByAssistantId.delete(previous);
+        pool.assistantIdBySlotId.delete(slot);
+        pool.digests.delete(previous);
+        pool.acquisitionModeByAssistantId.delete(previous);
+        pool.domObservedAssistantIds.delete(previous);
+        pool.supersededAssistantIds.add(previous);
+        pool.supersededAssistantIds.delete(next);
+    }
+    return pool;
+}
+
 function normalizeTurn(turn: ConversationTurnV1, ordinal: number): ConversationTurnV1 | null {
     const turnId = turn.identity.turnId.trim();
     const assistantMessageId = turn.identity.assistantMessageId.trim();
     const assistantMarkdown = turn.assistantMarkdown.trim();
     if (!turnId || !assistantMessageId || !assistantMarkdown) return null;
+    if (turn.assistantRichBlocks !== undefined && !isRichBlocksV1(turn.assistantRichBlocks)) return null;
     const userMessageId = turn.identity.userMessageId?.trim() || null;
     return Object.freeze({
         ...turn,
@@ -644,6 +717,9 @@ function normalizeTurn(turn: ConversationTurnV1, ordinal: number): ConversationT
         identity: Object.freeze({ turnId, userMessageId, assistantMessageId }),
         userText: turn.userText.trim(),
         assistantMarkdown,
+        ...(turn.assistantRichBlocks !== undefined
+            ? { assistantRichBlocks: freezeRichBlocks(turn.assistantRichBlocks) }
+            : {}),
         ...(typeof turn.assistantSourceMarkdown === 'string'
             ? { assistantSourceMarkdown: turn.assistantSourceMarkdown }
             : {}),
@@ -845,6 +921,7 @@ function digestTurnContent(turn: ConversationTurnV1): string {
         userText: turn.userText,
         assistantMarkdown: turn.assistantMarkdown,
         assistantSourceMarkdown: turn.assistantSourceMarkdown,
+        assistantRichBlocks: turn.assistantRichBlocks,
         assistantProvenance: turn.assistantProvenance,
     });
 }
@@ -860,6 +937,7 @@ function createContentToken(snapshot: Omit<ConversationSnapshotV1, 'contentToken
             userText: turn.userText,
             assistantMarkdown: turn.assistantMarkdown,
             assistantSourceMarkdown: turn.assistantSourceMarkdown,
+            assistantRichBlocks: turn.assistantRichBlocks,
             assistantProvenance: turn.assistantProvenance,
         })),
     });

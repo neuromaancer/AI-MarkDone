@@ -81,7 +81,12 @@ export function buildPageAtomicSelectionSnapshot(
         maxNodeCount,
     });
     if (!result.ok || performance.now() - startedAt > maxProcessingTimeMs) return null;
-    const canonicalMarkdown = result.markdown;
+    // A closed ordinary image selection has always copied its readable alt
+    // text. Whole-message visuals retain their richer placeholder contract.
+    const canonicalMarkdown = selection.units.length === 1 && selection.units[0]?.kind === 'image'
+        && result.richBlocks?.length === 1 && result.richBlocks[0]?.kind === 'image'
+        ? result.richBlocks[0].label
+        : result.markdown;
     if (!canonicalMarkdown) return null;
     return {
         range: range.cloneRange(),

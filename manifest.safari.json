@@ -64,6 +64,7 @@
         "vendor/katex/fonts/*",
         "vendor/latex-workshop/formula-snippets.json",
         "export-renderer.html",
+        "rich-asset-relay.html",
         "content-features.js",
         "content-feature-chunks/*.js"
     ]

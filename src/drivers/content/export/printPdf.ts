@@ -10,6 +10,7 @@ const DEFAULT_CONTAINER_ID = 'aimd-pdf-export-container';
 const KATEX_STYLESHEET_TIMEOUT_MS = 1000;
 const FONT_READY_TIMEOUT_MS = 1500;
 const IMAGE_READY_TIMEOUT_MS = 2000;
+const activePrintCleanups = new Map<string, () => void>();
 
 async function preparePrintImages(container: HTMLElement, unavailableLabel: string): Promise<void> {
     await Promise.all(Array.from(container.querySelectorAll<HTMLImageElement>('img')).map(async (image) => {
@@ -117,13 +118,20 @@ async function injectKatexStylesheetIfNeeded(container: HTMLElement, html: strin
     await injectKatexStylesheetLink(container);
 }
 
-export async function printPdf(plan: PdfPrintPlan): Promise<void> {
+export async function printPdf(plan: PdfPrintPlan, options: { onCleanup?: () => void } = {}): Promise<void> {
+    let released = false;
+    const release = () => {
+        if (released) return;
+        released = true;
+        options.onCleanup?.();
+    };
     const html = (plan?.html || '').trim();
-    if (!html) return;
+    if (!html) { release(); return; }
 
     const containerId = plan.containerId || DEFAULT_CONTAINER_ID;
 
     const frameId = `${containerId}-frame`;
+    activePrintCleanups.get(frameId)?.();
     document.getElementById(frameId)?.remove();
 
     // Host beforeprint handlers can create a second document and hide ours.
@@ -139,6 +147,7 @@ export async function printPdf(plan: PdfPrintPlan): Promise<void> {
     const printWindow = frame.contentWindow;
     if (!printDocument || !printWindow) {
         frame.remove();
+        release();
         throw new Error('PDF print document is unavailable.');
     }
     printDocument.title = document.title;
@@ -163,6 +172,7 @@ export async function printPdf(plan: PdfPrintPlan): Promise<void> {
         ]);
     } catch (error) {
         frame.remove();
+        release();
         throw error;
     }
 
@@ -181,13 +191,17 @@ export async function printPdf(plan: PdfPrintPlan): Promise<void> {
             cleanupTimer = null;
         }
         frame.remove();
+        if (activePrintCleanups.get(frameId) === cleanup) activePrintCleanups.delete(frameId);
+        release();
     };
+
+    activePrintCleanups.set(frameId, cleanup);
 
     printWindow.addEventListener('afterprint', cleanup);
     printWindow.addEventListener('beforeprint', prepareLayout);
     const cleanupWhenIdle = (): void => {
         // Some browsers return from print() while preview is still open.
-        if (printWindow.matchMedia?.('print').matches) {
+        if (frame.isConnected && printWindow.matchMedia?.('print').matches) {
             cleanupTimer = window.setTimeout(cleanupWhenIdle, 30000);
         } else {
             cleanup();

@@ -110,6 +110,7 @@ import {
     type ReaderRenderResult,
 } from './ReaderRendering';
 import { BrowserReaderHostAdapter, type ReaderHostAdapter } from './ReaderHostAdapter';
+import { fallbackReaderRichSlot, hydrateReaderRichSlots, prepareReaderRichContent, type ReaderRichContentLease, type ReaderRichContentResolver } from './readerRichContent';
 
 export type {
     ReaderCommentExportContext,
@@ -187,6 +188,10 @@ export class ReaderPanel {
     private unsubscribeLocale: (() => void) | null = null;
     private tooltipDelegate: TooltipDelegate | null = null;
     private contentRenderToken = 0;
+    private richContentController: AbortController | null = null;
+    private richContentLease: ReaderRichContentLease | null = null;
+    private resolveRichContent: ReaderRichContentResolver = prepareReaderRichContent;
+    private readonly richImageListeners = new WeakSet<HTMLImageElement>();
     private katexCssToken = 0;
     private statusTimer: number | null = null;
     private renderCodeInReader = true;
@@ -400,6 +405,8 @@ export class ReaderPanel {
     }
 
     async show(items: ReaderItem[], startIndex: number, theme: Theme, options?: ReaderPanelShowOptions): Promise<void> {
+        this.clearRichContentAssets();
+        this.resolveRichContent = options?.resolveRichContent ?? prepareReaderRichContent;
         if (!this.closing) this.saveCurrentReaderScrollPosition();
         this.cancelPendingReaderScrollRestore();
         this.focusLifecycle.capture();
@@ -513,6 +520,8 @@ export class ReaderPanel {
 
     hide(): void {
         if (this.closing) return;
+        this.clearRichContentAssets();
+        this.contentRenderToken += 1;
         this.saveCurrentReaderScrollPosition();
         this.cancelPendingReaderScrollRestore();
         this.state.visible = false;
@@ -626,6 +635,7 @@ export class ReaderPanel {
     }
 
     private unmount(): void {
+        this.clearRichContentAssets();
         this.showGeneration += 1;
         this.annotationLoadGeneration += 1;
         this.unsubscribeAnnotationChanges?.();
@@ -979,6 +989,7 @@ export class ReaderPanel {
     }
 
     private async renderCurrentContent(options: { restoreScrollPosition?: boolean } = {}): Promise<void> {
+        this.clearRichContentAssets();
         const item = this.workflow.currentItem;
         if (!item) {
             const empty = createEmptyReaderRenderResult();
@@ -1025,6 +1036,69 @@ export class ReaderPanel {
             this.restoreCurrentReaderScrollPosition(item, token);
         }
         this.syncOutlineActiveState();
+        if (item.richBlocks?.length) void this.hydrateCurrentRichContent(item, token);
+    }
+
+    private clearRichContentAssets(): void {
+        this.richContentController?.abort();
+        this.richContentController = null;
+        const lease = this.richContentLease;
+        this.richContentLease = null;
+        if (lease) void Promise.resolve(lease.release()).catch(() => undefined);
+        // No future render may reuse URLs after their lease is released.
+        this.state.renderedHtml = '';
+    }
+
+    private async hydrateCurrentRichContent(item: ReaderItem, token: number): Promise<void> {
+        const controller = new AbortController();
+        this.richContentController = controller;
+        let lease: ReaderRichContentLease | null = null;
+        const current = () => !controller.signal.aborted && this.state.visible
+            && token === this.contentRenderToken && this.workflow.currentItem === item;
+        try {
+            lease = await this.resolveRichContent(item, controller.signal);
+            if (!current()) { await lease.release(); return; }
+            const rendered = await renderReaderItem(item, {
+                highlightCode: this.renderCodeInReader, contentCleanup: this.contentCleanup, richAssets: lease.assets,
+                labels: { copyCode: this.getLabel('btnCopyText', 'Copy code'), enableCodeWrap: this.getLabel('readerCodeWrapEnable', 'Enable word wrap'), disableCodeWrap: this.getLabel('readerCodeWrapDisable', 'Disable word wrap') },
+            });
+            if (!current()) { await lease.release(); return; }
+            this.richContentLease = lease;
+            this.state.renderedHtml = rendered.html;
+            const root = this.getMarkdownRoot();
+            if (root) hydrateReaderRichSlots(root, rendered.html);
+            this.bindRichContentImages();
+            this.syncCommentUi();
+        } catch {
+            if (lease && this.richContentLease !== lease) await lease.release();
+            // Base text and descriptive placeholders remain usable on failure.
+        }
+    }
+
+    private bindRichContentImages(): void {
+        const item = this.workflow.currentItem;
+        const lease = this.richContentLease;
+        const controller = this.richContentController;
+        const root = this.getMarkdownRoot();
+        const token = this.contentRenderToken;
+        if (!item || !lease || !controller || !root) return;
+        const current = () => !controller.signal.aborted && this.workflow.currentItem === item && token === this.contentRenderToken;
+        for (const image of root.querySelectorAll<HTMLImageElement>('img[data-aimd-rich-block]')) {
+            const block = item.richBlocks?.find(candidate => candidate.id === image.dataset.aimdRichBlock);
+            if (!block || this.richImageListeners.has(image)
+                || !lease.assets.some(asset => asset.blockId === block.id && asset.url === image.getAttribute('src'))) continue;
+            this.richImageListeners.add(image);
+            image.addEventListener('load', () => { if (current()) this.syncCommentUi(); }, { once: true, signal: controller.signal });
+            image.addEventListener('error', () => {
+                if (!current()) return;
+                fallbackReaderRichSlot(root, block);
+                const markup = this.host.document.createElement('div');
+                markup.innerHTML = this.state.renderedHtml;
+                fallbackReaderRichSlot(markup, block);
+                this.state.renderedHtml = markup.innerHTML;
+                this.syncCommentUi();
+            }, { once: true, signal: controller.signal });
+        }
     }
 
     private async copyCurrent(): Promise<void> {
@@ -1284,6 +1358,8 @@ export class ReaderPanel {
         this.applyAtomicSelectionState();
         this.syncCommentUi();
         this.syncCommentControls();
+
+        this.bindRichContentImages();
 
         const nextBody = panel.querySelector<HTMLElement>('.reader-body');
         this.syncReaderBodyScrollListener(nextBody);

@@ -12,6 +12,27 @@ import { WordCounter } from '@/core/text/wordCounter';
 import { readFileSync } from 'node:fs';
 
 describe('ChatGPT toolbar Copy Markdown code preservation', () => {
+    it('refuses a stale toolbar copy immediately when inner message ownership changes before the observer runs', async () => {
+        document.body.innerHTML = `<article data-turn="assistant"><div data-message-author-role="assistant" data-message-id="answer-A">
+          <div data-chatgpt-selection-message-id="answer-A"><div class="markdown prose"><div data-dil-source-message-id="answer-A"><div data-dil-message-id="answer-A"><p>Original answer</p></div></div></div></div>
+        </div><div class="z-0 flex"><button data-testid="copy-turn-action-button">Copy</button></div></article>`;
+        const adapter = new ChatGPTAdapter();
+        const message = document.querySelector<HTMLElement>('[data-message-id]')!;
+        const orchestrator = new MessageToolbarOrchestrator(adapter, {}) as any;
+        const toolbar = new MessageToolbar('light', orchestrator.getActionsForMessage(message, () => toolbar));
+        adapter.injectToolbar(message, toolbar.getElement());
+        vi.mocked(copyTextToClipboard).mockClear();
+        try {
+            message.querySelector('[data-dil-message-id]')!.setAttribute('data-dil-message-id', 'answer-B');
+            message.querySelector('p')!.textContent = 'Different answer body';
+            const button = toolbar.getElement().shadowRoot!.querySelector<HTMLButtonElement>('[data-action="copy_markdown"]')!;
+            button.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, composed: true }));
+            button.click();
+            await Promise.resolve();
+            await Promise.resolve();
+            expect(copyTextToClipboard).not.toHaveBeenCalled();
+        } finally { toolbar.dispose(); orchestrator.dispose(); adapter.dispose(); }
+    });
     it('copies the current ChatGPT code/editor and inline markers through the real toolbar button', async () => {
         document.body.innerHTML = readFileSync('tests/testdata/chatgpt/semantic-code-blocks.html', 'utf8');
         const expected = [

@@ -54,6 +54,7 @@ export function prepareExtensionTarget(target: ExtensionTarget): void {
     );
     copyLocales(target, resolve(process.cwd(), 'public/_locales'), join(distDir, '_locales'));
     cpSync(resolve(process.cwd(), 'public/export-renderer.html'), join(distDir, 'export-renderer.html'));
+    cpSync(resolve(process.cwd(), 'public/rich-asset-relay.html'), join(distDir, 'rich-asset-relay.html'));
     cpSync(resolve(process.cwd(), 'public/reader.html'), join(distDir, 'reader.html'));
     mkdirSync(join(distDir, 'src/popup'), { recursive: true });
     cpSync(resolve(process.cwd(), 'src/popup/popup.html'), join(distDir, 'src/popup/popup.html'));

@@ -36,6 +36,9 @@ const readerPanelSetAppearance = vi.fn();
 const readerPanelShow = vi.fn(async () => undefined);
 const readerPanelFocusAnnotation = vi.fn(async () => true);
 const readerPanelHide = vi.fn();
+const readerRichAssetsPrepare = vi.fn(async () => ({ version: 1, leaseId: null, refs: [] }));
+const readerRichAssetsRelease = vi.fn(async () => undefined);
+const readerRichAssetsDispose = vi.fn(async () => undefined);
 const readerPanelCtor = vi.fn(function () {
     return {
         setAppearance: readerPanelSetAppearance,
@@ -414,6 +417,7 @@ vi.mock('@/services/content/ConversationNavigationCoordinator', () => ({
 vi.mock('@/drivers/shared/browser', () => ({
     browser: {
         runtime: {
+            id: 'extension-id',
             onMessage: {
                 addListener: (listener: (msg: unknown) => void) => {
                     runtimeMessageListener = listener;
@@ -442,6 +446,7 @@ vi.mock('@/ui/content/bookmarks/BookmarksPanel', () => ({
 }));
 
 vi.mock('@/runtimes/content/lazyContentFeatures', () => ({
+    createLazyReaderRichAssetSessions: vi.fn(() => ({ prepare: readerRichAssetsPrepare, release: readerRichAssetsRelease, dispose: readerRichAssetsDispose })),
     createLazyReaderPanel: readerPanelCtor,
     createLazyBookmarksPanel: bookmarksPanelCtor,
     createLazySaveMessagesDialog: vi.fn(() => ({
@@ -1957,6 +1962,56 @@ describe('content runtime entry', () => {
             type: 'readerSession:draft',
             data: { text: 'existing official composer text' },
         }));
+    });
+
+    it('requires the background extension sender for detached rich assets', async () => {
+        adapterPlatformId = 'chatgpt';
+        vi.resetModules();
+        await import('@/runtimes/content/entry');
+        await Promise.resolve();
+        const request = { v: 1, id: 'assets-untrusted', type: 'readerSession:assets', payload: { version: 1, sessionId: 'session-1', itemId: 'item-1', blockVersions: [] } };
+        for (const sender of [undefined, { id: 'foreign-extension' }, { id: 'extension-id', tab: { id: 12 } }]) {
+            const sendResponse = vi.fn();
+            (runtimeMessageListener as any)!(request, sender, sendResponse);
+            expect(sendResponse).toHaveBeenCalledWith(expect.objectContaining({ ok: false, error: expect.objectContaining({ code: 'PERMISSION_DENIED' }) }));
+        }
+    });
+
+    it('uses the lazy source asset facade only for the first bound assets RPC and cleans it on teardown', async () => {
+        adapterPlatformId = 'chatgpt';
+        vi.resetModules();
+        await import('@/runtimes/content/entry');
+        await Promise.resolve();
+        expect(readerRichAssetsPrepare).not.toHaveBeenCalled();
+        const item = { id: 'item-1', userPrompt: '', content: 'Body', richBlocks: [] };
+        const sendResponse = vi.fn();
+        (runtimeMessageListener as any)!({ v: 1, id: 'assets-lazy', type: 'readerSession:assets', payload: {
+            version: 1, sessionId: 'session-1', itemId: 'item-1', leaseId: 'lease-1', blockVersions: [], sourceItem: item, sourceUrl: 'https://chatgpt.com/c/1',
+        } }, { id: 'extension-id' }, sendResponse);
+        await vi.waitFor(() => expect(readerRichAssetsPrepare).toHaveBeenCalledWith('session-1', item, 'https://chatgpt.com/c/1', 'lease-1'));
+        window.dispatchEvent(new Event('pagehide'));
+        expect(readerRichAssetsDispose).toHaveBeenCalled();
+    });
+
+    it('cleans source asset ownership on every pagehide after a BFCache restore', async () => {
+        adapterPlatformId = 'chatgpt';
+        vi.resetModules();
+        const { createLazyReaderRichAssetSessions } = await import('@/runtimes/content/lazyContentFeatures');
+        const scoped = { prepare: vi.fn(async () => ({ version: 1 as const, leaseId: null, refs: [] })), release: vi.fn(async () => undefined), dispose: vi.fn(async () => undefined) };
+        vi.mocked(createLazyReaderRichAssetSessions).mockReturnValueOnce(scoped);
+        await import('@/runtimes/content/entry');
+        await Promise.resolve();
+        window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+        expect(scoped.dispose).toHaveBeenCalledTimes(1);
+        window.dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true }));
+        const item = { id: 'item-1', userPrompt: '', content: 'Body', richBlocks: [] };
+        const sendResponse = vi.fn();
+        (runtimeMessageListener as any)!({ v: 1, id: 'assets-after-restore', type: 'readerSession:assets', payload: {
+            version: 1, sessionId: 'session-1', itemId: 'item-1', leaseId: 'lease-restored', blockVersions: [], sourceItem: item, sourceUrl: 'https://chatgpt.com/c/1',
+        } }, { id: 'extension-id' }, sendResponse);
+        await vi.waitFor(() => expect(scoped.prepare).toHaveBeenCalledTimes(1));
+        window.dispatchEvent(new PageTransitionEvent('pagehide', { persisted: true }));
+        expect(scoped.dispose).toHaveBeenCalledTimes(2);
     });
 
     it('rejects a detached Reader refresh when the conversation changes during snapshot construction', async () => {

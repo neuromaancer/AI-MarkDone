@@ -170,6 +170,7 @@ function buildConversationReaderItem(
         // content path.
         content: turn.assistantMarkdown,
         sourceContent: turn.assistantSourceMarkdown,
+        ...(turn.assistantRichBlocks !== undefined ? { richBlocks: turn.assistantRichBlocks } : {}),
         meta: {
             platformId: document.platformId,
             messageId: turn.identity.assistantMessageId,
@@ -430,6 +431,10 @@ export async function readerItemsToChatTurns(items: ReaderItem[]): Promise<ChatT
             ...(item.sourceContent !== undefined
                 ? { assistantSource: await resolveContent(item.sourceContent) }
                 : {}),
+            ...(item.richBlocks !== undefined ? { richBlocks: item.richBlocks } : {}),
+            ...((item.meta?.assistantMessageId || item.meta?.messageId)
+                ? { messageId: item.meta!.assistantMessageId || item.meta!.messageId! } : {}),
+            ...(item.meta?.url ? { documentUrl: item.meta.url } : {}),
             index,
         });
     }

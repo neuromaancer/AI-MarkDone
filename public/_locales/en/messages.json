@@ -791,6 +791,46 @@
         "message": "Markdown",
         "description": "Message for formatMarkdown"
     },
+    "formatMarkdownZip": {
+        "message": "Markdown offline bundle (ZIP)",
+        "description": "Export Markdown with locally saved charts and images"
+    },
+    "messageExportRichLabel": {
+        "message": "Charts and rich content",
+        "description": "Rich content output choice in the message export dialog"
+    },
+    "messageExportRichInclude": {
+        "message": "Include images",
+        "description": "Keep rich content as available images"
+    },
+    "messageExportRichPlaceholder": {
+        "message": "Use text placeholders",
+        "description": "Represent rich content using descriptive text"
+    },
+    "messageExportPreparing": {
+        "message": "Preparing content $1",
+        "description": "Message export preparation count"
+    },
+    "messageExportPackaging": {
+        "message": "Packaging offline bundle",
+        "description": "Offline Markdown ZIP packaging progress"
+    },
+    "messageExportReady": {
+        "message": "Export ready",
+        "description": "Message export completed"
+    },
+    "messageExportCancelled": {
+        "message": "Export cancelled",
+        "description": "Message export was cancelled"
+    },
+    "messageExportFailed": {
+        "message": "Export failed. Please try again.",
+        "description": "Recoverable message export failure"
+    },
+    "messageExportRichFallback": {
+        "message": "Included $1 images; $2 rich blocks use text placeholders.",
+        "description": "Completed export with some unavailable visual blocks"
+    },
     "formatPdf": {
         "message": "PDF",
         "description": "Message for formatPdf"

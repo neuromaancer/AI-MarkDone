@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { richSvgBlock } from '../../../helpers/richContentFixtures';
 
 import {
     createConversationDocumentKeyV1,
@@ -7,6 +8,7 @@ import {
 } from '@/contracts/conversationContent';
 import {
     ConversationContentRepository,
+    type ConversationHostAssistantReplacementV1,
     type ConversationHostTurnObservationV1,
 } from '@/services/content/ConversationContentRepository';
 
@@ -47,6 +49,119 @@ function ids(repository: ConversationContentRepository): string[] {
 }
 
 describe('ConversationContentRepository persistent host slots', () => {
+    it('retains immutable rich blocks and updates its token when only visual source changes', () => {
+        const repository = new ConversationContentRepository({ resolveDocument: () => documentRef('visual-change') });
+        const source = { kind: 'svg' as const, svg: '<svg><rect fill="red"/></svg>' };
+        const block = richSvgBlock({ source });
+        const original = observation(1);
+        const body = { ...original, turn: { ...original.turn, assistantMarkdown: '![Diagram](aimd-rich:block-1)', assistantRichBlocks: [block] } };
+        repository.ingestHostBatch([body]);
+        const before = repository.read().snapshot!;
+        source.svg = '<svg><rect fill="blue"/></svg>';
+        expect(before.turns[0]?.assistantRichBlocks?.[0]?.source).toMatchObject({ svg: '<svg><rect fill="red"/></svg>' });
+        repository.ingestHostBatch([body]);
+        const after = repository.read().snapshot!;
+        expect(after.contentToken).not.toBe(before.contentToken);
+        expect(after.turns[0]?.assistantMarkdown).toBe(before.turns[0]?.assistantMarkdown);
+        expect(after.turns[0]?.assistantRichBlocks?.[0]?.source).toMatchObject({ svg: '<svg><rect fill="blue"/></svg>' });
+        expect(Object.isFrozen(after.turns[0]?.assistantRichBlocks?.[0]?.source)).toBe(true);
+    });
+
+    function replacement(repository: ConversationContentRepository, previous = 'assistant-1', next = 'assistant-new'): ConversationHostAssistantReplacementV1 {
+        return {
+            documentKey: repository.read().document!.key,
+            hostSlotId: 'assistant-slot-1',
+            previousAssistantMessageId: previous,
+            nextAssistantMessageId: next,
+            userMessageId: 'user-1',
+        };
+    }
+
+    function regenerated(id = 'assistant-new'): ConversationHostTurnObservationV1 {
+        const original = turn(1, `Body ${id}`);
+        return { hostSlotId: 'assistant-slot-1', turn: { ...original, key: `turn-1:${id}`, identity: { ...original.identity, assistantMessageId: id } } };
+    }
+
+    it('atomically replaces an obtained assistant with explicit same-user slot proof and permits a proved switch back', () => {
+        const repository = new ConversationContentRepository({ resolveDocument: () => documentRef('replacement') });
+        repository.ingestHostBatch([observation(1), observation(2)]);
+        const proof = replacement(repository);
+        const changed = repository.admitHostBatch([regenerated()], ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [proof]);
+        expect(changed.rejectionReason).toBeNull();
+        expect(ids(repository)).toEqual(['assistant-new', 'assistant-2']);
+        const restored = repository.admitHostBatch([regenerated('assistant-1')], ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [replacement(repository, 'assistant-new', 'assistant-1')]);
+        expect(restored.rejectionReason).toBeNull();
+        expect(ids(repository)).toEqual(['assistant-1', 'assistant-2']);
+    });
+
+    it.each(['document', 'user', 'missing-user', 'slot', 'duplicate'] as const)('rejects invalid %s replacement proof without modifying private content', (fault) => {
+        const repository = new ConversationContentRepository({ resolveDocument: () => documentRef(`replacement-${fault}`) });
+        repository.ingestHostBatch([observation(1), observation(2)]);
+        const before = repository.read().snapshot;
+        const proof = { ...replacement(repository) };
+        if (fault === 'document') proof.documentKey = documentRef('other').key;
+        if (fault === 'user') proof.userMessageId = 'other-user';
+        if (fault === 'missing-user') proof.userMessageId = null;
+        if (fault === 'slot') proof.hostSlotId = 'assistant-slot-2';
+        if (fault === 'duplicate') proof.nextAssistantMessageId = 'assistant-2';
+        const rejected = repository.admitHostBatch([regenerated(proof.nextAssistantMessageId)], ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [proof]);
+        expect(rejected.rejectionReason).toBe('identity-conflict');
+        expect(repository.read().snapshot).toBe(before);
+        expect(repository.admitHostBatch([observation(1)], ['assistant-slot-1', 'assistant-slot-2']).rejectionReason).toBeNull();
+        expect(ids(repository)).toEqual(['assistant-1', 'assistant-2']);
+    });
+
+    it('does not revive a superseded assistant from a late GET seed', () => {
+        const ref = documentRef('replacement-source');
+        const repository = new ConversationContentRepository({ resolveDocument: () => ref });
+        const seed = { document: ref, coverage: 'complete' as const, turns: [turn(1), turn(2)], origin: 'source' as const };
+        repository.ingestSourceCandidate(seed);
+        repository.ingestHostBatch([observation(1), observation(2)]);
+        repository.admitHostBatch([regenerated()], ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [replacement(repository)]);
+        repository.ingestSourceCandidate(seed);
+        expect(ids(repository)).toEqual(['assistant-new', 'assistant-2']);
+        repository.admitHostBatch([regenerated('assistant-1')], ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [replacement(repository, 'assistant-new', 'assistant-1')]);
+        repository.ingestSourceCandidate({ ...seed, turns: [regenerated().turn, turn(2)] });
+        expect(ids(repository)).toEqual(['assistant-1', 'assistant-2']);
+    });
+
+    it('rolls back a valid staged replacement when a different observation makes the batch invalid', () => {
+        const repository = new ConversationContentRepository({ resolveDocument: () => documentRef('replacement-atomic') });
+        repository.ingestHostBatch([observation(1), observation(2)]);
+        const before = repository.read().snapshot;
+        const proof = replacement(repository);
+        const item = observation(3);
+        const duplicateTurn = { ...item, turn: { ...item.turn, identity: { ...item.turn.identity, turnId: 'turn-2' } } };
+        const rejected = repository.admitHostBatch([regenerated(), duplicateTurn], ['assistant-slot-1', 'assistant-slot-2', 'assistant-slot-3'], [], undefined, [proof]);
+        expect(rejected.rejectionReason).toBe('identity-conflict');
+        expect(repository.read().snapshot).toBe(before);
+        expect(repository.admitHostBatch([observation(1)], ['assistant-slot-1', 'assistant-slot-2']).rejectionReason).toBeNull();
+        expect(repository.admitHostBatch([regenerated()], ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [proof]).rejectionReason).toBeNull();
+        expect(ids(repository)).toEqual(['assistant-new', 'assistant-2']);
+    });
+
+    it('does not commit any replacement when one of multiple proofs fails', () => {
+        const repository = new ConversationContentRepository({ resolveDocument: () => documentRef('replacement-many') });
+        repository.ingestHostBatch([observation(1), observation(2)]);
+        const before = repository.read().snapshot;
+        const first = replacement(repository);
+        const second = {
+            ...first, hostSlotId: 'assistant-slot-2', previousAssistantMessageId: 'assistant-2',
+            nextAssistantMessageId: 'assistant-new-2', userMessageId: 'wrong-user',
+        };
+        const secondBody = turn(2, 'New second body');
+        const secondObservation = {
+            hostSlotId: 'assistant-slot-2',
+            turn: { ...secondBody, key: 'turn-2:assistant-new-2', identity: { ...secondBody.identity, assistantMessageId: 'assistant-new-2' } },
+        };
+        const bodies = [regenerated(), secondObservation];
+        expect(repository.admitHostBatch(bodies, ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [first, second]).rejectionReason).toBe('identity-conflict');
+        expect(repository.read().snapshot).toBe(before);
+        expect(repository.admitHostBatch([observation(1), observation(2)]).rejectionReason).toBeNull();
+        expect(repository.admitHostBatch(bodies, ['assistant-slot-1', 'assistant-slot-2'], [], undefined, [first, { ...second, userMessageId: 'user-2' }]).rejectionReason).toBeNull();
+        expect(ids(repository)).toEqual(['assistant-new', 'assistant-new-2']);
+    });
+
     it('keeps completed bodies from disjoint history windows using a batch placement hint', () => {
         const repository = new ConversationContentRepository({ resolveDocument: () => documentRef('disjoint-placement') });
         repository.ingestHostBatch([4, 5, 6].map(index => observation(index)));

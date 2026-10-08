@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { chatgptMarkdownParserAdapter } from '@/drivers/content/adapters/parser/chatgpt';
 import { normalizeChatGPTReaderMarkdown } from '@/core/content/chatgptMarkdownCleanup';
+import { ChatGPTAdapter } from '@/drivers/content/adapters/sites/chatgpt';
+import { RenderedContentCompiler } from '@/services/content/RenderedContentCompiler';
+import { readFileSync } from 'node:fs';
 import {
     createRenderedParserCapabilityV2,
     RenderedContentCompilerV2,
@@ -128,5 +131,40 @@ describe('RenderedContentCompilerV2', () => {
         if (result.kind !== 'ready') return;
         expect(result.user).toEqual({ markdown: '', text: '' });
         expect(result.assistant.markdown).toBe('Answer');
+    });
+
+    it('uses the same body conversion and rich sidecar for current-message and pool captures', async () => {
+        const adapter = new ChatGPTAdapter();
+        const root = document.createElement('div');
+        root.innerHTML = readFileSync('tests/testdata/chatgpt/rich-content.html', 'utf8');
+        const capabilities = {
+            normalizeDOM: (clone: HTMLElement) => adapter.normalizeDOM(clone),
+            isNoiseNode: adapter.isNoiseNode.bind(adapter),
+            cleanMarkdown: adapter.cleanMarkdown.bind(adapter),
+            collectRichBlocks: adapter.collectRichBlocks.bind(adapter),
+        };
+        const current = new RenderedContentCompiler({ parserAdapter: chatgptMarkdownParserAdapter, ...capabilities }).compile(root);
+        const pooled = await new RenderedContentCompilerV2({ markdownParserAdapter: chatgptMarkdownParserAdapter, ...capabilities })
+            .compile({ ...request('', ''), assistantRootClone: root.cloneNode(true) as HTMLElement });
+        expect(current.kind).toBe('ready');
+        expect(pooled.kind).toBe('ready');
+        if (current.kind !== 'ready' || pooled.kind !== 'ready') return;
+        expect(pooled.assistant.markdown).toBe(current.markdown);
+        expect(pooled.assistantRichBlocks).toEqual(current.richBlocks);
+        expect(pooled.assistantSourceMarkdown).toBe(current.sourceMarkdown ?? current.markdown);
+    });
+
+    it('admits a path-only assistant SVG without requiring readable text or a user prompt', async () => {
+        const adapter = new ChatGPTAdapter();
+        const result = await new RenderedContentCompilerV2({
+            markdownParserAdapter: chatgptMarkdownParserAdapter,
+            collectRichBlocks: adapter.collectRichBlocks.bind(adapter),
+            cleanMarkdown: adapter.cleanMarkdown.bind(adapter),
+        }).compile(request('', '<svg viewBox="0 0 10 10"><path d="M0 0L10 10"/></svg>'));
+        expect(result.kind).toBe('ready');
+        if (result.kind !== 'ready') return;
+        expect(result.user).toEqual({ text: '', markdown: '' });
+        expect(result.assistant.markdown).toContain('aimd-rich:');
+        expect(result.assistantRichBlocks).toHaveLength(1);
     });
 });

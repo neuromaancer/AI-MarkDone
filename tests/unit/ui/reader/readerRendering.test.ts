@@ -1,8 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
 import { renderReaderItem } from '@/ui/content/reader/ReaderRendering';
+import { richSvgBlock } from '../../../helpers/richContentFixtures';
 
 describe('ReaderRendering', () => {
+    it('renders rich placeholders without exposing the internal source URL', async () => {
+        const result = await renderReaderItem({ id: 'rich', userPrompt: '', content: '![Diagram](aimd-rich:block-1)', richBlocks: [richSvgBlock()] }, {
+            highlightCode: false, labels: { copyCode: 'Copy', enableCodeWrap: 'Wrap', disableCodeWrap: 'No wrap' },
+        });
+        expect(result.html).toContain('data-aimd-rich-block="block-1"');
+        expect(result.html).not.toContain('src="aimd-rich:');
+        expect(result.markdownSource).toBe('![Diagram](aimd-rich:block-1)');
+    });
+
     it('resolves lazy content and returns the complete Reader rendering model', async () => {
         const result = await renderReaderItem({
             id: 'a',

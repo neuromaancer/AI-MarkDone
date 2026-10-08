@@ -92,6 +92,7 @@ export function buildChatGPTReaderContent(
         // normalization path.
         content: turn.assistantMarkdown,
         sourceContent: turn.assistantSourceMarkdown,
+        ...(turn.assistantRichBlocks !== undefined ? { richBlocks: turn.assistantRichBlocks } : {}),
         meta: {
             platformId: snapshot.document.platformId,
             messageId: turn.identity.assistantMessageId,

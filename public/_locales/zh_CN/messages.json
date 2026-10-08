@@ -791,6 +791,46 @@
         "message": "Markdown",
         "description": "Message for formatMarkdown"
     },
+    "formatMarkdownZip": {
+        "message": "Markdown 离线包（ZIP）",
+        "description": "导出 Markdown 及本地保存的图表和图片"
+    },
+    "messageExportRichLabel": {
+        "message": "图表与富内容",
+        "description": "消息导出中的富内容输出选项"
+    },
+    "messageExportRichInclude": {
+        "message": "保留图片",
+        "description": "将富内容保存为可用图片"
+    },
+    "messageExportRichPlaceholder": {
+        "message": "使用文字占位",
+        "description": "以描述文字呈现富内容"
+    },
+    "messageExportPreparing": {
+        "message": "正在准备内容 $1",
+        "description": "消息导出准备进度"
+    },
+    "messageExportPackaging": {
+        "message": "正在打包离线文件",
+        "description": "离线 Markdown ZIP 打包进度"
+    },
+    "messageExportReady": {
+        "message": "导出已完成",
+        "description": "消息导出完成"
+    },
+    "messageExportCancelled": {
+        "message": "导出已取消",
+        "description": "消息导出已取消"
+    },
+    "messageExportFailed": {
+        "message": "导出失败，请重试。",
+        "description": "可重试的消息导出失败"
+    },
+    "messageExportRichFallback": {
+        "message": "已包含 $1 张图片；$2 个富内容块已使用文字占位。",
+        "description": "导出已完成，其中部分视觉块不可用"
+    },
     "formatPdf": {
         "message": "PDF",
         "description": "Message for formatPdf"

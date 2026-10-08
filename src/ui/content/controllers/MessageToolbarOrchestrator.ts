@@ -25,6 +25,7 @@ import {
     type CopyPngDebugEvent,
 } from '../../../services/copy/copy-png-debug';
 import type { ImageExportProgressEvent } from '../../../services/export/imageExportContracts';
+import type { ChatTurn } from '../../../services/export/saveMessagesTypes';
 import { collectConversationTurnRefs, type ConversationTurnRef } from '../../../drivers/content/conversation/collectConversationTurnRefs';
 import { buildReaderItemFromTurn, stripHash as stripReaderUrl } from '../../../services/reader/collectReaderItems';
 import {
@@ -353,6 +354,7 @@ export class MessageToolbarOrchestrator {
                 userPrompt: canonicalTurn?.userText || turn?.userPrompt || this.adapter.extractUserPrompt(messageElement) || '',
                 content: markdown.markdown,
                 sourceContent: markdown.sourceMarkdown,
+                ...(markdown.richBlocks !== undefined ? { richBlocks: markdown.richBlocks } : {}),
                 meta: {
                     platformId: 'chatgpt',
                     messageId: assistantMessageId,
@@ -395,6 +397,13 @@ export class MessageToolbarOrchestrator {
                 .catch(() => {
                     this.currentReaderItemByMessageKey.delete(key);
                     return null;
+                })
+                .finally(() => {
+                    // ChatGPT shares concurrent preparation only. A later explicit
+                    // action must read the current DOM, even before pool admission.
+                    if (this.adapter.getPlatformId() === 'chatgpt' && this.currentReaderItemByMessageKey.get(key) === promise) {
+                        this.currentReaderItemByMessageKey.delete(key);
+                    }
                 });
             this.currentReaderItemByMessageKey.set(key, promise);
         }
@@ -434,12 +443,16 @@ export class MessageToolbarOrchestrator {
         };
     }
 
-    private async getReaderTurnForElement(messageElement: HTMLElement): Promise<{ user: string; assistant: string; index: number } | null> {
+    private async getReaderTurnForElement(messageElement: HTMLElement): Promise<ChatTurn | null> {
         const item = await this.prepareCurrentReaderItemForElement(messageElement);
         if (!item || item.meta?.sourceQuality === 'reconstructed') return null;
         return {
             user: item.userPrompt,
             assistant: await resolveReaderItemMarkdown(item),
+            ...(item.richBlocks !== undefined ? { richBlocks: item.richBlocks } : {}),
+            ...((item.meta?.assistantMessageId || item.meta?.messageId)
+                ? { messageId: item.meta!.assistantMessageId || item.meta!.messageId! } : {}),
+            ...(item.meta?.url ? { documentUrl: item.meta.url } : {}),
             index: 0,
         };
     }

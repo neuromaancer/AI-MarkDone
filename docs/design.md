@@ -1,5 +1,18 @@
 # AI-MarkDone Design Reference
 
+## Rich-content output controls (2026-10-08)
+
+Save Messages uses the existing modal, token system and selection contract.
+Formats are Markdown, Markdown offline bundle (ZIP), PDF and PNG. PDF/PNG show
+one two-choice rich-content group only when the selection contains visual
+blocks: Include images (default) / Use text placeholders. Do not expose capture
+channels, SVG/foreignObject details or per-block technical choices in this flow.
+Preparation keeps selection fixed, offers cancellation and overall progress;
+PNG additionally retains detailed rendering progress. Native PDF preview opens
+only after preparation. A degraded success reports included/placeholder counts
+without requesting an additional confirmation. Plain-message controls stay compact.
+The real-component evidence surface is `mocks/components/message-export`.
+
 This document is the single source of truth for AI-MarkDone product UI design, style-system rules, and visual governance. It replaces the previous split style and token references.
 
 Runtime token values live in `src/style/reference-tokens.ts`, `src/style/system-tokens.ts`, and `src/style/public-tokens.ts`; `src/style/tokens.ts` composes those layers for callers. This document defines what those values mean, how they may be used, and how future UI work should be judged.
@@ -99,7 +112,7 @@ The catalog is normative for visual and interaction ownership. Appearance means 
 | Feature overview; Settings information group | Bookmarks/Settings family; panel body; `inline` | Shared snapshot | Live refresh required | Search, group jump and related-setting navigation remain keyboard reachable; empty results offer a clear reset | Each group owns one semantic two-column table, with one feature per row: actual function name on the left and its purpose on the right, followed by a concise semantic entry; narrow layouts preserve that reading order without clipping, with panel-owned body scrolling | `mocks/components/bookmarks-workspace` (family coverage) |
 | Settings, data management, Cloud Backup, formula settings, and information tabs; Bookmarks tab entry | Bookmarks/Settings family; panel body plus local anchored surfaces | Shared snapshot; settings values do not style controls directly | Live refresh required | Form focus order, pending/disabled/error states; local popovers return focus | Labels/help text keep intrinsic height; panel body scrolls; at narrow widths rows stack and destructive actions remain separated | `mocks/components/bookmarks-workspace` (family coverage) |
 | Bookmark Save dialog; toolbar/page bookmark action | Save family; shared overlay ShadowRoot; `modal` | Shared snapshot | Live refresh required | Initial field focus, Escape/cancel, pending lock, focus return | Dialog body scrolls when needed; actions remain visible at narrow width/short height | `mocks/components/workflow-dialogs` |
-| Save Messages dialog; toolbar action | Export/Save family; shared overlay ShadowRoot; `modal` | Shared snapshot | Live refresh required | Selection keyboard flow, Escape/cancel, pending/progress/error, focus return | Selection body owns scroll; footer remains visible; long titles truncate without hiding selection state | `mocks/components/workflow-dialogs` |
+| Save Messages dialog; toolbar action | Export/Save family; shared overlay ShadowRoot; `modal` | Shared snapshot | Live refresh required | Selection keyboard flow, Escape/cancel, pending/progress/error, focus return | Selection body owns scroll; footer remains visible; long titles truncate without hiding selection state | `mocks/components/message-export` |
 | Send popover; Reader or detached Reader send action | Sending family; anchored ShadowRoot | Shared snapshot | Live refresh required | Draft focus, pending send blocks duplicates, focus returns | Text area and body share one declared scroll strategy; actions remain reachable under virtual keyboard/short viewport | `mocks/components/workflow-dialogs` |
 | Shared notices, confirm/prompt dialogs, changelog notice, and import review; workflow-owned trigger | Overlay family; shared ShadowRoot; `modal` | Shared snapshot | Live refresh required | Modal focus containment/return, Escape policy, backdrop, scroll lock, reduced motion | Centered with viewport gutters; body becomes the sole scroll owner; no dialog may exceed the visual viewport | `mocks/components/overlay-host` |
 | Tooltip and toast feedback; control hover/focus or operation result | Feedback family; page feedback layer or owning ShadowRoot preview | Shared snapshot | Live refresh required | Tooltip follows hover/focus and is non-interactive unless declared; toast never captures focus | Clamp to viewport; tooltip must not be clipped by host controls; toast must not block page interaction | `mocks/components/host-integrated-controls` (family coverage) |

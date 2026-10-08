@@ -43,6 +43,8 @@ describe('manifest resource consistency', () => {
         expect(chromeResources).toContain('content-features.js');
         expect(chromeResources).toContain('content-feature-chunks/*.js');
         expect(chromeResources).toContain('export-renderer.html');
+        expect(chromeResources).toContain('rich-asset-relay.html');
+        expect(chromeResources).not.toContain('rich-asset-relay.js');
         expect(chromeResources).not.toContain('export-renderer.js');
         expect(chromeResources).not.toContain('export-renderer-chunks/*.js');
         expect(chromeResources).not.toContain('png-encoder-worker.js');

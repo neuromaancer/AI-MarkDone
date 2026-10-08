@@ -101,6 +101,26 @@ describe('ChatGPT directory feedback through production composition', () => {
     });
     afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 
+    it('shows an assistant-only visual response in Directory as soon as its completed body is captured', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = roundHtml(1);
+        main.querySelector('[data-turn-id-container="user-slot-1"]')!.remove();
+        main.querySelector('.markdown')!.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="60"><rect width="100" height="60" fill="red"/></svg>';
+        const fixture = createFixture();
+        try {
+            fixture.init();
+            await settle();
+            expect(fixture.counts()).toEqual({ mounted: 1, snapshot: 1, surface: 1, directory: 1 });
+            const turn = fixture.runtime.source.read().snapshot?.turns[0]!;
+            expect(turn.identity.userMessageId).toBeNull();
+            expect(turn.assistantRichBlocks).toHaveLength(1);
+            expect(turn.assistantMarkdown).toContain('aimd-rich:');
+            const item = document.getElementById('aimd-chatgpt-directory-rail')!.shadowRoot!.querySelector<HTMLButtonElement>('.rail__item')!;
+            expect(item.getAttribute('aria-label')).toContain('Diagram');
+            expect(item.getAttribute('aria-label')).not.toContain('aimd-rich:');
+        } finally { fixture.dispose(); }
+    });
+
     it('admits the recorded native search-unit shape, deduplicates its assistant alias, and mounts the toolbar beside its ancestor action row', async () => {
         document.body.innerHTML = readFileSync(resolve(process.cwd(), 'tests/fixtures/chatgpt/native-search-unit-recorded-shape.html'), 'utf8');
         const fixture = createFixture();

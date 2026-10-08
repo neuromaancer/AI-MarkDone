@@ -160,6 +160,26 @@ Repository 在当前标签页内维护 `Map<conversationKey, ConversationPool>`�
 - `readerSession:send`
 - `readerSession:locate`
 - `readerSession:close`
+- `readerSession:assets`
+- `readerSession:releaseAssets`
+
+Rich-asset requests carry `version: 1`, the sender-bound `sessionId`, `itemId`,
+optional `leaseId`, and exact block ID/visual-digest pairs. Background selects
+the unique stored snapshot item and supplies `sourceItem/sourceUrl`; a Reader
+cannot substitute arbitrary source content. Only the registered Reader tab may
+request assets. The source accepts forwarded requests only from its own extension
+background, retains session leases, and rejects stale document/item ownership.
+Source close, Reader close/tab removal and runtime teardown release resources.
+Late success after cancellation or session removal is released again safely.
+
+Snapshots limit rich descriptions to 512 blocks and 2 MiB in aggregate; bitmap
+data is never stored in `storage.session`. Loaded-image page URLs are redacted
+to non-authoritative live-image descriptions. Asset replies contain only bounded,
+white-list-copied extension-origin Blob refs. SVG/PNG bytes cross the lightweight
+extension iframe through the separate rich-asset relay V1 MessageChannel using
+begin/chunk/commit/release, sequential transfer buffers and byte/pixel/lease limits.
+Missing or undecodable assets leave readable placeholders. Cross-document Blob
+partition behavior must pass actual Chrome/Firefox installation acceptance.
 
 用途：
 

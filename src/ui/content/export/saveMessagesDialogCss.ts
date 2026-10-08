@@ -122,6 +122,51 @@ ${getWorkflowDialogChromeCss()}
   font-size: var(--aimd-text-sm);
   color: var(--aimd-text-secondary);
   border-right: 1px solid var(--aimd-border-default);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.format-options {
+  grid-auto-flow: row;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.format-options button {
+  padding: var(--aimd-space-2) var(--aimd-space-3);
+}
+
+.format-options button:nth-child(2n) {
+  border-right: none;
+}
+
+.format-options button:nth-child(-n + 2) {
+  border-bottom: 1px solid var(--aimd-border-default);
+}
+
+.rich-content-options {
+  display: grid;
+  gap: var(--aimd-space-2);
+  margin-top: var(--aimd-space-4);
+}
+
+.rich-content-options button {
+  padding: var(--aimd-space-2) var(--aimd-space-3);
+}
+
+.export-result {
+  margin-top: var(--aimd-space-4);
+  color: var(--aimd-text-secondary);
+}
+
+.segmented button:disabled,
+.message-chip:disabled {
+  cursor: default;
+  color: var(--aimd-text-tertiary);
+}
+
+.segmented button[data-active="1"]:disabled,
+.message-chip[data-active="1"]:disabled {
+  color: var(--aimd-text-on-primary);
 }
 
 .segmented button:last-child {

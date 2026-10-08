@@ -1,5 +1,49 @@
 # Architecture Current State (As-Is)
 
+> **Rich content and pool lifecycle implementation (2026-10-08)**
+>
+> Current-message and pool capture share `compileRenderedBody`; thin compiler
+> wrappers keep clone ownership and pair budgets. `assistantRichBlocks` is an
+> immutable sidecar propagated to Reader items and export turns. Canonical
+> `aimd-rich:` image nodes bind through existing SemanticContent source spans;
+> plain Markdown/copy/Directory project readable fallback, never asset URLs.
+> DIL diagrams, chart data and supported HTML cards are claimed as whole blocks
+> before ordinary noise removal, so axes and card metrics do not become prose
+> or article headings. Non-text GET/genui content has an opaque placeholder.
+> Numeric DIL metric rows with at least two direct column boxes are one visual
+> only when every box contains a tabular-number title and caption; ordinary
+> prose rows stay semantic, and existing capture budgets still apply.
+>
+> Native action-row lifecycle and bounded visual attribute changes use the same
+> PageIndex observer. Route epochs reset owner/generation evidence. A ready
+> same-user/same-slot replacement is staged atomically with explicit proof;
+> superseded GET identities cannot revive the old reply. Ordinary virtualized
+> removal keeps immutable content. Asset readiness never gates admission/UI.
+> Message-owned selection/DIL carrier IDs must agree with the outer identity;
+> temporarily mixed IDs are rejected before current-message copy or admission.
+>
+> Output preparation freezes selection, applies bounded static-asset capture,
+> and shares fallback across MD, offline ZIP, PDF/PNG and Copy PNG. The offline
+> bundle contains relative image paths and actual bytes plus a manifest. PDF
+> placeholder mode does not capture images; print-context cleanup owns its
+> resource lease. Current production message PNG still renders in content
+> runtime, not the legacy extension iframe message job.
+>
+> Page Reader hydrates only rich slots with render/identity fences. Detached
+> Reader uses sender-bound versioned metadata requests and a lightweight
+> extension-origin binary relay; runtime/session storage never carries bitmap
+> base64, byte arrays or page-owned Blob URLs. Sources/assets stay transient.
+> Its source-side asset manager is loaded only on an explicit asset RPC through
+> the existing extension-origin content-feature facade; unused teardown does not
+> load it or introduce dynamic chunk imports into the classic startup entry.
+> Every `pagehide`, including after BFCache restoration, fences source asset
+> work. The shared asset module registers one lightweight cleanup callback when
+> loaded; Reader, export and Copy PNG cleanup do not depend on creating a detached
+> session manager. Unused teardown does not load capture capabilities.
+> Actual Chrome/Firefox extension-origin relay decoding remains a separately
+> required installation acceptance gate. See ADR-0032 and its execution log;
+> local component validation is not an installed-extension update claim.
+
 本文描述 AI-MarkDone 当前仓库已经落地的结构事实，用于帮助开发者和 Codex 理解“现在是什么”。它不描述目标蓝图，也不描述未来计划。
 
 > **Directory installation default (2026-10-08)**
@@ -279,10 +323,10 @@
   - `ChatGPTConversationNavigation` 是 ChatGPT 同页定位的 driver interface：Reader locate、Bookmark Go、跨页 pending navigation、directory 与 stepper 都提交 typed identity。已挂载目标直接使用 Conversation Surface anchor；未挂载目标只允许有界、可取消、projection-safe 的 materialization seek，并在精确 identity 命中后成功。URL 文本本身不决定取消边界；Surface projection 变化才 fence 旧任务。无 ID 时 Directory/Stepper 仍可进行本页已获得消息导航，但 Bookmark Go/跨页定位仍要求既有 canonical identity。`src/ui/content/chatgptDirectory/navigation.ts` 只负责命中后的视觉对齐；识别到目标所属的滚动容器时，以容器顶部及 CSS scroll padding/margin 验证落点并在首次滚动停短时重试，无法识别容器则保留原有稳定位置判定；用户主动滚动、触摸、指针或键盘导航会中止短生命周期 re-align。
   - `ChatGPTSendPositionRestoreController` 是 ChatGPT-only page-behavior 层能力，由 `chatgptBehavior.restorePositionAfterSend` 默认开启地控制。它只负责发送后的阅读位置恢复，不进入正文发现链路；仅在用户主动发送前记录主滚动容器、scrollTop 与顶部附近 turn anchor，发送后用短生命周期 MutationObserver / scroll listener / rAF 合并做 instant restore。关闭时没有 observer/rAF/额外 scroll listener；开启但未发送时只有少量 capture 事件监听；发送 pointerdown 和输入增强 before-focus arm 先记录视觉锚点；同一滚动根后续 click/submit/before-send 不重新记录或续期。仍连接、属于原滚动容器且具有非零布局高度的锚点使用当前 top 差值（包括零差值）计算恢复位置，避免反向覆盖官网已有的水合滚动补偿；锚点不存在或不满足这些几何条件时回退：普通布局使用 savedTop，column-reverse 使用 savedTop 减去发送后可滚动范围的变化量（当前范围减去发送前范围）。armed 后会在用户 wheel/touch、非发送 pointer/keyboard、官方滚到底部、Reader locate、Bookmark Go 或 90 秒超时时释放；成功恢复不计次数，不在第 20 次提前结束。输入增强在已有发送会话里派发的 synthetic Enter 保留会话；IME/修饰键和关闭开关仍按原边界处理。
   - 跨消息 Reader 与 Save Messages 导出通过 `readerContentSource` 共享唯一累积 `ReaderItem[]` 投影。消息工具栏的当前消息 Copy Markdown / Copy PNG、单消息 Reader、词数和空池时的单消息导出直接读取点击时仍挂载的对应消息 DOM，不等待 Repository 发布；若 pool 已有累积内容，Reader/Save Messages 仍优先使用 pool。`collectFreshReaderContent()` 保留为兼容名称，只委托无副作用的当前读取。显式 Reader Refresh 只冲刷已观察的本地 DOM 工作，不发起网络请求，也不重新扫描隐藏历史。`pageshow`、`resume` 和 visible 恢复只触发一次当前 DOM 重扫。书签事务继续额外要求 canonical conversation ID 与 pool-proven position。
-  - 当前消息 Copy Markdown 与 Copy PNG 可以在同一 content token 内共享一个 in-flight/resolved Reader item promise；该 identity 只用于异步事务校验，不进入书签、导出或存储 schema。Token 变化或 route/document replacement 必须清空整页正文 promise；DOM mutation 只能使当前元素映射失效，不能绕过 cache 创造第二正文来源。普通入口不主动 refresh；Route/dispose 同样清空，禁止跨 token 返回旧正文。
+  - ChatGPT 当前消息 Copy Markdown 与 Copy PNG 只共享同一事务中尚未完成的 Reader item promise；完成后移除，下一次显式动作重新读取当前挂载正文与图块。Legacy adapter 保留既有 resolved cache 行为。该 identity 只用于异步事务校验，不进入书签、导出或存储 schema。Token 变化或 route/document replacement 清空 promise；DOM mutation 只能使当前元素映射失效，不能绕过 cache 创造第二正文来源。普通入口不主动 refresh；Route/dispose 同样清空，禁止跨 token 返回旧正文。
   - 官网 conversation Reader 由 `ChatGPTConversationReaderBinding` 订阅 Source state：cache 新增尾项时追加，缓存中已有 typed identity 时保持其内容，内容不变不更新；没有 snapshot 时关闭该跨消息 binding。消息工具栏只在用户显式执行当前消息动作时转换该消息 DOM，不维护第二内容缓存或触发消费者 flush；空池时可用这一条不可变 DOM-local `ReaderItem` 打开单消息 Reader/Export。Detached Reader 继续采用不可变快照与手动 Refresh；Refresh snapshot 构造完成后必须再次校验 content token，annotation focus 在 Reader show 与 focus 两个异步提交点后也必须复核，迟到结果关闭旧 Reader 并 fail closed。
   - Save Messages 使用 pool 时，打开期间任何 ChatGPT source revision 变化都会关闭弹窗；空池时只持有点击时构造的一条 DOM-local 不可变 `ReaderItem`。书签保存弹窗返回后必须再次校验点击时的 source revision，不一致则拒绝写入。Copy/PNG 以点击时确认的当前消息快照为原子输入，不在执行中途切换正文。局部选择优先使用 canonical `SurfaceProjection`；其 source 证据缺失、重建或变旧时，可在显式 Copy/Annotation 动作上回退转换仍 connected 且仍包含该 Range 的同一消息 DOM。跨消息、detached 与 streaming 选择继续 fail closed。
-  - ChatGPT snapshot 正文进入 `ReaderItem[]` 前必须经过 `normalizeChatGPTReaderMarkdown()`：引用/file citation 噪声继续移除；ChatGPT 内部 annotation token 不能裸露到 Reader/Copy/Export/Bookmark。已知 `entity` token 归一成正文显示名，已知 GenUI math widget 归一成 Markdown inline/block math，未知 annotation token 安全丢弃。
+  - ChatGPT snapshot 正文进入 `ReaderItem[]` 前必须经过 `normalizeChatGPTReaderMarkdown()`：引用/file citation 噪声继续移除；ChatGPT 内部 annotation token 不能裸露到 Reader/Copy/Export/Bookmark。已知 `entity` token 归一成正文显示名，已知 GenUI math widget 归一成 Markdown inline/block math，未知 GenUI 动态内容保留可读占位说明；其余未知 annotation token 安全丢弃。
   - ChatGPT Reader 的 `jump to message`、管理面板 Go 与跨页 pending navigation 都复用同一条 canonical navigation interface。
   - ChatGPT Toolbar 与 Reader 的消息书签动作共享当前消息 `ReaderItem` 与同一个 canonical writer；Toolbar 不再调用独立的元素 preparation seam。DOM-only fallback 仍可用于只读 Reader 展示，但没有 canonical identity、稳定 position 或当前 snapshot 校验时，两条入口都禁用/拒绝书签写入，并不改变底层类型、协议、存储 schema、迁移或兼容数据。
   - ChatGPT adapter 的 observer container 契约由唯一 `ChatGPTPageIndex` 持有；conversation root 替换、typed identity、完成 action anchor、Deep Research hydration 与当前 DOM anchor 都从这一个 Page Monitor 投影。`MessageToolbarOrchestrator` 在 ChatGPT 生产组合中不创建 `MutationObserver`、`RouteWatcher`、`ScanScheduler` 或 targeted recovery timer，只订阅 `ChatGPTConversationSurface`。只要 assistant 已退出 streaming、官方 action row 与消息 DOM 仍 connected，即使 Repository 尚未发布该 turn，也立即在该官方 anchor 挂载工具栏；词数和当前消息动作按需读取该消息 DOM。无 canonical ID 或 pool-proven position 时正文操作继续可用，书签 action 被禁用；identity promotion 后原位恢复。anchor 卸载时移除、稳定重挂时保持单例。`dirtyMessages + incremental reconcile` 仅为非 ChatGPT adapter 的现有兼容生命周期。

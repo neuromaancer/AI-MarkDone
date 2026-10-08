@@ -10,6 +10,9 @@ import {
     type ChatGPTDomRoundRef,
 } from '../../chatgpt/domConversationDiscovery';
 import { isChatGPTPageUrl } from '../../../../contracts/chatgptHosts';
+import { normalizeChatGPTRichBlocks } from '../../chatgpt/chatgptRichContent';
+import type { RichBlockV1 } from '../../../../contracts/richContent';
+import { hasConsistentChatGPTMessageContentIdentity } from '../../chatgpt/chatgptMessageContentIdentity';
 
 const DEEP_RESEARCH_SCREENSHOT_ROOT_SELECTOR = '[data-conversation-screenshot-content]';
 const DEEP_RESEARCH_IFRAME_SELECTOR = `${DEEP_RESEARCH_SCREENSHOT_ROOT_SELECTOR} iframe[title="internal://deep-research"]`;
@@ -175,6 +178,7 @@ export class ChatGPTAdapter extends SiteAdapter {
     }
 
     getToolbarAnchorElement(assistantMessageElement: HTMLElement): HTMLElement | null {
+        if (!this.isMessageContentAvailable(assistantMessageElement)) return null;
         return this.findOfficialActionAnchor(assistantMessageElement)
             ?? this.findDeepResearchToolbarAnchor(assistantMessageElement);
     }
@@ -194,6 +198,7 @@ export class ChatGPTAdapter extends SiteAdapter {
     }
 
     injectToolbar(messageElement: HTMLElement, toolbarHost: HTMLElement): boolean {
+        if (!this.isMessageContentAvailable(messageElement)) return false;
         try {
             const officialActionAnchor = this.findOfficialActionAnchor(messageElement);
             const deepResearchAnchor = officialActionAnchor
@@ -246,6 +251,7 @@ export class ChatGPTAdapter extends SiteAdapter {
     }
 
     getMessageId(element: HTMLElement): string | null {
+        if (!this.isMessageContentAvailable(element)) return null;
         const searchIds = element.getAttribute('data-chatgpt-search-message-ids')?.trim().split(/\s+/).filter(Boolean);
         if (searchIds?.length && searchIds.every((id) => id === searchIds[0])) return searchIds[0]!;
         if (this.findDeepResearchFrame(element)) {
@@ -272,6 +278,10 @@ export class ChatGPTAdapter extends SiteAdapter {
         const allMessages = document.querySelectorAll(this.getMessageSelector());
         const index = Array.from(allMessages).indexOf(element);
         return index >= 0 ? `chatgpt-${index}` : null;
+    }
+
+    isMessageContentAvailable(message: HTMLElement): boolean {
+        return hasConsistentChatGPTMessageContentIdentity(message);
     }
 
     getObserverContainer(): HTMLElement | null {
@@ -390,6 +400,12 @@ export class ChatGPTAdapter extends SiteAdapter {
 
     normalizeDOM(root: HTMLElement): void {
         this.unwrapComponentBlocks(root);
+        root.querySelectorAll<HTMLElement>('span[data-d-weight="semibold"]').forEach((source) => {
+            if (source.closest('strong, pre, code')) return;
+            const strong = root.ownerDocument.createElement('strong');
+            strong.append(...Array.from(source.childNodes));
+            source.replaceWith(strong);
+        });
         // Host markers carry code semantics even when ChatGPT omits native pre/code tags.
         root.querySelectorAll<HTMLElement>('[data-markdown-copy="code-block"]').forEach((source) => {
             if (source.tagName === 'PRE') return;
@@ -417,6 +433,10 @@ export class ChatGPTAdapter extends SiteAdapter {
                 wrapper.remove();
             }
         });
+    }
+
+    collectRichBlocks(root: HTMLElement): readonly RichBlockV1[] {
+        return normalizeChatGPTRichBlocks(root);
     }
 
     private unwrapComponentBlocks(root: HTMLElement): void {
@@ -492,6 +512,7 @@ export class ChatGPTAdapter extends SiteAdapter {
     isNoiseNode(node: Node, context: NoiseContext): boolean {
         if (!(node instanceof HTMLElement)) return false;
         if (node.matches('[data-markdown-copy="exclude"]')) return true;
+        if (node.matches('[data-d-component="icon"], [data-d-component="favicon"]')) return true;
 
         if (node.classList.contains('sr-only')) {
             return true;
@@ -511,7 +532,7 @@ export class ChatGPTAdapter extends SiteAdapter {
     }
 
     private isMarkdownControlNoise(node: HTMLElement): boolean {
-        if (!node.closest('.markdown.prose, .markdown.prose.dark\\:prose-invert')) return false;
+        if (!node.closest('.markdown.prose, .markdown.prose.dark\\:prose-invert, [data-markdown-text-style="assistant-message"]')) return false;
         if (node.matches('button')) return true;
         if (node.getAttribute('role') === 'button') return true;
         const label = `${node.getAttribute('aria-label') ?? ''} ${node.textContent ?? ''}`.replace(/\s+/g, ' ').trim();

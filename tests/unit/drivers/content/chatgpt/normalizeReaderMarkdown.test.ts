@@ -1,8 +1,18 @@
 import { describe, expect, it } from 'vitest';
 
 import { cleanChatGPTReferenceNoise, normalizeChatGPTReaderMarkdown } from '@/drivers/content/chatgpt/normalizeReaderMarkdown';
+import { projectChatGPTMarkdown } from '@/core/content/chatgptMarkdownCleanup';
 
 describe('cleanChatGPTReferenceNoise', () => {
+    it('preserves controlled rich image bindings while retaining legacy ordinary-image cleanup', () => {
+        const internal = '![Diagram](aimd-rich:rich-1-ab)';
+        expect(normalizeChatGPTReaderMarkdown(`${internal}\n\n![External](https://example.com/p.png)`))
+            .toBe(`${internal}\n\nExternal`);
+        expect(projectChatGPTMarkdown(`${internal}\n\n![External](https://example.com/p.png)`, {
+            preserveLinks: true, includeCodeBlocks: true,
+        })).toBe(`${internal}\n\nExternal`);
+        expect(normalizeChatGPTReaderMarkdown('![Invalid](aimd-rich:../unsafe)')).toBe('Invalid');
+    });
     it('preserves blank lines, indentation, and source-like text inside long fences and code spans', () => {
         const code = '````markdown\n    [docs](https://example.com)\n\n\n    ```\n    \\(x\\)\n````';
         const inline = '`` `https://example.com` ``';
@@ -190,5 +200,13 @@ describe('cleanChatGPTReferenceNoise', () => {
     it('removes unknown ChatGPT internal annotations instead of exposing payload JSON', () => {
         expect(normalizeChatGPTReaderMarkdown('前文 unknown{"private":"metadata"} 后文'))
             .toBe('前文  后文');
+    });
+
+    it('keeps a descriptive placeholder for a non-math visual genui token', () => {
+        const result = normalizeChatGPTReaderMarkdown('Before\n\ngenui{"future_chart":{"private":"opaque state"}}\n\nAfter');
+        expect(result).toContain('Dynamic content');
+        expect(result).toContain('Before');
+        expect(result).toContain('After');
+        expect(result).not.toContain('opaque state');
     });
 });

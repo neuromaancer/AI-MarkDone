@@ -10,6 +10,9 @@ import { SiteAdapter, type ThemeDetector } from '@/drivers/content/adapters/base
 import { ChatGPTConversationSurface } from '@/drivers/content/chatgpt/ChatGPTConversationSurface';
 import { MessageToolbarOrchestrator } from '@/ui/content/controllers/MessageToolbarOrchestrator';
 import { ChatGPTDirectoryRail } from '@/ui/content/chatgptDirectory/ChatGPTDirectoryRail';
+import * as messageCopy from '@/services/copy/copy-markdown';
+import * as turnCopy from '@/services/copy/copy-turn-markdown';
+import { richSvgBlock } from '../../../helpers/richContentFixtures';
 import {
     createConversationContentSource,
     readyConversationState,
@@ -165,6 +168,45 @@ function clickPromptReplyHoverAction(): void {
 }
 
 describe('MessageToolbarOrchestrator Surface-driven official toolbar lifecycle', () => {
+    it('keeps the current DOM capture sidecar when Export is clicked before pool admission', async () => {
+        renderTurn();
+        const blocks = [richSvgBlock()];
+        const result = { ok: true as const, markdown: '![Diagram](aimd-rich:block-1)', richBlocks: blocks };
+        const copyMessage = vi.spyOn(messageCopy, 'copyMarkdownFromMessage').mockReturnValue(result);
+        const copyTurn = vi.spyOn(turnCopy, 'copyMarkdownFromTurn').mockReturnValue(result);
+        const adapter = new FakeOfficialToolbarAdapter();
+        const source = createConversationContentSource({ kind: 'syncing', document: readyConversationState(SNAPSHOT).document, snapshot: null });
+        const surface = new ChatGPTConversationSurface({ adapter, content: source });
+        const saveMessagesDialog = { open: vi.fn(async () => true), isOpen: () => false, close() {}, setAppearance() {}, setExportSettings() {}, setMarkdownFormulaFormat() {} };
+        const orchestrator = new MessageToolbarOrchestrator(adapter, {
+            readerPanel: { setTheme() {}, show: async () => undefined } as any,
+            saveMessagesDialog: saveMessagesDialog as any,
+            conversationContentSource: source, conversationMaterialization: surface.materialization, conversationSurface: surface,
+        });
+        harnesses.add({ adapter, source, surface, orchestrator });
+        try {
+            orchestrator.setBehaviorFlags({ showSaveMessages: true, pinnedMessageControls: ['export'] });
+            orchestrator.init();
+            await vi.waitFor(() => expect(toolbarHosts()).toHaveLength(1));
+            const button = toolbarHosts()[0]!.shadowRoot!.querySelector<HTMLButtonElement>('[data-action="export"]')!;
+            expect(button).toBeTruthy();
+            button.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, composed: true }));
+            button.click();
+            await vi.waitFor(() => expect(saveMessagesDialog.open).toHaveBeenCalledWith(
+                adapter, expect.any(String), expect.objectContaining({ currentReaderItem: expect.objectContaining({ richBlocks: blocks, content: result.markdown }) }),
+            ));
+            const updatedBlocks = [richSvgBlock({ visualDigest: 'visual-2', source: { kind: 'svg', svg: '<svg><rect fill="blue"/></svg>' } })];
+            const updated = { ok: true as const, markdown: 'Updated ![Diagram](aimd-rich:block-1)', richBlocks: updatedBlocks };
+            copyMessage.mockReturnValue(updated);
+            copyTurn.mockReturnValue(updated);
+            document.querySelector('.content')!.textContent = 'Updated current body';
+            button.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, composed: true }));
+            button.click();
+            await vi.waitFor(() => expect(saveMessagesDialog.open).toHaveBeenCalledTimes(2));
+            expect(saveMessagesDialog.open.mock.calls[1]?.[2]?.currentReaderItem).toMatchObject({ richBlocks: updatedBlocks, content: updated.markdown });
+        } finally { copyMessage.mockRestore(); copyTurn.mockRestore(); }
+    });
+
     it('opens the message drawer only from More when a pinned action is hovered in the official row', async () => {
         renderTurn();
         const { orchestrator } = createHarness();

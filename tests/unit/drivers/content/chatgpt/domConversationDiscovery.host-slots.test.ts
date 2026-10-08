@@ -104,6 +104,41 @@ describe('ChatGPT persistent host-slot seam', () => {
         expect(resolveChatGPTDomRoundHostSlotId(round!, slots)).toBe('chatgpt-message-slot:user-1');
     });
 
+    it.each(['data-chatgpt-selection-message-id', 'data-dil-source-message-id', 'data-dil-message-id'])(
+        'rejects a native assistant whose message-owned %s disagrees with its outer identity', attribute => {
+            document.querySelector('#host-slots')!.innerHTML = `
+              <div data-turn-key="fallback-turn-0"><div data-content-search-turn-key="fallback-turn-0">
+                <div data-chatgpt-search-unit-key="fallback-turn-0:0:user" data-chatgpt-search-message-ids="question-owner">Question</div>
+                <div><div data-chatgpt-search-unit-key="fallback-turn-0:2:assistant" data-chatgpt-search-message-ids="answer-owner answer-owner">
+                  <div data-chatgpt-selection-message-id="answer-owner"><div data-markdown-text-style="assistant-message">
+                    <div data-dil-source-message-id="answer-owner" data-markdown-copy="contents"><div data-dil-message-id="answer-owner"><p>Different body</p></div></div>
+                  </div></div>
+                </div><div class="turn-action-controls"><button>Copy</button></div></div>
+              </div></div>`;
+            const message = document.querySelector<HTMLElement>('[data-chatgpt-search-unit-key$=":assistant"]')!;
+            message.querySelector(`[${attribute}]`)!.setAttribute(attribute, 'different-body-owner');
+            expect(collectChatGPTDomRoundRefs(adapter)).toEqual([]);
+            expect(adapter.getMessageId(message)).toBeNull();
+            expect(adapter.getToolbarAnchorElement(message)).toBeNull();
+        },
+    );
+
+    it('ignores quoted and nested-tool identity markers while checking the owning body carriers', () => {
+        document.querySelector('#host-slots')!.innerHTML = `
+          <div data-turn-key="fallback-turn-0"><div data-content-search-turn-key="fallback-turn-0">
+            <div data-chatgpt-search-unit-key="fallback-turn-0:2:assistant" data-chatgpt-search-message-ids="answer-owner">
+              <div data-chatgpt-selection-message-id="answer-owner"><div data-markdown-text-style="assistant-message">
+                <div data-dil-source-message-id="answer-owner"><div data-dil-message-id="answer-owner"><p>Answer</p>
+                  <blockquote><div data-dil-source-message-id="quoted-id" data-chatgpt-selection-message-id="quoted-id">Quoted</div></blockquote>
+                  <div data-testid="chatgpt-chart-content-reference"><div data-dil-message-id="tool-id">Chart</div></div>
+                </div></div>
+              </div></div>
+            </div>
+          </div></div>`;
+        const [round] = collectChatGPTDomRoundRefs(adapter);
+        expect(round?.identity.assistantMessageId).toBe('answer-owner');
+    });
+
     it.each([
         ['nested message', '<div data-turn-key="fallback-turn-0"><div data-message-author-role="assistant" data-message-id="assistant-1"></div></div>'],
         ['owner itself', '<div data-turn-key="fallback-turn-0" data-message-author-role="assistant" data-message-id="assistant-1"></div>'],

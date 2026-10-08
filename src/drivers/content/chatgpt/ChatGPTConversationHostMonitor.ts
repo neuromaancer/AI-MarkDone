@@ -6,6 +6,7 @@ import type {
     ConversationContentRepository,
     ConversationHostBatchAdmissionV1,
     ConversationHostTurnObservationV1,
+    ConversationHostAssistantReplacementV1,
 } from '../../../services/content/ConversationContentRepository';
 import {
     DEFAULT_RENDERED_CONTENT_POLICY_V2,
@@ -47,6 +48,7 @@ export class ChatGPTConversationHostMonitor {
     private readonly parserCapability;
     private readonly elementTokens = new WeakMap<HTMLElement, string>();
     private readonly dirtyAssistantIds = new Set<string>();
+    private readonly pendingReplacements = new Map<string, ConversationHostAssistantReplacementV1>();
     private readonly capturedAssistantIdsByDocumentKey = new Map<string, Set<string>>();
     private readonly compileRejectionCounts = new Map<string, number>();
     private readonly admissionRejectionCounts = new Map<string, number>();
@@ -73,6 +75,7 @@ export class ChatGPTConversationHostMonitor {
                 isNoiseNode: (node, context) => options.adapter.isNoiseNode(node, context),
                 getArtifactPlaceholder: (node) => options.adapter.getArtifactPlaceholder(node),
                 cleanMarkdown: (markdown) => options.adapter.cleanMarkdown(markdown),
+                collectRichBlocks: (root) => options.adapter.collectRichBlocks(root),
             })
             : null);
         this.parserCapability = parserAdapter ? createRenderedParserCapabilityV2(parserAdapter) : null;
@@ -95,6 +98,7 @@ export class ChatGPTConversationHostMonitor {
         if (nextDocument?.key !== this.lastDocument?.key) {
             this.documentFence += 1;
             this.dirtyAssistantIds.clear();
+            this.pendingReplacements.clear();
             this.globalDirty = captureCurrentSurface;
             if (this.settleTimer !== null) clearTimeout(this.settleTimer);
             this.settleTimer = null;
@@ -135,6 +139,7 @@ export class ChatGPTConversationHostMonitor {
         this.documentFence += 1;
         this.captureRequested = false;
         this.dirtyAssistantIds.clear();
+        this.pendingReplacements.clear();
         this.capturedAssistantIdsByDocumentKey.clear();
         this.globalDirty = false;
         this.lastDocument = null;
@@ -145,12 +150,34 @@ export class ChatGPTConversationHostMonitor {
     private observe(batch: ChatGPTHostObservationBatch): void {
         if (this.disposed || batch.kinds.every((kind) => kind === 'surface')) return;
         this.options.repository.bindCurrentDocument();
-        if (batch.surfaceRebased || batch.kinds.includes('structure') || batch.kinds.includes('identity')) {
+        const topologyChanged = batch.surfaceRebased || batch.kinds.includes('structure') || batch.kinds.includes('identity');
+        const slots = topologyChanged || batch.assistantIdentityReplacements.length > 0
+            ? collectChatGPTDomHostSlots(this.options.adapter) : [];
+        const documentKey = this.options.resolveDocument()?.key;
+        const obtained = this.options.repository.read().snapshot?.turns ?? [];
+        for (const replacement of batch.assistantIdentityReplacements) {
+            const pending = this.pendingReplacements.get(replacement.previousAssistantMessageId);
+            this.pendingReplacements.delete(replacement.previousAssistantMessageId);
+            const previousAssistantMessageId = pending?.previousAssistantMessageId ?? replacement.previousAssistantMessageId;
+            if (previousAssistantMessageId === replacement.nextAssistantMessageId) continue;
+            const previous = obtained.find(turn => turn.identity.assistantMessageId === previousAssistantMessageId);
+            const round = this.options.index.getSnapshot().find(round => round.identity.assistantMessageId === replacement.nextAssistantMessageId);
+            const identity = round && resolveChatGPTDomRoundProjectionIdentity(round);
+            const hostSlotId = round && resolveChatGPTDomRoundHostSlotId(round, slots);
+            if (!documentKey || !previous?.identity.userMessageId || !identity?.userMessageId || !hostSlotId
+                || previous.identity.userMessageId !== identity.userMessageId) continue;
+            this.pendingReplacements.set(identity.assistantMessageId, Object.freeze({
+                documentKey, hostSlotId, previousAssistantMessageId,
+                nextAssistantMessageId: identity.assistantMessageId,
+                userMessageId: identity.userMessageId,
+            }));
+        }
+        if (topologyChanged) {
             // Preserve overlap while it is mounted; body compilation stays
             // coalesced and uses this same PageIndex observation boundary.
-            const slots = collectChatGPTDomHostSlots(this.options.adapter);
             this.recordAdmission(this.options.repository.admitHostBatch([], slots.map(slot => slot.id),
-                slots.flatMap(slot => slot.identity ? [{ hostSlotId: slot.id, ...slot.identity }] : []), this.readHostPlacement()));
+                slots.flatMap(slot => slot.identity && !this.pendingReplacements.has(slot.identity.assistantMessageId)
+                    ? [{ hostSlotId: slot.id, ...slot.identity }] : []), this.readHostPlacement()));
         }
         if (batch.surfaceRebased || batch.assistantMessageIds.length === 0) this.globalDirty = true;
         const forceKnownCapture = batch.kinds.includes('content')
@@ -242,7 +269,6 @@ export class ChatGPTConversationHostMonitor {
                 round.isStreaming
                 || !officialActionRow?.isConnected
                 || !round.assistantContentRootEl?.isConnected
-                || !round.assistantContentRootEl.textContent?.trim()
             ) {
                 this.dirtyAssistantIds.add(assistantMessageId);
                 continue;
@@ -275,7 +301,12 @@ export class ChatGPTConversationHostMonitor {
         }
 
         const admission = this.options.repository.admitHostBatch(observations, observedHostSlotOrder,
-            hostSlots.flatMap(slot => slot.identity ? [{ hostSlotId: slot.id, ...slot.identity }] : []), hostPlacement);
+            hostSlots.flatMap(slot => slot.identity && (!this.pendingReplacements.has(slot.identity.assistantMessageId)
+                || successfulIds.has(slot.identity.assistantMessageId)) ? [{ hostSlotId: slot.id, ...slot.identity }] : []), hostPlacement,
+            observations.flatMap(observation => {
+                const proof = this.pendingReplacements.get(observation.turn.identity.assistantMessageId);
+                return proof ? [proof] : [];
+            }));
         this.recordAdmission(admission);
         const admittedIds = new Set(admission.admittedAssistantMessageIds);
         for (const observation of observations) {
@@ -284,6 +315,7 @@ export class ChatGPTConversationHostMonitor {
                 this.dirtyAssistantIds.add(assistantMessageId);
                 continue;
             }
+            this.pendingReplacements.delete(assistantMessageId);
             // An assistant-only capture can later regain its virtualized user
             // prompt, so only admitted complete pairs may be skipped on remount.
             if (observation.turn.identity.userMessageId) this.rememberCaptured(documentKey, assistantMessageId);
@@ -317,6 +349,7 @@ export class ChatGPTConversationHostMonitor {
         const messages = Array.from(owner.querySelectorAll<HTMLElement>(selector));
         if (owner.matches(selector)) messages.push(owner);
         return messages.some(message => {
+            if (this.options.adapter.isMessageContentAvailable?.(message) === false) return true;
             const currentId = this.options.adapter.getMessageId(message);
             return currentId !== null && currentId !== assistantId;
         });
@@ -391,6 +424,7 @@ export class ChatGPTConversationHostMonitor {
             identity: Object.freeze({ turnId, userMessageId, assistantMessageId }),
             userText: result.user.text,
             assistantMarkdown: result.assistant.markdown,
+            ...(result.assistantRichBlocks !== undefined ? { assistantRichBlocks: result.assistantRichBlocks } : {}),
             ...(assistantSourceMarkdown !== result.assistant.markdown
                 ? { assistantSourceMarkdown }
                 : {}),

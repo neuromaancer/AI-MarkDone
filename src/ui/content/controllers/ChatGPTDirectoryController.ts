@@ -24,6 +24,7 @@ import type {
     ConversationSurfacePortV1,
 } from '../../../contracts/conversationSurface';
 import { ChatGPTActivePositionTracker } from './ChatGPTActivePositionTracker';
+import { projectRichContentMarkdown } from '../../../services/content/richContentProjection';
 
 type DirectoryBookmarksState = {
     refreshPositionsForUrl?: (url: string) => Promise<void>;
@@ -397,16 +398,24 @@ export class ChatGPTDirectoryController {
     }
 
     private buildDirectoryRoundsFromFrame(frame: ConversationSurfaceFrameV1): ChatGPTConversationRound[] {
-        return frame.obtainedTurns.map(({ turn }) => ({
-            id: turn.identity.turnId,
-            position: turn.ordinal,
-            userPrompt: turn.userText,
-            assistantContent: turn.assistantMarkdown,
-            preview: turn.userText,
-            messageId: turn.identity.assistantMessageId,
-            userMessageId: turn.identity.userMessageId,
-            assistantMessageId: turn.identity.assistantMessageId,
-        }));
+        return frame.obtainedTurns.map(({ turn }) => {
+            let assistantContent = turn.assistantMarkdown;
+            if (assistantContent.includes('aimd-rich:')) {
+                const projected = projectRichContentMarkdown(assistantContent, turn.assistantRichBlocks ?? []);
+                assistantContent = projected.status === 'ready' && 'markdown' in projected
+                    ? projected.markdown : (turn.assistantRichBlocks ?? []).map(block => block.label).join('; ');
+            }
+            return {
+                id: turn.identity.turnId,
+                position: turn.ordinal,
+                userPrompt: turn.userText,
+                assistantContent,
+                preview: turn.userText,
+                messageId: turn.identity.assistantMessageId,
+                userMessageId: turn.identity.userMessageId,
+                assistantMessageId: turn.identity.assistantMessageId,
+            };
+        });
     }
 
     private updateActivePosition(options?: { followRail?: boolean }): void {

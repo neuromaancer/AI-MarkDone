@@ -51,6 +51,7 @@ Version 6.1.0 brings customizable toolbars and refreshed Settings. Pin the butto
 - Partial code selections keep the selected text; formulas are copied as complete formulas.
 - Hover over Copy to copy PNG above or the matching question and reply together below.
 - Select one or several replies and save Markdown or PNG, or use the browser print dialog to save PDF; multiple PNGs can be packed into a ZIP.
+- Save supported diagrams and charts with Markdown in an offline ZIP, or choose static images/text placeholders for PDF and PNG. Unavailable visuals retain readable descriptions.
 - Adjust image width and resolution for sharing, and clean up Deep Research content for notes or documents.
 
 ### Writing and formulas

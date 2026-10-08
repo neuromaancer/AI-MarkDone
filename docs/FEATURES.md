@@ -1,5 +1,38 @@
 # AI-MarkDone — Product Capabilities & Acceptance (Authoritative)
 
+### 2026-10-08 ChatGPT rich-content implementation
+
+- ChatGPT retains supported rendered visual blocks as revision-bound rich
+  descriptions alongside canonical Markdown. Text, code, tables and TeX retain
+  their existing semantics. DIL diagrams/charts/cards, visual-only replies and
+  unknown visual placeholders share the current-message and pool compiler.
+  Numeric DIL metric rows with at least two direct column boxes, each containing
+  a tabular-number title and caption, are captured as one visual; numbers remain
+  in text fallback, not the outline.
+- Whole-message Markdown copy and `.md` export contain readable visual labels
+  and extractable chart data, without internal asset schemes or temporary URLs.
+  Markdown offline ZIP adds actual SVG/PNG files, relative image references and
+  an included/placeholder manifest. A remote URL alone is not offline success.
+- PDF and PNG offer static images (default) or text placeholders when selected
+  messages contain rich blocks. This is an output choice, not a content/annotation
+  mutation. Ordinary formula/code/table settings retain their independent roles.
+  Placeholder mode starts no visual capture; one failed block keeps the rest usable.
+- Resource preparation has cancellation and byte/node/pixel/time limits. Save
+  Messages retains its selection/progress during preparation; PNG keeps its
+  detailed rendering progress. PDF opens native print only after preparation.
+- Toolbars need their own connected official action row and completed message,
+  never full-history admission or image readiness. Directory includes admitted
+  visual-only/assistant-only messages, projects readable previews and retains
+  stable navigation identity through DOM unmount and supported replacement.
+- Page Reader immediately displays readable fallback, then hydrates only its
+  visual slots. Detached Reader uses the same document and session-bound asset
+  references; source/Reader cancellation and teardown release resources.
+- Acceptance is tracked in the dated execution plan: actual installed Chrome,
+  Firefox and detached Blob partition/decoding proof are distinct from component
+  previews, unit/integration tests and successful builds. Unsupported/cross-origin
+  frames, origin-tainted media and unavailable/offscreen sources may remain
+  descriptive placeholders. No arbitrary widget execution is supported.
+
 目的：用 **一个** 权威文档固化当前产品能力、验收口径与测试映射，避免多份功能文档漂移。
 
 范围：本文件定义“能力在支持的平台上应如何工作”，并持有当前平台支持状态与支持级别。当前落地运行时边界同步记录在 `docs/architecture/CURRENT_STATE.md`。

@@ -51,6 +51,30 @@ fall back to a stored position, even with a complete snapshot.
 
 ## 2. Minimum Automated Gates
 
+### ChatGPT rich content and asset lifetime
+
+Run the shared compiler/sidecar/projection, current-message Copy/Copy PNG,
+native lifecycle and Repository replacement suites together. Rich fixtures must
+cover mixed/visual-only/assistant-only bodies, chart data, card outline isolation,
+escaped labels, code literals, stale spans and delayed sibling action rows.
+Required asset tests include hostile SVG/URL rejection, local SVG definitions,
+zero resource fetch, aggregate capture budgets, fresh pixel captures, cache/lease
+eviction, cancellation and exact live message ownership. The relay/client/Reader
+session suites must reject wrong senders, forged source snapshots, wrong block
+versions, oversized/truncated/out-of-order chunks and late cancelled successes.
+Reader rendering must preserve surrounding text/annotation nodes on hydration.
+PDF keeps asset leases until actual print-context cleanup; placeholder mode must
+start zero visual preparation. ZIP must contain real bytes, local relative paths
+and a manifest matching its files. All outputs must share selection and order.
+
+Run `npm run test:core`, smoke, acceptance, discovery, type checks and both builds.
+Record isolated reruns and concurrency limits if the existing 200-round navigation
+test times out; never turn that first failure into an unqualified green claim.
+Inspect the real Save Messages component at `mocks/components/message-export`
+in both languages and constrained widths. Installed Chrome/Firefox relay decoding,
+refresh/close/partitioning and native PDF preview remain separate acceptance gates;
+an HTTP fixture or Node MessageChannel test cannot prove extension isolation.
+
 ### Code Changes
 
 Default minimum gate:

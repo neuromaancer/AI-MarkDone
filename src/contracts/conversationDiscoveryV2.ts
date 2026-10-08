@@ -1,3 +1,5 @@
+import type { RichBlockV1 } from './richContent';
+
 /**
  * Sparse, page-scoped conversation discovery contract.
  *
@@ -304,6 +306,7 @@ export type RenderedTurnCompileResultV2 =
         user: ConversationBodyV2;
         assistant: ConversationBodyV2;
         assistantSourceMarkdown?: string;
+        assistantRichBlocks?: readonly RichBlockV1[];
         semanticDigest: string;
         surfaceDigest: string;
         manifest: Readonly<{

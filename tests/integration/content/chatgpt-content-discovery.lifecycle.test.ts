@@ -90,6 +90,68 @@ describe('ChatGPT DOM content discovery lifecycle', () => {
         vi.useRealTimers();
     });
 
+    it('publishes a native body and its live action surface when the sibling row arrives late', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = searchUnitRoundHtml(1, 0);
+        main.querySelector('.turn-action-controls')!.remove();
+        const harness = createRuntime('native-late-row');
+        try {
+            harness.runtime.init();
+            await settle();
+            expect(harness.runtime.source.read().snapshot).toBeNull();
+            main.querySelector('.group')!.insertAdjacentHTML('beforeend', '<div class="turn-action-controls"><button aria-label="复制">Copy</button></div>');
+            await settle();
+            expect(harness.runtime.source.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Answer 1');
+            const mounted = harness.runtime.surface.readFrame().obtainedTurns[0]?.materialization;
+            expect(mounted?.anchorElement.classList.contains('turn-action-controls')).toBe(true);
+            expect(mounted?.anchorElement.isConnected).toBe(true);
+        } finally { harness.dispose(); }
+    });
+
+    it('updates the same native message rich revision when only its aria-hidden chart path changes', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = searchUnitRoundHtml(1, 0);
+        const body = main.querySelector('[data-markdown-text-style]')!;
+        body.innerHTML = '<p>Chart description.</p><div data-testid="chatgpt-chart-content-reference"><svg aria-hidden="true"><path d="M0 0"/></svg><ul class="sr-only"><li>Value: 1</li></ul></div>';
+        const harness = createRuntime('native-chart-update');
+        try {
+            harness.runtime.init();
+            await settle();
+            const before = harness.runtime.source.read().snapshot!;
+            const beforeBlock = before.turns[0]?.assistantRichBlocks?.[0];
+            expect(beforeBlock).toBeTruthy();
+            body.querySelector('path')!.setAttribute('d', 'M10 10 L20 20');
+            await settle(60);
+            const after = harness.runtime.source.read().snapshot!;
+            expect(after.turns).toHaveLength(1);
+            expect(after.turns[0]?.identity.assistantMessageId).toBe('assistant-1');
+            expect(after.contentToken).not.toBe(before.contentToken);
+            expect(after.turns[0]?.assistantRichBlocks?.[0]?.visualDigest).not.toBe(beforeBlock?.visualDigest);
+        } finally { harness.dispose(); }
+    });
+
+    it('replaces a completed native response and safely switches back using the same prompt owner', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = searchUnitRoundHtml(1, 0);
+        const harness = createRuntime('native-regeneration');
+        try {
+            harness.runtime.init();
+            await settle();
+            const assistant = main.querySelector('[data-chatgpt-search-unit-key$=":assistant"]')!;
+            const body = assistant.querySelector('[data-markdown-text-style]')!;
+            assistant.setAttribute('data-chatgpt-search-message-ids', 'assistant-new assistant-new');
+            body.textContent = 'New branch';
+            await settle(60);
+            expect(harness.runtime.source.read().snapshot?.turns.map(turn => turn.identity.assistantMessageId)).toEqual(['assistant-new']);
+            expect(harness.runtime.surface.readFrame().obtainedTurns[0]?.target.assistantMessageId).toBe('assistant-new');
+            assistant.setAttribute('data-chatgpt-search-message-ids', 'assistant-1 assistant-1');
+            body.textContent = 'Restored branch';
+            await settle(60);
+            expect(harness.runtime.source.read().snapshot?.turns.map(turn => turn.identity.assistantMessageId)).toEqual(['assistant-1']);
+            expect(harness.runtime.source.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Restored branch');
+        } finally { harness.dispose(); }
+    });
+
     it('restores content already carrying an official action row at runtime initialization', async () => {
         document.querySelector('main')!.innerHTML = roundHtml(1, 'Initial answer');
         const harness = createRuntime('initial-conversation');

@@ -9,6 +9,7 @@ import { ChatGPTAdapter } from '@/drivers/content/adapters/sites/chatgpt';
 import { ChatGPTConversationHostMonitor } from '@/drivers/content/chatgpt/ChatGPTConversationHostMonitor';
 import { getChatGPTPageIndex } from '@/drivers/content/chatgpt/domConversationDiscovery';
 import { ConversationContentRepository } from '@/services/content/ConversationContentRepository';
+import { richSvgBlock } from '../../../../helpers/richContentFixtures';
 
 function documentRef(id: string): ConversationDocumentRefV1 {
     return {
@@ -123,6 +124,117 @@ describe('ChatGPTConversationHostMonitor DOM readiness', () => {
         vi.useRealTimers();
     });
 
+    it('replaces an already obtained assistant after same-owner regeneration finishes streaming', async () => {
+        document.querySelector('main')!.innerHTML = roundHtml(1, 'Original answer');
+        const harness = createHarness('regeneration');
+        try {
+            harness.monitor.init();
+            await settle();
+            expect(harness.repository.read().snapshot?.turns[0]?.identity.assistantMessageId).toBe('assistant-1');
+            document.body.insertAdjacentHTML('beforeend', '<button data-testid="stop-button">Stop</button>');
+            const message = document.querySelector('[data-message-author-role="assistant"]')!;
+            message.setAttribute('data-message-id', 'assistant-new');
+            message.querySelector('.markdown')!.textContent = 'Regenerated answer';
+            await settle();
+            expect(harness.repository.read().snapshot?.turns[0]?.identity.assistantMessageId).toBe('assistant-1');
+            document.querySelector('[data-testid="stop-button"]')!.remove();
+            await settle(60);
+            expect(harness.repository.read().snapshot?.turns.map(turn => turn.identity.assistantMessageId)).toEqual(['assistant-new']);
+            expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Regenerated answer');
+        } finally { harness.dispose(); }
+    });
+
+    it('lets the compiler decide meaningful content for a body with no text nodes', async () => {
+        document.querySelector('main')!.innerHTML = roundHtml(1, '<img src="data:image/png;base64,AA==" alt="Diagram">');
+        const harness = createHarness('visual-body');
+        vi.mocked(harness.renderedCompiler.compile).mockImplementation(async request => {
+            const result = await compiler().compile(request);
+            if (result.kind !== 'ready') return result;
+            return { ...result, assistant: { markdown: '[Visual block: Diagram]', text: 'Diagram' }, assistantRichBlocks: [richSvgBlock()] };
+        });
+        try {
+            harness.monitor.init();
+            await settle();
+            expect(harness.renderedCompiler.compile).toHaveBeenCalledTimes(1);
+            expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('[Visual block: Diagram]');
+            expect(harness.repository.read().snapshot?.turns[0]?.assistantRichBlocks).toEqual([richSvgBlock()]);
+        } finally { harness.dispose(); }
+    });
+
+    it('carries same-owner proof through successive unfinished A to B to C regenerations', async () => {
+        document.querySelector('main')!.innerHTML = roundHtml(1, 'Answer A');
+        const harness = createHarness('successive-regeneration');
+        try {
+            harness.monitor.init();
+            await settle();
+            document.body.insertAdjacentHTML('beforeend', '<button data-testid="stop-button">Stop</button>');
+            const message = document.querySelector('[data-message-author-role="assistant"]')!;
+            message.setAttribute('data-message-id', 'assistant-b');
+            message.querySelector('.markdown')!.textContent = 'Unfinished B';
+            await settle();
+            message.setAttribute('data-message-id', 'assistant-c');
+            message.querySelector('.markdown')!.textContent = 'Answer C';
+            await settle();
+            expect(harness.repository.read().snapshot?.turns[0]?.identity.assistantMessageId).toBe('assistant-1');
+            document.querySelector('[data-testid="stop-button"]')!.remove();
+            await settle(60);
+            expect(harness.repository.read().snapshot?.turns.map(turn => turn.identity.assistantMessageId)).toEqual(['assistant-c']);
+            expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Answer C');
+        } finally { harness.dispose(); }
+    });
+
+    it('does not infer regeneration from a remounted slot with the same user and a different assistant', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = roundHtml(1, 'Original answer');
+        const harness = createHarness('unproved-owner-reuse');
+        try {
+            harness.monitor.init();
+            await settle();
+            const before = harness.repository.read().snapshot;
+            main.innerHTML = roundHtml(1, 'Different assistant').replace('data-message-id="assistant-1"', 'data-message-id="assistant-other"');
+            await settle(60);
+            expect(harness.repository.read().snapshot).toBe(before);
+            expect(harness.repository.read().snapshot?.turns.map(turn => turn.identity.assistantMessageId)).toEqual(['assistant-1']);
+        } finally { harness.dispose(); }
+    });
+
+    it('retains an immutable completed clone when virtualization unmounts its owner during compilation', async () => {
+        document.querySelector('main')!.innerHTML = roundHtml(1, 'Obtained before unmount');
+        const harness = createHarness('ordinary-unmount');
+        const delegate = compiler().compile;
+        vi.mocked(harness.renderedCompiler.compile).mockImplementationOnce(async request => {
+            document.querySelector('main')!.replaceChildren();
+            return delegate(request);
+        });
+        try {
+            harness.monitor.init();
+            await settle(60);
+            expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Obtained before unmount');
+        } finally { harness.dispose(); }
+    });
+
+    it('rejects the first A clone after A to B to A before compilation resolves', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = roundHtml(1, 'Obsolete A');
+        const harness = createHarness('aba-a');
+        let release!: () => void;
+        const blocked = new Promise<void>(resolve => { release = resolve; });
+        const delegate = compiler().compile;
+        vi.mocked(harness.renderedCompiler.compile).mockImplementationOnce(async request => { await blocked; return delegate(request); });
+        try {
+            harness.monitor.init();
+            await settle();
+            harness.setDocument('aba-b');
+            harness.monitor.notifyRouteChanged(true);
+            harness.setDocument('aba-a');
+            main.innerHTML = roundHtml(1, 'Current A');
+            harness.monitor.notifyRouteChanged(true);
+            release();
+            await settle(80);
+            expect(harness.repository.read().snapshot?.turns.map(turn => turn.assistantMarkdown)).toEqual(['Current A']);
+        } finally { release(); harness.dispose(); }
+    });
+
     it('captures official-action messages already present at initialization', async () => {
         document.querySelector('main')!.innerHTML = roundHtml(1, 'Initial answer');
         const harness = createHarness('initial');
@@ -167,6 +279,35 @@ describe('ChatGPTConversationHostMonitor DOM readiness', () => {
             }]);
         } finally { harness.dispose(); }
     });
+
+    it.each(['data-chatgpt-selection-message-id', 'data-dil-source-message-id', 'data-dil-message-id'])(
+        'does not bind a new inner body to the old outer identity when %s updates first', async attribute => {
+            document.querySelector('main')!.innerHTML = `<div data-turn-key="slot"><div data-content-search-turn-key="round">
+              <div data-chatgpt-search-unit-key="round:0:user" data-chatgpt-search-message-ids="question">Question</div>
+              <div><div data-chatgpt-search-unit-key="round:2:assistant" data-chatgpt-search-message-ids="answer-A">
+                <div data-chatgpt-selection-message-id="answer-A"><div data-markdown-text-style="assistant-message">
+                  <div data-dil-source-message-id="answer-A"><div data-dil-message-id="answer-A"><p>Original A</p></div></div>
+                </div></div>
+              </div><div class="turn-action-controls"><button>Copy</button></div></div>
+            </div></div>`;
+            const harness = createHarness('inner-identity');
+            try {
+                harness.monitor.init();
+                await settle();
+                expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Original A');
+                const message = document.querySelector<HTMLElement>('[data-chatgpt-search-unit-key$=":assistant"]')!;
+                message.querySelector(`[${attribute}]`)!.setAttribute(attribute, 'answer-B');
+                message.querySelector('p')!.textContent = 'New B body';
+                await settle();
+                expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('Original A');
+                expect(harness.renderedCompiler.compile).toHaveBeenCalledTimes(1);
+                expect(harness.adapter.getToolbarAnchorElement(message)).toBeNull();
+                message.querySelector(`[${attribute}]`)!.setAttribute(attribute, 'answer-A');
+                await settle();
+                expect(harness.repository.read().snapshot?.turns[0]?.assistantMarkdown).toBe('New B body');
+            } finally { harness.dispose(); }
+        },
+    );
 
     it('waits indefinitely for the official action row and reacts to its mutation once', async () => {
         document.querySelector('main')!.innerHTML = roundHtml(1, 'Delayed answer', false);
@@ -700,6 +841,34 @@ describe('ChatGPTConversationHostMonitor DOM readiness', () => {
             releaseCompilation();
             harness.dispose();
         }
+    });
+
+    it('rejects an obsolete detached clone when the reused slot has a contradictory inner owner', async () => {
+        const main = document.querySelector('main')!;
+        main.innerHTML = roundHtml(1, 'Obsolete answer');
+        const harness = createHarness('slot-inner-conflict');
+        let releaseCompilation!: () => void;
+        const blocked = new Promise<void>(resolve => { releaseCompilation = resolve; });
+        const delegate = compiler().compile;
+        vi.mocked(harness.renderedCompiler.compile).mockImplementationOnce(async request => {
+            await blocked;
+            return delegate(request);
+        });
+        try {
+            harness.monitor.init();
+            await settle();
+            const oldMessage = main.querySelector<HTMLElement>('[data-message-author-role="assistant"]')!;
+            const replacement = document.createElement('div');
+            replacement.setAttribute('data-message-author-role', 'assistant');
+            replacement.setAttribute('data-message-id', 'assistant-1');
+            replacement.innerHTML = '<div class="markdown prose"><div data-dil-source-message-id="assistant-2">New body</div></div>';
+            oldMessage.replaceWith(replacement);
+            await Promise.resolve();
+            releaseCompilation();
+            await settle(60);
+            expect(harness.repository.read().snapshot).toBeNull();
+            expect(harness.adapter.getMessageId(replacement)).toBeNull();
+        } finally { releaseCompilation(); harness.dispose(); }
     });
 
     it('fences a compiled observation when its document changes before compilation finishes', async () => {
