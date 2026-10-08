@@ -24,6 +24,7 @@ import {
     type ReaderCommentResolvedAnchor,
     type ReaderCommentRect,
 } from '../../../services/reader/commentAnchoring';
+import { createAnnotationDraftIdentity } from '../../../contracts/annotationDrafts';
 import type { ReaderCommentRecord } from '../../../services/reader/commentSession';
 import { PageAnnotationStore } from '../../../services/reader/pageAnnotationStore';
 import {
@@ -51,7 +52,7 @@ import { PageAnnotationOverlay } from '../pageAnnotations/PageAnnotationOverlay'
 import { ComposerAnnotationChip } from '../pageAnnotations/ComposerAnnotationChip';
 import { PageAnnotationMarkers, type MarkersAnchorRender } from '../pageAnnotations/PageAnnotationMarkers';
 import { PageAnnotationManagerPopover } from '../pageAnnotations/PageAnnotationManagerPopover';
-import { ReaderCommentPopover } from '../reader/ReaderCommentPopover';
+import { ReaderCommentPopover, getAnnotationEditorLabels } from '../reader/ReaderCommentPopover';
 import { OverlaySession } from '../overlay/OverlaySession';
 import { showToast } from '../../../utils/toast';
 import { t } from '../components/i18n';
@@ -545,6 +546,14 @@ export class ChatGPTPageAnnotationController {
     // ---------- comment popover ----------
 
     private openCreateComment(snapshot: PageMarkdownSelectionSnapshot): void {
+        const documentKey = this.lastDocumentKey;
+        const target = this.resolveTarget(snapshot.evidence);
+        const record = createPageCommentRecord({
+            id: `${ID_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+            itemId: this.itemIdForEvidence(snapshot.evidence), comment: '', range: snapshot.range,
+            root: snapshot.root, sourceMarkdown: snapshot.canonicalMarkdown,
+        });
+        record.target = target ?? undefined;
         this.closeToolbar();
         this.mode = 'editing';
         this.commentPopover.open({
@@ -554,29 +563,28 @@ export class ChatGPTPageAnnotationController {
             selectedSource: snapshot.canonicalMarkdown,
             anchorRect: this.selectionViewportRect(snapshot),
             mode: 'create',
+            draftIdentity: createAnnotationDraftIdentity(this.store.getDocument(), target?.assistantMessageId, { sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote, textPosition: record.selectors.textPosition }),
+            runtimeDraftKey: JSON.stringify([this.pageUrl(), record.itemId, record.sourceMarkdown, record.selectors.textQuote, record.selectors.textPosition]),
             labels: this.commentLabels(),
-            onSave: (value) => this.saveNewAnnotation(snapshot, value),
+            onSave: (value) => {
+                if (!snapshot.root.isConnected && !documentKey) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
+                return this.saveNewAnnotation(record, value, documentKey);
+            },
             onCancel: () => {
                 this.closeToolbar();
             },
         });
     }
 
-    private async saveNewAnnotation(snapshot: PageMarkdownSelectionSnapshot, value: string): Promise<void> {
-        const target = this.resolveTarget(snapshot.evidence);
-        const record = createPageCommentRecord({
-            id: `${ID_PREFIX}${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-            itemId: this.itemIdForEvidence(snapshot.evidence),
-            comment: value,
-            range: snapshot.range,
-            root: snapshot.root,
-            sourceMarkdown: snapshot.canonicalMarkdown,
-        });
-        record.target = target ?? undefined;
+    private async saveNewAnnotation(record: ReaderCommentRecord, value: string, documentKey: string | null): Promise<void> {
+        if (documentKey !== this.lastDocumentKey) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
+        const target = record.target ?? null;
         try {
             const document = this.store.getDocument();
             if (document) await this.store.bindDocument(readMarkDocumentTitle(document));
-            const saved = await this.store.create(record, target);
+            if (documentKey !== this.lastDocumentKey) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
+            const saved = await this.store.create({ ...record, comment: value }, target);
+            if (documentKey !== this.lastDocumentKey) return;
             this.activeAnnotationId = saved.id;
         } catch (error) {
             showToast({
@@ -590,6 +598,7 @@ export class ChatGPTPageAnnotationController {
     }
 
     private openEditComment(record: ReaderCommentRecord, anchorRect: DOMRect): void {
+        const documentKey = this.lastDocumentKey;
         this.closeHighlightActions();
         this.activeAnnotationId = record.id;
         this.closeToolbar();
@@ -608,11 +617,15 @@ export class ChatGPTPageAnnotationController {
                 bottom: anchorRect.bottom,
             },
             mode: 'edit',
+            draftIdentity: createAnnotationDraftIdentity(this.store.getDocument(), record.target?.assistantMessageId ?? this.targetFromItemId(record)?.assistantMessageId, { annotationId: record.id, sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote }),
+            runtimeDraftKey: JSON.stringify([this.pageUrl(), record.itemId, record.id]),
             labels: this.commentLabels(),
             initialText: record.comment,
             onSave: async (value) => {
                 try {
+                    if (documentKey !== this.lastDocumentKey) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
                     await this.store.update({ ...record, comment: value, updatedAt: Date.now() }, record.target ?? this.targetFromItemId(record));
+                    if (documentKey !== this.lastDocumentKey) return;
                     this.activeAnnotationId = record.id;
                 } catch (error) {
                     showToast({
@@ -626,7 +639,9 @@ export class ChatGPTPageAnnotationController {
             },
             onDelete: async () => {
                 try {
+                    if (documentKey !== this.lastDocumentKey) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
                     await this.store.remove(record);
+                    if (documentKey !== this.lastDocumentKey) return;
                 } catch (error) {
                     showToast({
                         text: error instanceof Error ? error.message : this.getLabel('readerCommentPersistenceUnavailable', 'Annotation could not be deleted.'),
@@ -662,18 +677,9 @@ export class ChatGPTPageAnnotationController {
         );
     }
 
-    private commentLabels(): {
-        addTitle: string;
-        editTitle: string;
-        close: string;
-        selectedSource: string;
-        placeholder: string;
-        cancel: string;
-        delete: string;
-        save: string;
-        saveShortcut: string;
-    } {
+    private commentLabels() {
         return {
+            ...getAnnotationEditorLabels((key, fallback) => this.getLabel(key, fallback)),
             addTitle: this.getLabel('readerCommentAddTitle', 'Add annotation'),
             editTitle: this.getLabel('readerCommentEditTitle', 'Edit annotation'),
             close: this.getLabel('btnClose', 'Close'),
@@ -1114,7 +1120,6 @@ export class ChatGPTPageAnnotationController {
             const documentKey = this.contentSource?.read().document?.key ?? null;
             const materializationToken = this.materialization?.read().materializationToken ?? '';
             if (documentKey !== this.lastDocumentKey) {
-                this.lastDocumentKey = documentKey;
                 void this.syncDocument();
             } else if (materializationToken !== this.lastMaterializationToken) {
                 this.lastMaterializationToken = materializationToken;
@@ -1136,7 +1141,7 @@ export class ChatGPTPageAnnotationController {
         const sourceDocument = createReaderAnnotationDocument(state.document, this.pageUrl());
         const annotationDocument = sourceDocument ? readMarkDocumentTitle(sourceDocument) : undefined;
         const nextKey = annotationDocument ? readerAnnotationDocumentKey(annotationDocument) : null;
-        if (previousKey !== null && previousKey !== nextKey) {
+        if (previousKey !== nextKey) {
             // Conversation identity changed: close transient UI before swapping data.
             this.commentPopover.close(this.ensureOverlay().getShadow(), false);
             this.mode = 'closed';

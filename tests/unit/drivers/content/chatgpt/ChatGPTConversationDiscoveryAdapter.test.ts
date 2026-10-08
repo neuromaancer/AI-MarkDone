@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { ChatGPTConversationDiscoveryAdapter } from '@/drivers/content/chatgpt/ChatGPTConversationDiscoveryAdapter';
+import { buildChatGPTReaderContent } from '@/services/reader/chatgptReaderItems';
+import { renderReaderItem } from '@/ui/content/reader/ReaderRendering';
 
 const conversationId = '12345678-1234-1234-1234-123456789abc';
 const bridgeSource = readFileSync(
@@ -87,6 +89,16 @@ describe('ChatGPTConversationDiscoveryAdapter', () => {
                 assistantMarkdown: 'Answer',
             }],
         });
+        expect(candidate?.turns[0]?.assistantSourceMarkdown).toBeUndefined();
+        if (!candidate) return;
+        const item = buildChatGPTReaderContent({ ...candidate, schemaVersion: 1, contentToken: 'get' }).items[0]!;
+        const rendered = await renderReaderItem(item, {
+            highlightCode: true,
+            contentCleanup: { preserveLinks: true, includeCodeBlocks: true },
+            labels: { copyCode: 'Copy code', enableCodeWrap: 'Wrap', disableCodeWrap: 'Unwrap' },
+        });
+        expect(rendered.markdownSource).toBe('Answer');
+        expect(rendered.html).toContain('Answer');
     });
 
     it('retains the source link while preserving the existing default projection', async () => {

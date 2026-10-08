@@ -420,8 +420,10 @@ describe('ReaderPanel (MVP)', () => {
         shadow.querySelector<HTMLButtonElement>('[data-action="reader-comment-add"]')!.click();
         await Promise.resolve();
         expect(shadow.querySelector<HTMLElement>('.reader-comment-popover__selection-value')?.textContent).toBe('answer');
-        shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="cancel"]')!.click();
-        await Promise.resolve();
+        const closeAnnotation = shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="close"]')!;
+        expect(closeAnnotation.getAttribute('aria-label')).toBe('Close and keep draft');
+        closeAnnotation.click();
+        await vi.waitFor(() => expect((panel as any).commentPopover.isOpen()).toBe(false));
 
         document.dispatchEvent(new Event('selectionchange'));
         document.dispatchEvent(new Event('pointerup'));

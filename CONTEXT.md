@@ -15,6 +15,7 @@ This file defines the short, shared vocabulary used in product discussion, imple
 | 提问 | Question | The user's actual message in the conversation. |
 | 提示词 | Prompt | A reusable instruction kept in the prompt library or chosen for annotation output; not the original question. |
 | 注释 | Annotation | The user's note associated with selected source text. |
+| 注释草稿 | Annotation draft | Unsubmitted annotation writing kept for recovery; separate from saved annotations and their persistence preference. |
 | 高亮 | Highlight | A saved colored text mark, independent of an annotation. |
 | 摘录区 / 暂存摘录 | Excerpt tray / Keep excerpt | Temporary excerpts for comparison while reading; clear on refresh and do not become saved bookmarks. Internal Sticky names remain compatible. |
 | 固定按钮 | Keep visible | Keep an enabled action outside its collapsed drawer; not content persistence. Internal Pin fields remain compatible. |

@@ -1,15 +1,15 @@
 # FAQ
 
-## Which platforms does this extension support?
+## Where can I use AI-MarkDone?
 
-New features target ChatGPT, including the in-page Reader and separate reader. Previously saved bookmarks from other platforms remain available.
+The full workspace is available on ChatGPT, including the in-page Reader and separate Reader. Formula copying is also available on Gemini, Claude, and DeepSeek. Previously saved bookmarks from those platforms remain available.
 
 ## Where do I find each feature?
 
 - Library and Settings: click the extension icon to open the management panel
-- Feature overview: below the Settings categories, browse grouped features, entry points, and shortcuts
-- Copy, bookmark, Reader and export: expand the capsule below an assistant reply
-- Annotation and highlight: select text, then choose the annotation button or a color
+- Feature overview: below the Settings categories, find features, instructions, and shortcuts
+- Copy, bookmark, Reader, and export: expand the toolbar below a reply
+- Annotate and highlight: select text, then choose Annotate or a color
 - Formula copy: click a formula
 - Message navigation: use the previous/next buttons at the lower right of the page
 - Backup: Settings → Data & backup
@@ -20,29 +20,35 @@ Yes. Choose Full screen beside Close at the management panel’s upper right to 
 
 ## Why use Reader?
 
-Reader makes long replies easier to read, with full screen or window modes, a heading outline, page navigation, Markdown copying, annotations, and follow-up questions. Copy or wrap individual code blocks, and keep important passages in the excerpt tray on the left for comparison.
+Read long replies in a window or full screen, use the heading outline to find a section, and switch between messages. You can copy Markdown, add annotations, and write a follow-up. Copy or wrap individual code blocks, and keep passages in the excerpt tray for comparison.
 
-Excerpts last for the current page session and clear after a refresh. Open a separate reader from the page’s lower-right controls; refresh its content manually, and keep the original ChatGPT tab open for sending and locating replies.
+Excerpts stay on the current page and clear after a refresh. To read in another tab, open a separate Reader from the page controls. Refresh its content manually, and keep the original ChatGPT tab open to refresh, send, or locate replies.
 
 ## What are annotations for?
 
-Select a passage and add a note. You can then copy the selected text and notes together, or insert them into the composer for a follow-up. Inserting does not send the message.
+Select a passage and choose Annotate. You can copy the passage and annotation together, or insert them into the input box for a follow-up. Review the draft before sending; insertion does not send it.
 
 ## Can I customize annotation templates?
 
 Open the annotation copy template from Reader’s upper-right settings, or Library → Annotations → Details → Templates. The template controls the order and format of each passage and note.
 
-Prompts are reusable instructions managed under Settings → Writing & prompts. When copying annotations, choose a prompt and place it before or after the notes.
+Manage reusable prompts under Settings → Writing & prompts. When copying annotations, choose a prompt and place it before or after the annotations.
 
 ## Are annotations and highlights saved?
 
-Highlights are always saved in the current browser profile. Save new annotations is off by default in Reader settings: when off, new notes last only for this page session; when on, they remain after a refresh. Previously saved annotations stay available.
+Highlights save automatically in the current browser profile. Save new annotations is off by default in Reader settings. When off, new annotations last for the current page session; when on, they remain after a refresh. Previously saved annotations stay available.
 
 Browse annotations and highlights by conversation in Library, or open their source pages.
 
+## What happens to unfinished annotations?
+
+Text is saved as a draft while you type. Closing the annotation window keeps the draft; Discard draft removes it. For an identified conversation and reply, you can recover a draft in this browser for 30 days after its last save, including after a refresh or restart. Otherwise, recovery lasts for the current page session. If saving fails, keep the window open and copy the text before leaving.
+
+Reopen the annotation or select the original passage again to resume. The position must still match; changed text or an uncertain location may prevent automatic recovery. Drafts are separate from Save new annotations and stay out of annotation lists, copied annotations, and Library backups until you save the annotation.
+
 ## Can I copy just part of a reply as Markdown?
 
-Select text on the ChatGPT page or in Reader and choose Copy. Text, formulas, code, and lists keep their Markdown formatting; selected formulas copy as complete formulas, while partial code selections copy only the selected text.
+Select text on ChatGPT or in Reader and choose Copy Markdown. Text, formulas, code, and lists keep their Markdown formatting. Selected formulas copy in full; partial code selections copy only the selected text.
 
 ChatGPT’s default shortcut is Cmd/Ctrl + Shift + C; change it to Cmd/Ctrl + C or turn it off in Settings → Advanced. Reader uses Cmd/Ctrl + C.
 
@@ -64,9 +70,9 @@ Choose a folder on the left, or search. Lists show 20 items per page. Use the ro
 
 “Select this page” selects the current page. “Select all bookmarks” and “Invert bookmarks” apply across all results matching the current filters. Paging preserves selection; changing the folder, type or search clears it. A single folder must be empty before deletion. Bulk folder deletion includes its bookmarks and subfolders, with counts shown before confirmation.
 
-## How does export work?
+## How do I export messages?
 
-Open Export below a reply or in a directory preview, select messages, and choose Markdown, PDF, or PNG. Markdown stays editable; PDF uses the browser’s print dialog with Save as PDF; PNG creates long images, and multiple images can be packed in a ZIP. Batch selection is supported, with progress and cancellation during image generation.
+Open Export below a reply or in a directory preview, select messages, and choose a format. Markdown remains editable. PDF opens the browser’s print dialog, where you can choose Save as PDF. PNG saves long images, with a ZIP when multiple image files are needed. During image generation, you can view progress or cancel.
 
 ## Can I hide buttons or change the theme?
 
@@ -76,19 +82,19 @@ Use Settings → Buttons to configure page, reply, formula, selection, and direc
 
 The experimental backup flow stores your saved bookmarks, highlights, annotations, and their folders in your own Drive under `AI-MarkDone/Backups/bookmarks`. It excludes unsaved annotations, excerpts, prompts, extension settings, and OAuth credentials. A full local Library export contains the same saved items. Older bookmark-only files still import and affect bookmarks alone.
 
-Backup verifies the uploaded snapshot. Restore shows a merge preview: local-only items remain, duplicates are skipped, and conflicts keep the local copy by default. This is not real-time synchronization.
+Backup checks the uploaded file. Before restoring, review the merge preview: local-only items remain, duplicates are skipped, and conflicts keep the local copy by default. Backups run when you start them; they do not sync changes automatically.
 
-Manage cloud files or test the connection under Data & backup. Trashing a Drive backup does not delete local Library data. Sign out revokes the current Drive grant and clears its cached authorization. An interrupted upload can leave a file in Drive; failed verification reports whether cleanup is needed.
+Manage cloud files or test the connection under Data & backup. Trashing a Drive backup does not delete local Library data. Sign out disconnects AI-MarkDone from Drive and clears cached authorization. An interrupted upload can leave a file in Drive; failed verification reports whether cleanup is needed.
 
 ## How do message navigation and the directory work?
 
 Use the page’s lower-right previous/next buttons. Left and right arrow keys also navigate when you are not typing, if enabled.
 
-Enable the directory under Settings → Reading & messages, choose compact previews or an expanded list, and adjust summaries, preview length, and right spacing. Regular messages join the directory as they load; unloaded history may be missing. Official navigation visibility is in the same category; navigation shortcuts and jump distance are under Advanced.
+The directory is on by default for new installations; existing settings stay unchanged. Under Settings → Reading & messages, turn it on or off, choose compact previews or an expanded list, and adjust summaries, preview length, and right spacing. Regular messages join the directory as they load; unloaded history may be missing. Official navigation visibility is in the same category; navigation shortcuts and jump distance are under Advanced.
 
 ## What does the character count include?
 
-The existing Chars calculation counts each CJK character as two and Latin text by its counted characters after punctuation handling. Fenced code, inline code and formulas are excluded. A reply containing only code shows zero.
+The count is weighted: common Chinese, Japanese, and Korean characters count as two; English letters A–Z and a–z, digits, and underscores count as one. Spaces and other characters do not count. Recognized code and formulas are skipped.
 
 The optional time below the count comes from the website's message metadata: update time first, creation time otherwise. It is omitted when unavailable.
 

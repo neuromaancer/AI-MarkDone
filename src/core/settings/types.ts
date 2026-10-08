@@ -222,6 +222,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     formula: DEFAULT_FORMULA_SETTINGS,
     export: DEFAULT_EXPORT_SETTINGS,
     chatgptDirectory: {
+        // Older installs may have no saved settings; only the install event opts new profiles in.
         enabled: false,
         mode: 'preview',
         promptLabelMode: 'head',

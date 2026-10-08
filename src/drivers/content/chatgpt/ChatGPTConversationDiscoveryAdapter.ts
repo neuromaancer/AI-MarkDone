@@ -181,7 +181,7 @@ function toCandidate(
             },
             userText: typeof round?.userText === 'string' ? round.userText.trim() : '',
             assistantMarkdown,
-            ...(assistantSourceMarkdown !== assistantMarkdown ? { assistantSourceMarkdown } : {}),
+            ...(assistantSourceMarkdown && assistantSourceMarkdown !== assistantMarkdown ? { assistantSourceMarkdown } : {}),
             ...(round?.assistantProvenance ? { assistantProvenance: round.assistantProvenance } : {}),
         };
     });

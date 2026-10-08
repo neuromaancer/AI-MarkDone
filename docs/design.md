@@ -130,6 +130,15 @@ Hidden export-renderer and formula-renderer documents are rendering infrastructu
 - `reader.persistAnnotations` defaults off. Durable ChatGPT annotations are always read and displayed, and their later edits/deletions remain durable regardless of the switch. When off, only newly created annotations stay in the current page runtime; turning it on does not silently migrate those session-only records.
 - The visual fixture must mount the production manager with real tokens and cover dense multi-conversation data, long Chinese/English text, empty state, unanchored state, deletion confirmation, narrow width, dark mode, and 200% zoom. A Reader header trigger test must enter the manager through the real user path.
 
+### 3.4 Annotation editor
+
+- The shared Page/Reader annotation editor is nonmodal: outside clicks neither close it nor pull focus back from reading. Its textarea has a visible boundary and keyboard focus treatment; icon controls have localized action names.
+- Header drag, minimize, expand and close preserve input. Dragged placement stops following the selection and clamps against the owning container and visual viewport after resize/scroll. At narrow widths and short heights, only the editor body scrolls; draft status and Save remain reachable.
+- Close/Escape preserve a draft. Discard draft and Delete annotation have explicit confirmation states, and pending destructive actions lock conflicting editing/saving. IME composition cannot trigger Escape dismissal or shortcut submission.
+- Draft-saving, local/session recovery, conflict, quota and save failure are distinct visible states. A failed local write preserves text and offers retry; a successful formal save clears only the submitted draft version. Draft status must not imply that the formal annotation has been saved.
+- Reader redraws reattach the same editing DOM and keyboard scope. Target changes close and flush the original target instead of attaching its writing to the new message. Persistent draft identity excludes synthetic page identities; runtime recovery uses caller-owned document/message/selection identity.
+- Both locales use the writing authority in [WRITING.md](WRITING.md). The production reader-comments fixture covers selection-triggered editing, outside reading, drag/collapse/expand, close/reopen recovery, responsive layouts and both themes.
+
 ## 4. Color Tokens
 
 The color system should be small enough to remember and broad enough to cover all shipped UI.

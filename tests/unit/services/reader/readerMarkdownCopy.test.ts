@@ -61,6 +61,14 @@ describe('readerMarkdownCopy formula formatting', () => {
         await copyReaderItemMarkdownToClipboard(item, { preserveLinks: true, includeCodeBlocks: false });
         expect(copyTextToClipboard).toHaveBeenLastCalledWith('Read [paper](https://example.com)');
     });
+
+    it('keeps the readable body when an older Reader snapshot has an empty preserved source', async () => {
+        const body = 'Answer\n\n```ts\n    run();\n```';
+        await copyReaderItemMarkdownToClipboard({ id: 'empty-source', userPrompt: 'Prompt', content: body, sourceContent: '' }, {
+            preserveLinks: true, includeCodeBlocks: true,
+        });
+        expect(copyTextToClipboard).toHaveBeenLastCalledWith(body);
+    });
 });
 
 describe('Question and reply copy', () => {

@@ -3,6 +3,18 @@ import { describe, expect, it } from 'vitest';
 import { cleanChatGPTReferenceNoise, normalizeChatGPTReaderMarkdown } from '@/drivers/content/chatgpt/normalizeReaderMarkdown';
 
 describe('cleanChatGPTReferenceNoise', () => {
+    it('preserves blank lines, indentation, and source-like text inside long fences and code spans', () => {
+        const code = '````markdown\n    [docs](https://example.com)\n\n\n    ```\n    \\(x\\)\n````';
+        const inline = '`` `https://example.com` ``';
+        expect(normalizeChatGPTReaderMarkdown(`${code}\n\n\n${inline}\n\n[paper](https://example.com)`))
+            .toBe(`${code}\n\n${inline}\n\npaper`);
+    });
+
+    it('protects a fence closed by a longer marker and indented code from cleanup', () => {
+        const markdown = '~~~text\n[docs](https://example.com)\n\n\n$x$\n~~~~\n\n    [keep](https://example.com/code)\n    \\(x\\)';
+        expect(normalizeChatGPTReaderMarkdown(markdown)).toBe(markdown);
+    });
+
     it('removes ChatGPT citation markers and file citations', () => {
         expect(cleanChatGPTReferenceNoise('Alpha citeturn0search0 beta .'))
             .toBe('Alpha  beta .');

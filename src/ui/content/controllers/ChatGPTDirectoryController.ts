@@ -16,7 +16,8 @@ import {
     type AppearanceSnapshot,
 } from '../../../style/appearance';
 import { AIMD_VIEWPORT_RESIZE_IDLE_EVENT } from './ViewportResizeSuspendController';
-import { subscribeLocaleChange } from '../components/i18n';
+import { subscribeLocaleChange, t } from '../components/i18n';
+import { showToast } from '../../../utils/toast';
 import type { ConversationNavigationPortV1 } from '../../../contracts/conversationNavigation';
 import type {
     ConversationSurfaceFrameV1,
@@ -438,11 +439,12 @@ export class ChatGPTDirectoryController {
             if (matches.length !== 1) {
                 this.renderedContentToken = null;
                 this.reconcile();
+                showToast({ text: t('chatgptDirectoryNavigationFailed'), tone: 'error' });
                 return;
             }
             const entry = matches[0]!;
             if (this.navigation) {
-                await this.navigation.navigate({
+                const result = await this.navigation.navigate({
                     position: entry.turn.ordinal,
                     messageId: entry.turn.identity.assistantMessageId,
                     roundId: entry.turn.identity.turnId,
@@ -451,6 +453,9 @@ export class ChatGPTDirectoryController {
                     documentKey: entry.target.documentKey,
                     source: 'directory',
                 }, { align: 'start', signal, timeoutMs: 15_000 });
+                if (!result.ok && result.reason !== 'cancelled' && !signal.aborted) {
+                    showToast({ text: t('chatgptDirectoryNavigationFailed'), tone: 'error' });
+                }
                 return;
             }
             const located = await this.surface.materialization.locate(entry.target, signal);
@@ -462,8 +467,12 @@ export class ChatGPTDirectoryController {
                 const anchor = current?.materialization?.jumpAnchorElement;
                 if (anchor && typeof anchor.scrollIntoView === 'function') {
                     anchor.scrollIntoView({ behavior: 'auto', block: 'start' });
+                    return;
                 }
             }
+            if (!signal.aborted) showToast({ text: t('chatgptDirectoryNavigationFailed'), tone: 'error' });
+        } catch {
+            if (!signal.aborted) showToast({ text: t('chatgptDirectoryNavigationFailed'), tone: 'error' });
         } finally {
             if (this.activeLocateAbortController === locateController) {
                 this.activeLocateAbortController = null;

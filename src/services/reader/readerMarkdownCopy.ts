@@ -15,7 +15,8 @@ export async function resolveReaderItemOutputMarkdown(
     if (!settings.preserveLinks && settings.includeCodeBlocks) return resolveContent(item.content);
     if (!settings.preserveLinks) return omitMarkdownCodeBlocks(await resolveContent(item.content));
     if (item.sourceContent !== undefined) {
-        return projectChatGPTMarkdown(await resolveContent(item.sourceContent), settings);
+        const source = await resolveContent(item.sourceContent);
+        if (source.trim()) return projectChatGPTMarkdown(source, settings);
     }
     const markdown = await resolveContent(item.content);
     return settings.includeCodeBlocks ? markdown : omitMarkdownCodeBlocks(markdown);

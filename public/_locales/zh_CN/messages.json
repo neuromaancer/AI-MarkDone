@@ -1,10 +1,10 @@
 {
     "extName": {
-        "message": "AI-MarkDone — ChatGPT Productivity Suite",
+        "message": "AI-MarkDone — ChatGPT 阅读与导出",
         "description": "Message for extName"
     },
     "extDescription": {
-        "message": "为 ChatGPT 工作流提速：阅读、书签、提示词、备份与 Markdown/PDF/PNG 导出。",
+        "message": "阅读 ChatGPT 回复、添加注释、保存书签，并导出为 Markdown、PDF 或 PNG。",
         "description": "Message for extDescription"
     },
     "popupSupportedSites": {
@@ -12,7 +12,7 @@
         "description": "Label above the supported-site list in the extension popup"
     },
     "popupChatGptHint": {
-        "message": "完整的 AI-MarkDone 工作区",
+        "message": "阅读回复、添加注释、保存书签和导出",
         "description": "Capability hint for ChatGPT in the extension popup"
     },
     "popupFormulaCopyHint": {
@@ -20,7 +20,7 @@
         "description": "Capability hint for formula-copy sites in the extension popup"
     },
     "popupUnsupportedPageFooter": {
-        "message": "打开支持的网站即可使用 AI-MarkDone。",
+        "message": "打开 ChatGPT 后即可使用回复下方的工具栏；点击插件图标可打开资料库与设置。",
         "description": "Footer guidance shown when the extension popup opens on an unsupported page"
     },
     "popupLogoAlt": {
@@ -52,7 +52,7 @@
         "description": "Message for btnCopy"
     },
     "btnCopied": {
-        "message": "已复制!",
+        "message": "已复制",
         "description": "Message for btnCopied"
     },
     "btnCopyAsPng": {
@@ -60,7 +60,7 @@
         "description": "Message for btnCopyAsPng"
     },
     "btnCopyAsPngCopied": {
-        "message": "PNG 已复制!",
+        "message": "PNG 已复制",
         "description": "Message for btnCopyAsPngCopied"
     },
     "btnCopyAsPngDownloaded": {
@@ -72,23 +72,23 @@
         "description": "Message shown when Copy as PNG is cancelled"
     },
     "formulaCopyAsPng": {
-        "message": "复制为PNG",
+        "message": "复制为 PNG",
         "description": "Message for formulaCopyAsPng"
     },
     "formulaCopyAsSvg": {
-        "message": "复制为SVG",
+        "message": "复制为 SVG",
         "description": "Message for formulaCopyAsSvg"
     },
     "formulaCopyAsMathml": {
-        "message": "复制为MathML",
+        "message": "复制为 MathML",
         "description": "Message for formulaCopyAsMathml"
     },
     "formulaSaveAsPng": {
-        "message": "保存为PNG",
+        "message": "保存为 PNG",
         "description": "Message for formulaSaveAsPng"
     },
     "formulaSaveAsSvg": {
-        "message": "保存为SVG",
+        "message": "保存为 SVG",
         "description": "Message for formulaSaveAsSvg"
     },
     "formulaAssetSaved": {
@@ -96,7 +96,7 @@
         "description": "Message for formulaAssetSaved"
     },
     "formulaAssetRendering": {
-        "message": "正在渲染...",
+        "message": "正在渲染…",
         "description": "Message for formulaAssetRendering"
     },
     "btnBookmark": {
@@ -120,7 +120,7 @@
         "description": "Message for btnExport"
     },
     "btnWordCount": {
-        "message": "字数统计",
+        "message": "字符数",
         "description": "Message for btnWordCount"
     },
     "btnClose": {
@@ -168,7 +168,7 @@
         "description": "Message for btnSave"
     },
     "loading": {
-        "message": "加载中...",
+        "message": "正在加载…",
         "description": "Message for loading"
     },
     "noContent": {
@@ -176,11 +176,11 @@
         "description": "Message for noContent"
     },
     "openingPreview": {
-        "message": "打开预览...",
+        "message": "正在打开预览…",
         "description": "Message for openingPreview"
     },
     "saving": {
-        "message": "保存中...",
+        "message": "正在保存…",
         "description": "Message for saving"
     },
     "done": {
@@ -188,15 +188,15 @@
         "description": "Message for done"
     },
     "copyAppSettings": {
-        "message": "复制应用设置",
+        "message": "复制设置",
         "description": "Message for copyAppSettings"
     },
     "resetAppSettings": {
-        "message": "重置应用设置",
+        "message": "重置设置",
         "description": "Message for resetAppSettings"
     },
     "readerTitle": {
-        "message": "AI-Markdone 阅读器",
+        "message": "AI-MarkDone 阅读器",
         "description": "Message for readerTitle"
     },
     "readerOutlineLabel": {
@@ -224,7 +224,7 @@
         "description": "Empty state for the Reader sticky workspace"
     },
     "readerStickyDelete": {
-        "message": "删除摘录",
+        "message": "移除摘录",
         "description": "Accessible label for deleting a Reader sticky block"
     },
     "readerStickyDrag": {
@@ -252,15 +252,15 @@
         "description": "Directory navigation tooltip with keyboard shortcut."
     },
     "navigateHint": {
-        "message": "\"← →\" 切换消息",
+        "message": "用 ← 和 → 切换消息",
         "description": "Message for navigateHint"
     },
     "typeYourMessage": {
-        "message": "输入你的消息...",
+        "message": "输入消息…",
         "description": "Message for typeYourMessage"
     },
     "saveMessages": {
-        "message": "保存消息",
+        "message": "导出消息",
         "description": "Message for saveMessages"
     },
     "selectAll": {
@@ -280,15 +280,15 @@
         "description": "Message for readerMode"
     },
     "contentNotFound": {
-        "message": "内容未找到",
+        "message": "内容暂不可用，请重新打开这条回复。",
         "description": "Message for contentNotFound"
     },
     "bookmarkUnavailable": {
-        "message": "当前消息还不能保存书签",
+        "message": "这条消息尚不能保存为书签，请等待加载完成后重试。",
         "description": "当前消息缺少稳定书签数据时显示的提示"
     },
     "bookmarkUnreliableLocation": {
-        "message": "无法可靠定位原消息",
+        "message": "无法定位原消息，请打开原对话查找。",
         "description": "旧书签缺少消息身份或当前分支没有原消息时显示"
     },
     "bookmarkDuplicateManagedInLibrary": {
@@ -296,19 +296,19 @@
         "description": "工具栏无法确定要取消哪一条旧书签时显示"
     },
     "copyFailed": {
-        "message": "复制失败",
+        "message": "复制失败，请重试。",
         "description": "Message for copyFailed"
     },
     "clipboardImageWriteFailed": {
-        "message": "PNG 复制失败",
+        "message": "PNG 复制失败，请重试。",
         "description": "Message for clipboardImageWriteFailed"
     },
     "clipboardImageWriteUnsupported": {
-        "message": "当前浏览器不支持复制 PNG 图片",
+        "message": "此浏览器不支持复制 PNG，请改为保存图片。",
         "description": "Message for clipboardImageWriteUnsupported"
     },
     "openFailed": {
-        "message": "打开失败",
+        "message": "打开失败，请重试。",
         "description": "Message for openFailed"
     },
     "exportOptions": {
@@ -316,7 +316,7 @@
         "description": "Message for exportOptions"
     },
     "selectExportMethod": {
-        "message": "选择导出方式:",
+        "message": "选择导出方式",
         "description": "Message for selectExportMethod"
     },
     "keepFolderStructure": {
@@ -324,11 +324,11 @@
         "description": "Message for keepFolderStructure"
     },
     "exportAsFolders": {
-        "message": "导出为分层的文件夹和书签",
+        "message": "包含文件夹和书签",
         "description": "Message for exportAsFolders"
     },
     "flatList": {
-        "message": "扁平列表",
+        "message": "平铺列表",
         "description": "Message for flatList"
     },
     "exportBookmarksOnly": {
@@ -348,7 +348,7 @@
         "description": "Message for autoRename"
     },
     "clickCopy": {
-        "message": "点击复制",
+        "message": "复制",
         "description": "Message for clickCopy"
     },
     "btnCopyText": {
@@ -380,7 +380,7 @@
         "description": "Message for readerCommentEditTitle"
     },
     "readerCommentPlaceholder": {
-        "message": "输入你的注释...",
+        "message": "输入注释…",
         "description": "Message for readerCommentPlaceholder"
     },
     "readerCommentSave": {
@@ -388,7 +388,7 @@
         "description": "Message for readerCommentSave"
     },
     "readerCommentSaveShortcut": {
-        "message": "Ctrl/Cmd + Enter 保存",
+        "message": "Cmd/Ctrl + Enter 保存",
         "description": "Reader 注释保存按钮旁显示的键盘快捷键提示"
     },
     "readerCommentSaved": {
@@ -396,7 +396,7 @@
         "description": "Message for readerCommentSaved"
     },
     "readerCommentSessionOnly": {
-        "message": "仅在当前会话中保留。",
+        "message": "仅保留在当前页面。",
         "description": "Reader annotation confirmation when persistence is disabled or unavailable"
     },
     "readerCommentDeleted": {
@@ -428,7 +428,7 @@
         "description": "Label for annotation text position"
     },
     "readerCommentCurrentConversation": {
-        "message": "当前会话",
+        "message": "当前对话",
         "description": "Reader annotation manager current conversation tab"
     },
     "readerCommentAllAnnotations": {
@@ -440,7 +440,7 @@
         "description": "Reader annotation manager search"
     },
     "readerCommentGroupByConversation": {
-        "message": "按会话",
+        "message": "按对话",
         "description": "Reader annotation manager conversation grouping"
     },
     "readerCommentTimeline": {
@@ -468,7 +468,7 @@
         "description": "Reader annotation manager loading state"
     },
     "readerCommentListError": {
-        "message": "注释加载失败。",
+        "message": "注释加载失败，请重试。",
         "description": "Reader annotation manager error state"
     },
     "readerCommentUpdatedAt": {
@@ -484,7 +484,7 @@
         "description": "Reader annotation manager unanchored state"
     },
     "readerCommentPersistenceUnavailable": {
-        "message": "注释暂时无法加载。",
+        "message": "注释操作未完成，请重试。",
         "description": "Reader annotation persistence error"
     },
     "readerCommentDeleteTitle": {
@@ -492,15 +492,15 @@
         "description": "Reader annotation delete confirmation title"
     },
     "readerCommentDeleteMessage": {
-        "message": "此注释将从当前浏览器扩展配置中删除。",
+        "message": "这条注释将从此浏览器中删除。",
         "description": "Reader annotation delete confirmation message"
     },
     "readerCommentOpenOtherConversation": {
-        "message": "正在打开会话…",
+        "message": "正在打开对话…",
         "description": "Reader annotation cross conversation navigation"
     },
     "readerCommentSourceUnavailable": {
-        "message": "当前 Reader 中找不到该回复。",
+        "message": "阅读器中找不到这条回复，请打开原对话查找。",
         "description": "Reader annotation source unavailable"
     },
     "readerAnnotationPersistenceLabel": {
@@ -532,7 +532,7 @@
         "description": "Message for readerCommentTemplateHint"
     },
     "readerCommentTemplatePlaceholder": {
-        "message": "在这里编写注释模板...",
+        "message": "编写注释模板…",
         "description": "Message for readerCommentTemplatePlaceholder"
     },
     "readerCommentTemplateInsertSelectedSource": {
@@ -544,7 +544,7 @@
         "description": "Message for readerCommentTemplateInsertPlaceholder"
     },
     "readerCommentTemplateInsertUserComment": {
-        "message": "插入用户注释",
+        "message": "插入注释",
         "description": "Message for readerCommentTemplateInsertUserComment"
     },
     "readerCommentTemplateTokenSelectedSource": {
@@ -552,7 +552,7 @@
         "description": "Message for readerCommentTemplateTokenSelectedSource"
     },
     "readerCommentTemplateTokenUserComment": {
-        "message": "用户注释",
+        "message": "注释",
         "description": "Message for readerCommentTemplateTokenUserComment"
     },
     "readerSettingsLabel": {
@@ -580,7 +580,7 @@
         "description": "Message for readerOpenModeFullscreen"
     },
     "readerOpenModePanel": {
-        "message": "面板",
+        "message": "窗口",
         "description": "Message for readerOpenModePanel"
     },
     "readerBodyFontSizeLabel": {
@@ -604,7 +604,7 @@
         "description": "Message for readerDetachedNoticeResetLabel"
     },
     "readerDetachedNoticeResetDesc": {
-        "message": "重置后，下次从右下角打开独立阅读器时会再次显示实验功能提示。",
+        "message": "下次从页面工具栏打开独立阅读器时，再次显示使用提示。",
         "description": "Message for readerDetachedNoticeResetDesc"
     },
     "appearanceSettingsLabel": {
@@ -612,11 +612,11 @@
         "description": "Message for appearanceSettingsLabel"
     },
     "globalFontSizeLabel": {
-        "message": "扩展界面的文字大小",
+        "message": "界面字号",
         "description": "Message for globalFontSizeLabel"
     },
     "globalFontSizeDesc": {
-        "message": "将 AI-MarkDone 界面文字调整在 12px 到 20px 之间。",
+        "message": "将 AI-MarkDone 界面字号设为 12px 至 20px。",
         "description": "Message for globalFontSizeDesc"
     },
     "decreaseFontSize": {
@@ -628,11 +628,11 @@
         "description": "Message for increaseFontSize"
     },
     "themeAccentColorLabel": {
-        "message": "扩展界面的主色",
+        "message": "主色",
         "description": "Message for themeAccentColorLabel"
     },
     "themeAccentColorDesc": {
-        "message": "选择主按钮、链接、焦点环和选中状态使用的强调色。",
+        "message": "设置主按钮、链接、焦点提示和选中状态的颜色。",
         "description": "Message for themeAccentColorDesc"
     },
     "themeAccentDefaultBlue": {
@@ -660,7 +660,7 @@
         "description": "Message for advancedSettingsLabel"
     },
     "advancedSettingsDesc": {
-        "message": "展示少量用于微调扩展行为的高级控制项。",
+        "message": "调整导航、快捷键等扩展行为。",
         "description": "Message for advancedSettingsDesc"
     },
     "readerCommentPromptListLabel": {
@@ -684,7 +684,7 @@
         "description": "Label for Reader annotation ordering"
     },
     "readerCommentSortModeDesc": {
-        "message": "选择注释列表和复制注释时按创建时间排序，还是按正文位置排序。",
+        "message": "按创建时间或正文位置排列注释列表和复制内容。",
         "description": "Description for Reader annotation ordering"
     },
     "readerCommentSortCreated": {
@@ -696,7 +696,7 @@
         "description": "Annotation sort option by text position"
     },
     "readerCommentTemplateSettingsLabel": {
-        "message": "设置复制注释时的排版",
+        "message": "注释复制格式",
         "description": "Message for readerCommentTemplateSettingsLabel"
     },
     "readerCommentTemplateSettingsDesc": {
@@ -724,7 +724,7 @@
         "description": "Message for readerCommentPromptRestoreDefaultsTitle"
     },
     "readerCommentPromptRestoreDefaultsMessage": {
-        "message": "恢复默认提示词会覆盖你当前的全部提示词。确定要继续吗？",
+        "message": "用默认提示词替换当前全部提示词？",
         "description": "Message for readerCommentPromptRestoreDefaultsMessage"
     },
     "readerCommentPromptEdit": {
@@ -760,15 +760,15 @@
         "description": "Message for readerCommentPromptTitlePlaceholder"
     },
     "readerCommentPromptContentPlaceholder": {
-        "message": "填写复制注释时显示在最前面的提示词...",
+        "message": "输入复制注释时一同附上的指令…",
         "description": "Message for readerCommentPromptContentPlaceholder"
     },
     "readerCommentPromptDeleteTitle": {
-        "message": "删除提示词",
+        "message": "删除提示词？",
         "description": "Message for readerCommentPromptDeleteTitle"
     },
     "readerCommentPromptDeleteMessage": {
-        "message": "要从阅读器设置中删除这条提示词吗？",
+        "message": "这条提示词将从已保存的提示词中删除。",
         "description": "Message for readerCommentPromptDeleteMessage"
     },
     "readerCommentPromptPickerTitle": {
@@ -784,7 +784,7 @@
         "description": "Message for readerCommentInsertIntoSend"
     },
     "saveMessagesTitle": {
-        "message": "保存消息",
+        "message": "导出消息",
         "description": "Message for saveMessagesTitle"
     },
     "formatMarkdown": {
@@ -816,7 +816,7 @@
         "description": "PNG render stage shown while preparing the image"
     },
     "pngExportStageCompiling": {
-        "message": "正在编译 Markdown",
+        "message": "正在准备 Markdown",
         "description": "PNG render stage shown while compiling Markdown"
     },
     "pngExportStageLayout": {
@@ -828,7 +828,7 @@
         "description": "PNG render stage and current segment count"
     },
     "pngExportStageEncoding": {
-        "message": "正在编码第 $1 段",
+        "message": "正在处理第 $1 段图片",
         "description": "PNG encoding stage and current segment count"
     },
     "pngExportStageFinalizing": {
@@ -860,7 +860,7 @@
         "description": "Message shown when PNG export is cancelled"
     },
     "pngExportRenderProgressLabel": {
-        "message": "图片渲染",
+        "message": "图片进度",
         "description": "Accessible label for the detailed PNG rendering progress bar"
     },
     "pngExportTotalProgressLabel": {
@@ -868,7 +868,7 @@
         "description": "Accessible label for the total PNG export progress bar"
     },
     "pngExportWidthPresetLabel": {
-        "message": "整条消息 PNG 的宽度",
+        "message": "消息 PNG 宽度",
         "description": "Message for pngExportWidthPresetLabel"
     },
     "pngExportWidthPresetDesc": {
@@ -876,7 +876,7 @@
         "description": "Message for pngExportWidthPresetDesc"
     },
     "pngExportWidthValueLabel": {
-        "message": "宽度值",
+        "message": "宽度（像素）",
         "description": "Message for pngExportWidthValueLabel"
     },
     "pngExportWidthValueDesc": {
@@ -900,7 +900,7 @@
         "description": "Message for pngExportWidthPresetCustom"
     },
     "pngExportPixelRatioLabel": {
-        "message": "整条消息 PNG 的清晰度",
+        "message": "消息 PNG 清晰度",
         "description": "Message for pngExportPixelRatioLabel"
     },
     "pngExportPixelRatioDesc": {
@@ -924,7 +924,7 @@
         "description": "Message for languageChanged"
     },
     "reloadMessage": {
-        "message": "请刷新页面以应用新的语言设置。",
+        "message": "刷新页面即可应用新语言。",
         "description": "Message for reloadMessage"
     },
     "reloadNow": {
@@ -960,7 +960,7 @@
         "description": "Message for send"
     },
     "search": {
-        "message": "搜索...",
+        "message": "搜索…",
         "description": "Message for search"
     },
     "sortByTime": {
@@ -980,23 +980,23 @@
         "description": "Message for sortAlphaLabel"
     },
     "sortByTimeAscTitle": {
-        "message": "按时间排序（最旧优先）",
+        "message": "从旧到新",
         "description": "Message for sortByTimeAscTitle"
     },
     "sortByTimeDescTitle": {
-        "message": "按时间排序（最新优先）",
+        "message": "从新到旧",
         "description": "Message for sortByTimeDescTitle"
     },
     "sortAlphaAscTitle": {
-        "message": "按字母排序（A-Z）",
+        "message": "标题正序（A–Z）",
         "description": "Message for sortAlphaAscTitle"
     },
     "sortAlphaDescTitle": {
-        "message": "按字母排序（Z-A）",
+        "message": "标题倒序（Z–A）",
         "description": "Message for sortAlphaDescTitle"
     },
     "createFolder": {
-        "message": "创建新文件夹",
+        "message": "新建文件夹",
         "description": "Message for createFolder"
     },
     "importBookmarks": {
@@ -1072,31 +1072,31 @@
         "description": "Message for deleteBookmark"
     },
     "titleRequired": {
-        "message": "标题不能为空",
+        "message": "请输入标题。",
         "description": "Message for titleRequired"
     },
     "titleTooLong": {
-        "message": "标题长度不能超过 100 个字符",
+        "message": "标题最多 100 个字符。",
         "description": "Message for titleTooLong"
     },
     "titleForbiddenChars": {
-        "message": "标题包含非法字符",
+        "message": "请移除标题中不支持的字符。",
         "description": "Message for titleForbiddenChars"
     },
     "titleForbiddenCharsDetailed": {
-        "message": "标题不能包含以下字符：$1",
+        "message": "请移除标题中的以下字符：$1",
         "description": "Message for titleForbiddenCharsDetailed"
     },
     "errorCalculating": {
-        "message": "计算错误",
+        "message": "暂时无法计算",
         "description": "Message for errorCalculating"
     },
     "inputMessage": {
-        "message": "输入消息",
+        "message": "消息",
         "description": "Message for inputMessage"
     },
     "enterBookmarkTitle": {
-        "message": "输入书签标题...",
+        "message": "输入书签标题…",
         "description": "Message for enterBookmarkTitle"
     },
     "renameBookmarkLabel": {
@@ -1108,7 +1108,7 @@
         "description": "Message for saveBookmark"
     },
     "moveBookmarksToFolder": {
-        "message": "移动书签到文件夹",
+        "message": "移动书签",
         "description": "Message for moveBookmarksToFolder"
     },
     "newFolder": {
@@ -1124,7 +1124,7 @@
         "description": "Message for enterFolderName"
     },
     "loadingFolders": {
-        "message": "加载文件夹中...",
+        "message": "正在加载文件夹…",
         "description": "Message for loadingFolders"
     },
     "general": {
@@ -1140,7 +1140,7 @@
         "description": "Message for platforms"
     },
     "behavior": {
-        "message": "配置",
+        "message": "行为",
         "description": "Message for behavior"
     },
     "toolbarPageActionsSettingsLabel": {
@@ -1180,11 +1180,11 @@
         "description": "Message for messageToolbarLabel"
     },
     "messageToolbarDesc": {
-        "message": "关闭后，回复下方的其他插件按钮也会隐藏。",
+        "message": "在 ChatGPT 回复下方显示 AI-MarkDone 操作按钮。",
         "description": "Message for messageToolbarDesc"
     },
     "chatgptRestorePositionAfterSendLabel": {
-        "message": "发送消息后保持当前阅读位置",
+        "message": "发送后保持阅读位置",
         "description": "Message for chatgptRestorePositionAfterSendLabel"
     },
     "chatgptRestorePositionAfterSendDesc": {
@@ -1204,15 +1204,15 @@
         "description": "关闭 ChatGPT 选区 Markdown 复制快捷键的选项"
     },
     "chatgptAtomicMarkdownCopyModC": {
-        "message": "Ctrl/Cmd+C",
+        "message": "Cmd/Ctrl + C",
         "description": "使用主 C 快捷键复制 ChatGPT 选区 Markdown 的选项"
     },
     "chatgptAtomicMarkdownCopyModShiftC": {
-        "message": "Ctrl/Cmd+Shift+C",
+        "message": "Cmd/Ctrl + Shift + C",
         "description": "使用带 Shift 的主 C 快捷键复制 ChatGPT 选区 Markdown 的选项"
     },
     "chatgptInputEnhancementLabel": {
-        "message": "在 ChatGPT 输入框中使用输入增强",
+        "message": "启用输入增强",
         "description": "控制 ChatGPT 输入增强入口的设置标签"
     },
     "chatgptInputEnhancementDesc": {
@@ -1248,7 +1248,7 @@
         "description": "输入增强运行总开关标签"
     },
     "chatgptInputEnhancementMasterDesc": {
-        "message": "暂停或恢复全部能力，并保留下方各项选择。",
+        "message": "按下方设置启用输入快捷操作。",
         "description": "输入增强运行总开关说明"
     },
     "chatgptInputEnhancementEnterLabel": {
@@ -1296,7 +1296,7 @@
         "description": "公式预览开关标签"
     },
     "chatgptInputEnhancementFormulaPreviewDesc": {
-        "message": "轻量预览行内公式和行间公式。",
+        "message": "编辑时预览行内和行间公式。",
         "description": "公式预览开关说明"
     },
     "chatgptInputEnhancementGuideLabel": {
@@ -1308,7 +1308,7 @@
         "description": "输入增强说明标题"
     },
     "chatgptInputEnhancementGuideIntro": {
-        "message": "编辑时 Markdown 标记保持可见；实际行为以输入增强中的开关为准。",
+        "message": "编辑时会显示 Markdown 标记。可在“输入增强”中分别调整各项功能。",
         "description": "输入增强说明简介"
     },
     "chatgptInputEnhancementGuideSyntaxTitle": {
@@ -1324,7 +1324,7 @@
         "description": "有序列表语法说明"
     },
     "chatgptInputEnhancementGuideUnorderedListSyntax": {
-        "message": "无序列表条目，也支持 + 和 *",
+        "message": "项目符号列表，也支持 + 和 *",
         "description": "无序列表语法说明"
     },
     "chatgptInputEnhancementGuideInlineFormulaSyntax": {
@@ -1380,7 +1380,7 @@
         "description": "公式联想触发行为"
     },
     "chatgptInputEnhancementGuidePromptTrigger": {
-        "message": "输入反斜杠和提示词触发词（例如 \\translate）打开提示词联想；公式中的反斜杠仍用于 LaTeX 联想。",
+        "message": "输入反斜杠和提示词触发词（如 \\translate），查看匹配的提示词；公式内的反斜杠用于 LaTeX 联想。",
         "description": "Prompt 联想触发行为"
     },
     "promptAutocompleteKeyboardHint": {
@@ -1424,11 +1424,11 @@
         "description": "Message for chatgptShowMessageStepperDesc"
     },
     "chatgptShowPageBookmarkControlLabel": {
-        "message": "显示“收藏对话”按钮",
+        "message": "显示“收藏当前页面”按钮",
         "description": "Message for chatgptShowPageBookmarkControlLabel"
     },
     "chatgptShowPageBookmarkControlDesc": {
-        "message": "一键收藏当前 ChatGPT 对话。",
+        "message": "收藏当前 ChatGPT 对话。",
         "description": "Message for chatgptShowPageBookmarkControlDesc"
     },
     "chatgptShowDetachedReaderControlLabel": {
@@ -1484,7 +1484,7 @@
         "description": "Message for chatgptDirectoryEnabledLabel"
     },
     "chatgptDirectoryRetiredNotice": {
-        "message": "你可以在设置 → 阅读与消息中开启消息目录。",
+        "message": "可在设置 → 阅读与消息中开启或关闭消息目录。",
         "description": "Message for chatgptDirectoryRetiredNotice"
     },
     "chatgptDirectoryEnabledDesc": {
@@ -1524,7 +1524,7 @@
         "description": "Message for chatgptDirectoryRightInsetDesc"
     },
     "chatgptDirectoryPreviewMaxCharsLabel": {
-        "message": "消息预览显示的字数",
+        "message": "消息预览字符数",
         "description": "Message for chatgptDirectoryPreviewMaxCharsLabel"
     },
     "chatgptDirectoryPreviewMaxCharsDesc": {
@@ -1552,7 +1552,7 @@
         "description": "Title shown when a content surface cannot reach the extension runtime"
     },
     "runtimeConnectionUnavailableMessage": {
-        "message": "AI-MarkDone 暂时无法连接扩展运行时。请重试；若问题持续，请刷新当前页面。",
+        "message": "AI-MarkDone 暂时无法连接。请重试；若仍无响应，请刷新页面。",
         "description": "Recovery guidance for a temporary extension runtime connection failure"
     },
     "runtimeContextInvalidatedMessage": {
@@ -1576,7 +1576,7 @@
         "description": "Title shown while canonical settings are loading"
     },
     "settingsLoadingMessage": {
-        "message": "正在等待扩展运行时响应。",
+        "message": "正在等待 AI-MarkDone 响应。",
         "description": "Message shown while canonical settings are loading"
     },
     "createFirstFolder": {
@@ -1584,15 +1584,15 @@
         "description": "Message for createFirstFolder"
     },
     "noResultsTitle": {
-        "message": "无结果",
+        "message": "没有搜索结果",
         "description": "Message for noResultsTitle"
     },
     "noResultsHint": {
-        "message": "尝试清空搜索、类型或文件夹过滤条件。",
+        "message": "试试其他关键词，或清除筛选条件。",
         "description": "Message for noResultsHint"
     },
     "clearFiltersBtn": {
-        "message": "清空过滤",
+        "message": "清除筛选",
         "description": "Message for clearFiltersBtn"
     },
     "migrationComplete": {
@@ -1600,7 +1600,7 @@
         "description": "Message for migrationComplete"
     },
     "migratedBookmarks": {
-        "message": "已将 $1 个书签迁移到 \"Import\" 文件夹",
+        "message": "已将 $1 个书签移至“Import”文件夹",
         "description": "Message for migratedBookmarks"
     },
     "deleteSelected": {
@@ -1636,39 +1636,39 @@
         "description": "Message for batchClear"
     },
     "maxDepthExceeded": {
-        "message": "超出最大深度",
+        "message": "已达到文件夹层级上限",
         "description": "Message for maxDepthExceeded"
     },
     "maxDepthMessage": {
-        "message": "文件夹最大深度为 3 层。",
+        "message": "文件夹最多支持四级。请新建顶层文件夹或选择其他位置。",
         "description": "Message for maxDepthMessage"
     },
     "failedToCreateFolder": {
-        "message": "创建文件夹失败",
+        "message": "无法创建文件夹",
         "description": "Message for failedToCreateFolder"
     },
     "folderNameExists": {
-        "message": "文件夹名称已存在。",
+        "message": "文件夹名称已存在，请换一个名称。",
         "description": "Message for folderNameExists"
     },
     "folderNameNoSlash": {
-        "message": "文件夹名称不能包含 \"/\"。",
+        "message": "文件夹名称不能包含“/”，请移除。",
         "description": "Message for folderNameNoSlash"
     },
     "folderNameTooLong": {
-        "message": "文件夹名称长度不能超过 $1 个字符。",
+        "message": "文件夹名称最多 $1 个字符。",
         "description": "Message for folderNameTooLong"
     },
     "folderNameTraversal": {
-        "message": "文件夹名称不能包含 \"..\"。",
+        "message": "文件夹名称不能包含“..”，请移除。",
         "description": "Message for folderNameTraversal"
     },
     "folderNameInvalidChars": {
-        "message": "文件夹名称包含非法字符。",
+        "message": "请移除文件夹名称中不支持的字符。",
         "description": "Message for folderNameInvalidChars"
     },
     "folderNameControlChars": {
-        "message": "文件夹名称不能包含控制字符。",
+        "message": "请移除文件夹名称中的换行等控制字符。",
         "description": "Message for folderNameControlChars"
     },
     "folderPathSegmentInvalid": {
@@ -1680,23 +1680,23 @@
         "description": "Message for spacesCollapsed"
     },
     "failedToRename": {
-        "message": "重命名失败",
+        "message": "无法重命名",
         "description": "Message for failedToRename"
     },
     "deleteBookmarkTitle": {
-        "message": "删除书签",
+        "message": "删除书签？",
         "description": "Message for deleteBookmarkTitle"
     },
     "deleteBookmarkMessage": {
-        "message": "确定要删除这个书签吗？",
+        "message": "这条书签将从此浏览器中删除。",
         "description": "Message for deleteBookmarkMessage"
     },
     "noItemsSelected": {
-        "message": "未选择任何项目",
+        "message": "未选择条目",
         "description": "Message for noItemsSelected"
     },
     "pleaseSelectToExport": {
-        "message": "请选择要导出的项目",
+        "message": "请选择要导出的条目。",
         "description": "Message for pleaseSelectToExport"
     },
     "noBookmarksSelected": {
@@ -1708,7 +1708,7 @@
         "description": "Message for noBookmarksToMove"
     },
     "noBookmarksToMoveNote": {
-        "message": "注意：只能移动书签，不能移动文件夹。",
+        "message": "请选择要移动的书签。此操作不包含文件夹。",
         "description": "Message for noBookmarksToMoveNote"
     },
     "storageFull": {
@@ -1716,11 +1716,11 @@
         "description": "Message for storageFull"
     },
     "storageWarning": {
-        "message": "存储空间警告",
+        "message": "存储空间提醒",
         "description": "Message for storageWarning"
     },
     "importSuccessful": {
-        "message": "导入成功",
+        "message": "导入完成",
         "description": "Message for importSuccessful"
     },
     "importFailed": {
@@ -1740,7 +1740,7 @@
         "description": "Message for copyMarkdown"
     },
     "atomicCopyMarkdownFailed": {
-        "message": "无法复制所选 Markdown。",
+        "message": "无法复制当前选区，请重新选中文字后再试。",
         "description": "Notice after a Markdown selection copy fails"
     },
     "close": {
@@ -1768,7 +1768,7 @@
         "description": "Message for unknownError"
     },
     "sponsor": {
-        "message": "支持一下",
+        "message": "支持开发",
         "description": "Message for sponsor"
     },
     "settings": {
@@ -1784,7 +1784,7 @@
         "description": "Message for settingsLanguageLabel"
     },
     "settingsLanguageDesc": {
-        "message": "选择你的首选语言",
+        "message": "选择界面语言。",
         "description": "Message for settingsLanguageDesc"
     },
     "settingsDiscoveryDiagnosticsLabel": {
@@ -1796,7 +1796,7 @@
         "description": "Message for settingsDiscoveryDiagnosticsDesc"
     },
     "settingsDiscoveryDiagnosticsCopy": {
-        "message": "复制诊断",
+        "message": "复制诊断信息",
         "description": "Message for settingsDiscoveryDiagnosticsCopy"
     },
     "settingsDiscoveryDiagnosticsCopied": {
@@ -1804,7 +1804,7 @@
         "description": "Message for settingsDiscoveryDiagnosticsCopied"
     },
     "settingsDiscoveryDiagnosticsUnavailable": {
-        "message": "当前页面无内容发现诊断信息",
+        "message": "当前页面无法提供内容读取诊断信息。",
         "description": "Message for settingsDiscoveryDiagnosticsUnavailable"
     },
     "languageAuto": {
@@ -1824,7 +1824,7 @@
         "description": "Message for enableOnChatGPT"
     },
     "saveMessagesLabel": {
-        "message": "显示“保存消息”按钮",
+        "message": "显示“导出”按钮",
         "description": "Message for saveMessagesLabel"
     },
     "saveMessagesDesc": {
@@ -1832,7 +1832,7 @@
         "description": "Message for saveMessagesDesc"
     },
     "wordCountLabel": {
-        "message": "在回复旁显示字数",
+        "message": "显示字符数",
         "description": "Settings order or statistics label."
     },
     "wordCountDesc": {
@@ -1840,11 +1840,11 @@
         "description": "Message for wordCountDesc"
     },
     "clickToCopyLabel": {
-        "message": "消息 > 点击复制",
+        "message": "点击公式复制",
         "description": "Message for clickToCopyLabel"
     },
     "clickToCopyDesc": {
-        "message": "启用消息中数学公式点击复制功能",
+        "message": "点击回复中的公式即可复制源码。",
         "description": "Message for clickToCopyDesc"
     },
     "formulaSettingsLabel": {
@@ -1896,11 +1896,11 @@
         "description": "Message for formulaSourceFormatEquationStar"
     },
     "formulaAssetActionsLabel": {
-        "message": "公式悬浮动作",
+        "message": "公式导出按钮",
         "description": "Message for formulaAssetActionsLabel"
     },
     "formulaAssetActionsDesc": {
-        "message": "公式悬浮动作默认关闭，可按需启用 PNG / SVG / MathML 复制和保存动作。",
+        "message": "选择公式上方显示的复制和保存按钮。",
         "description": "Message for formulaAssetActionsDesc"
     },
     "formulaAssetFontSizeLabel": {
@@ -1912,19 +1912,19 @@
         "description": "Message for formulaAssetFontSizeDesc"
     },
     "formulaAssetActionsPopupTitle": {
-        "message": "公式动作",
+        "message": "公式操作",
         "description": "Message for formulaAssetActionsPopupTitle"
     },
     "formulaAssetActionsSummaryAll": {
-        "message": "已启用全部动作",
+        "message": "已启用全部操作",
         "description": "Message for formulaAssetActionsSummaryAll"
     },
     "formulaAssetActionsSummaryNone": {
-        "message": "未启用公式动作",
+        "message": "未启用操作",
         "description": "Message for formulaAssetActionsSummaryNone"
     },
     "formulaAssetActionsSummaryCount": {
-        "message": "已启用 $1 个动作",
+        "message": "已启用 $1 项操作",
         "description": "Message for formulaAssetActionsSummaryCount"
     },
     "contextOnlySaveLabel": {
@@ -1940,7 +1940,7 @@
         "description": "Message for renderCodeBlocksLabel"
     },
     "renderCodeBlocksDesc": {
-        "message": "关闭后仍显示代码块，但不再为代码添加语法颜色。",
+        "message": "为阅读器中的代码添加语法颜色。",
         "description": "Message for renderCodeBlocksDesc"
     },
     "readerOutlineToggleLabel": {
@@ -1952,7 +1952,7 @@
         "description": "Message for readerOutlineToggleDesc"
     },
     "supportDevDesc": {
-        "message": "AI-MarkDone 是开源项目。在 GitHub 点个星星支持下。",
+        "message": "AI-MarkDone 是开源项目，欢迎在 GitHub 点亮 Star 支持开发。",
         "description": "Message for supportDevDesc"
     },
     "starOnGitHub": {
@@ -1984,7 +1984,7 @@
         "description": "Message for followMe"
     },
     "aboutProfileBio": {
-        "message": "我是一个工科研究生。虽然我不直接从事计算机专业，但平时很喜欢捣鼓各种 AI 工具，欢迎大家关注我。",
+        "message": "我是一名工科研究生，平时喜欢探索各种 AI 工具。",
         "description": "Message for aboutProfileBio"
     },
     "aboutHeroEyebrow": {
@@ -1992,11 +1992,11 @@
         "description": "Eyebrow shown above the About page introduction"
     },
     "aboutHeroTitle": {
-        "message": "从真实的使用阻力里长出来",
+        "message": "从日常 ChatGPT 使用需求出发",
         "description": "Title of the About page introduction"
     },
     "aboutHeroDesc": {
-        "message": "AI-MarkDone 是一个从个人工作流出发的项目，希望让长对话更好读、更好整理，也更容易再次使用。",
+        "message": "AI-MarkDone 是一个个人项目，帮助你阅读、整理和复用较长的 ChatGPT 对话。",
         "description": "Summary shown in the About page introduction"
     },
     "aboutProfileRole": {
@@ -2008,7 +2008,7 @@
         "description": "Message for aboutWebsiteTitle"
     },
     "aboutWebsiteDesc": {
-        "message": "官网终于做出来了，欢迎大家去逛一逛。也欢迎帮忙多多传播，让更多有同样需求的朋友看到它。",
+        "message": "访问官网，查看使用指南和更新。",
         "description": "Message for aboutWebsiteDesc"
     },
     "aboutWebsiteButton": {
@@ -2116,7 +2116,7 @@
         "description": "Message for supportContactEmail"
     },
     "supportContactCopyEmail": {
-        "message": "复制邮箱",
+        "message": "复制邮箱地址",
         "description": "Message for supportContactCopyEmail"
     },
     "feedbackHeroEyebrow": {
@@ -2164,7 +2164,7 @@
         "description": "Title of the Xiaohongshu community group card"
     },
     "communityXiaohongshuMeta": {
-        "message": "邀请二维码有效期至 2026 年 8 月 14 日",
+        "message": "此邀请已于 2026 年 8 月 14 日过期",
         "description": "Expiry notice shown on the Xiaohongshu community group card"
     },
     "communityXiaohongshuHint": {
@@ -2176,7 +2176,7 @@
         "description": "Alternative text for the Xiaohongshu community invite image"
     },
     "communityPrivacyNote": {
-        "message": "加群完全自愿，群成员可能看到你的公开资料；也可以先关注我的小红书账号，再从我的账号进入群聊。",
+        "message": "加群完全自愿，其他成员可能看到你的公开资料；也可以通过我的小红书主页加入群聊。",
         "description": "Privacy note shown below the community group cards"
     },
     "selectFolderLabel": {
@@ -2188,11 +2188,11 @@
         "description": "Message for movingBookmarks"
     },
     "deleteBookmarkConfirm": {
-        "message": "删除书签\"$1\"？",
+        "message": "删除书签“$1”？",
         "description": "Message for deleteBookmarkConfirm"
     },
     "deleteBookmarkTip": {
-        "message": "提示：你可以先导出书签以创建备份，避免数据丢失。",
+        "message": "如需备份，可先导出资料库。",
         "description": "Message for deleteBookmarkTip"
     },
     "noBookmarksSelectedMessage": {
@@ -2200,7 +2200,7 @@
         "description": "Message for noBookmarksSelectedMessage"
     },
     "pleaseSelectToMove": {
-        "message": "请选择要移动的项目",
+        "message": "请选择要移动的书签。",
         "description": "Message for pleaseSelectToMove"
     },
     "storageQuotaExceeded": {
@@ -2228,11 +2228,11 @@
         "description": "Message for importFailedMessage"
     },
     "maxDepthSubfolderMessage": {
-        "message": "无法创建子文件夹：文件夹最大深度为 $1 层。\\n\\n请创建新的根文件夹或在现有文件夹中整理。",
+        "message": "文件夹最多支持 $1 级。请新建顶层文件夹或选择其他位置。",
         "description": "Message for maxDepthSubfolderMessage"
     },
     "maxDepthFolderMessage": {
-        "message": "无法创建文件夹：文件夹最大深度为 $1 层。\\n\\n当前路径为：$2\\n深度：$3\\n\\n请创建新的根文件夹或在现有文件夹中整理。",
+        "message": "文件夹最多支持 $1 级。路径 $2 将占用 $3 级，请缩短路径或选择顶层文件夹。",
         "description": "Message for maxDepthFolderMessage"
     },
     "failedToCreateFolderMessage": {
@@ -2244,7 +2244,7 @@
         "description": "Message for failedToRenameFolderMessage"
     },
     "folderNameEmpty": {
-        "message": "文件夹名称不能为空",
+        "message": "请输入文件夹名称。",
         "description": "Message for folderNameEmpty"
     },
     "creatingSubfolderIn": {
@@ -2252,7 +2252,7 @@
         "description": "Message for creatingSubfolderIn"
     },
     "createFirstFolderBtn": {
-        "message": "创建第一个文件夹",
+        "message": "新建文件夹",
         "description": "Message for createFirstFolderBtn"
     },
     "tabBookmarks": {
@@ -2316,7 +2316,7 @@
         "description": "Message for openGithubRepo"
     },
     "saveContextOnlyConfirm": {
-        "message": "仅保存上下文？（确定=是，取消=否）",
+        "message": "新书签只保存摘要？超过 500 个字符的提问和回复将分别保留开头 250 和结尾 250 个字符。",
         "description": "Message for saveContextOnlyConfirm"
     },
     "repairConfirm": {
@@ -2396,7 +2396,7 @@
         "description": "Message for storageUsedLabel"
     },
     "storageCalculating": {
-        "message": "计算中...",
+        "message": "正在计算…",
         "description": "Message for storageCalculating"
     },
     "backupTitle": {
@@ -2428,7 +2428,7 @@
         "description": "Settings data management card title for local backup"
     },
     "localBackupTitle": {
-        "message": "本地数据",
+        "message": "本地备份",
         "description": "Settings data backup card label for local export"
     },
     "cloudBackupGoogleDriveDesc": {
@@ -2448,7 +2448,7 @@
         "description": "Cloud backup connected account status"
     },
     "cloudBackupConfigMissingStatus": {
-        "message": "Google Drive 构建配置缺失",
+        "message": "此版本暂不支持 Google Drive 备份",
         "description": "Short cloud backup status when the Chrome build lacks OAuth configuration"
     },
     "cloudBackupSettings": {
@@ -2512,7 +2512,7 @@
         "description": "No cloud backups found title"
     },
     "cloudBackupNoSnapshotsDesc": {
-        "message": "Google Drive 中还没有 AI-MarkDone 备份。",
+        "message": "点击“立即备份”，将第一份资料库备份保存到 Google Drive。",
         "description": "No cloud backups found message"
     },
     "cloudBackupRestorePreviewTitle": {
@@ -2556,7 +2556,7 @@
         "description": "Scope note for old cloud snapshots"
     },
     "cloudBackupStatusChecking": {
-        "message": "正在检查 Google Drive 状态...",
+        "message": "正在检查 Google Drive…",
         "description": "Cloud backup status check message"
     },
     "cloudBackupPrivacyNote": {
@@ -2588,35 +2588,35 @@
         "description": "Description for the Google Drive restore snapshot picker"
     },
     "cloudBackupProgressConfirmingAccess": {
-        "message": "正在确认 Google Drive 访问权限...",
+        "message": "正在检查 Google Drive 访问权限…",
         "description": "Google Drive backup progress step for confirming short-lived access"
     },
     "cloudBackupProgressPreparingBookmarks": {
-        "message": "正在准备资料库...",
+        "message": "正在准备资料库…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressCreatingSnapshot": {
-        "message": "正在创建校验快照...",
+        "message": "正在准备备份…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressUploadingDrive": {
-        "message": "正在上传到 Google Drive...",
+        "message": "正在上传到 Google Drive…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressVerifyingUpload": {
-        "message": "正在回读文件并校验...",
+        "message": "正在校验上传的备份…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressComplete": {
-        "message": "正在完成...",
+        "message": "正在完成备份…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressReadingList": {
-        "message": "正在读取 Google Drive 备份列表...",
+        "message": "正在加载 Google Drive 备份…",
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressDownloadingSnapshot": {
-        "message": "正在下载所选备份...",
+        "message": "正在下载所选备份…",
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressBuildingPreview": {
@@ -2624,7 +2624,7 @@
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressWaitingConfirmation": {
-        "message": "等待确认...",
+        "message": "等待确认…",
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressApplyingMerge": {
@@ -2632,11 +2632,11 @@
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressWorking": {
-        "message": "处理中...",
+        "message": "正在处理…",
         "description": "Disabled modal footer label while Google Drive backup work is running"
     },
     "cloudBackupProgressTimeBudget": {
-        "message": "超时预算：剩余 $1",
+        "message": "距离超时还有：$1",
         "description": "Countdown label showing the remaining Google Drive backup operation timeout budget"
     },
     "cloudBackupSnapshotSizeUnknown": {
@@ -2680,11 +2680,11 @@
         "description": "Confirmation message for moving a Google Drive backup file to trash"
     },
     "selectMessagesLabel": {
-        "message": "选择要保存的消息：",
+        "message": "选择要导出的消息",
         "description": "Message for selectMessagesLabel"
     },
     "formatLabel": {
-        "message": "格式：",
+        "message": "格式",
         "description": "Message for formatLabel"
     },
     "selectedCountMessages": {
@@ -2696,7 +2696,7 @@
         "description": "Message for dataAndStorage"
     },
     "deleteSelectedTitle": {
-        "message": "删除选中项",
+        "message": "删除选中项？",
         "description": "Message for deleteSelectedTitle"
     },
     "deletePermanentlyPrefix": {
@@ -2716,19 +2716,19 @@
         "description": "Message for bookmarksCount"
     },
     "failedToExtractUserMessage": {
-        "message": "提取提问失败，请重试。",
+        "message": "无法读取提问，请重试。",
         "description": "Message for failedToExtractUserMessage"
     },
     "failedToPrepareBookmark": {
-        "message": "准备书签失败，请重试。",
+        "message": "无法准备书签，请重试。",
         "description": "Message for failedToPrepareBookmark"
     },
     "failedToToggleBookmark": {
-        "message": "切换书签状态失败",
+        "message": "无法更新书签状态，请重试。",
         "description": "Message for failedToToggleBookmark"
     },
     "failedToRenderContent": {
-        "message": "渲染内容失败",
+        "message": "无法显示内容，请重新打开。",
         "description": "Message for failedToRenderContent"
     },
     "exitFullscreen": {
@@ -2760,11 +2760,11 @@
         "description": "Message for importActionMerge"
     },
     "importConfirmationTitle": {
-        "message": "导入确认",
+        "message": "核对导入内容",
         "description": "Message for importConfirmationTitle"
     },
     "importingCount": {
-        "message": "正在导入 <strong>$1</strong> 个书签。",
+        "message": "正在导入 <strong>$1</strong> 个书签",
         "description": "Message for importingCount"
     },
     "importSummaryNormal": {
@@ -2876,15 +2876,15 @@
         "description": "Message for contextOnlyConfirmSummary"
     },
     "contextOnlyBenefitTitle": {
-        "message": "收益：",
+        "message": "存储空间",
         "description": "Message for contextOnlyBenefitTitle"
     },
     "contextOnlyBenefitDesc": {
-        "message": "显著降低存储占用。",
+        "message": "减少长回复占用的存储空间。",
         "description": "Message for contextOnlyBenefitDesc"
     },
     "contextOnlyTradeoffTitle": {
-        "message": "代价：",
+        "message": "保存内容",
         "description": "Message for contextOnlyTradeoffTitle"
     },
     "contextOnlyTradeoffDesc": {
@@ -2896,11 +2896,11 @@
         "description": "Message for contextOnlyEnable"
     },
     "noFoldersCreateHint": {
-        "message": "暂无文件夹，请先创建一个开始使用。",
+        "message": "暂无文件夹，新建一个即可整理书签。",
         "description": "Message for noFoldersCreateHint"
     },
     "loadingText": {
-        "message": "加载中...",
+        "message": "正在加载…",
         "description": "Message for loadingText"
     },
     "positionNotAvailable": {
@@ -2908,7 +2908,7 @@
         "description": "Message for positionNotAvailable"
     },
     "clipboardWriteFailed": {
-        "message": "写入剪贴板失败",
+        "message": "复制失败，请重试。",
         "description": "Message for clipboardWriteFailed"
     },
     "savedStatus": {
@@ -2920,15 +2920,15 @@
         "description": "Message for removedStatus"
     },
     "sendFailed": {
-        "message": "发送失败",
+        "message": "消息未发送，请重试。",
         "description": "Message for sendFailed"
     },
     "sendEmpty": {
-        "message": "内容为空",
+        "message": "请输入消息后再发送。",
         "description": "Message for sendEmpty"
     },
     "sendingStatus": {
-        "message": "发送中...",
+        "message": "正在发送…",
         "description": "Message for sendingStatus"
     },
     "sentStatus": {
@@ -2948,7 +2948,7 @@
         "description": "Message for readerPagerHint"
     },
     "resizeSendPopover": {
-        "message": "调整发送浮层大小",
+        "message": "调整消息窗口大小",
         "description": "Message for resizeSendPopover"
     },
     "searchBookmarksPlaceholder": {
@@ -2964,7 +2964,7 @@
         "description": "Message for alreadyOnPageStatus"
     },
     "emptyBookmarksHint": {
-        "message": "创建一个文件夹，或导入书签后开始浏览已保存的消息。",
+        "message": "保存一条回复为书签，或导入资料库文件。",
         "description": "Message for emptyBookmarksHint"
     },
     "settingsPlatformChatgptDesc": {
@@ -2972,35 +2972,35 @@
         "description": "Message for settingsPlatformChatgptDesc"
     },
     "settingsShowSaveMessagesLabel": {
-        "message": "显示保存消息",
+        "message": "显示“导出”按钮",
         "description": "Message for settingsShowSaveMessagesLabel"
     },
     "settingsShowSaveMessagesDesc": {
-        "message": "在支持导出的地方显示“保存消息”操作。",
+        "message": "显示消息导出操作。",
         "description": "Message for settingsShowSaveMessagesDesc"
     },
     "settingsShowWordCountLabel": {
-        "message": "显示字数统计",
+        "message": "显示字符数",
         "description": "Message for settingsShowWordCountLabel"
     },
     "settingsShowWordCountDesc": {
-        "message": "为保存和渲染后的内容显示字数信息。",
+        "message": "在回复旁显示字符数。",
         "description": "Message for settingsShowWordCountDesc"
     },
     "settingsEnableClickToCopyLabel": {
-        "message": "启用点击复制",
+        "message": "点击公式复制",
         "description": "Message for settingsEnableClickToCopyLabel"
     },
     "settingsEnableClickToCopyDesc": {
-        "message": "在支持的区域中点击即可复制消息内容。",
+        "message": "点击公式即可复制源码。",
         "description": "Message for settingsEnableClickToCopyDesc"
     },
     "settingsSaveContextOnlyLabel": {
-        "message": "仅保存上下文",
+        "message": "书签只保存内容摘要",
         "description": "Message for settingsSaveContextOnlyLabel"
     },
     "settingsSaveContextOnlyDesc": {
-        "message": "导出或收藏时只保存上下文摘要，而不是完整线程。",
+        "message": "新建书签时，仅保留较长提问和回复的开头与结尾。",
         "description": "Message for settingsSaveContextOnlyDesc"
     },
     "settingsRenderCodeInReaderLabel": {
@@ -3008,7 +3008,7 @@
         "description": "Message for settingsRenderCodeInReaderLabel"
     },
     "settingsRenderCodeInReaderDesc": {
-        "message": "仅控制代码颜色，代码块会继续显示。",
+        "message": "为阅读器中的代码添加语法颜色。",
         "description": "Message for settingsRenderCodeInReaderDesc"
     },
     "settingsInterfaceLanguageLabel": {
@@ -3016,7 +3016,7 @@
         "description": "Message for settingsInterfaceLanguageLabel"
     },
     "settingsInterfaceLanguageDesc": {
-        "message": "可跟随浏览器语言，也可以固定为指定语言。",
+        "message": "跟随浏览器语言，或选择指定语言。",
         "description": "Message for settingsInterfaceLanguageDesc"
     },
     "backupBookmarksHint": {
@@ -3032,7 +3032,7 @@
         "description": "Message for sponsorOpenSourceNote"
     },
     "sponsorOpenSourceBody": {
-        "message": "如果这个项目对你有帮助，点亮 Star 是最直接的支持方式。它能提升项目曝光度，也让持续维护更有动力。",
+        "message": "如果 AI-MarkDone 对你有帮助，欢迎在 GitHub 点亮 Star，让更多人发现它。",
         "description": "Message for sponsorOpenSourceBody"
     },
     "sponsorDonateTitle": {
@@ -3040,15 +3040,15 @@
         "description": "Message for sponsorDonateTitle"
     },
     "sponsorDonateNote": {
-        "message": "也可以通过现有赞助渠道直接支持开发。",
+        "message": "通过 Buy Me a Coffee 或微信支持开发。",
         "description": "Message for sponsorDonateNote"
     },
     "sponsorDonateBody": {
-        "message": "如果 AI-MarkDone 为你节省了时间，也欢迎通过现有赞助方式支持后续开发。",
+        "message": "如果愿意支持 AI-MarkDone，可以选择下方方式，自愿赞助开发。",
         "description": "Message for sponsorDonateBody"
     },
     "sponsorBmcNote": {
-        "message": "适合国际用户的快速支持方式",
+        "message": "通过 Buy Me a Coffee 支持开发",
         "description": "Message for sponsorBmcNote"
     },
     "sponsorBmcAlt": {
@@ -3064,7 +3064,7 @@
         "description": "Message for sponsorWechatAlt"
     },
     "sponsorThanksTitle": {
-        "message": "感谢赞助",
+        "message": "感谢支持者",
         "description": "Message for sponsorThanksTitle"
     },
     "sponsorThanksDesc": {
@@ -3124,7 +3124,7 @@
         "description": "Message for importMergeSummaryRenamedTitles"
     },
     "importMergeSummaryFolderFallbacks": {
-        "message": "文件夹回退",
+        "message": "转入 Import 的文件夹",
         "description": "Message for importMergeSummaryFolderFallbacks"
     },
     "importMergeImportedBookmarksTitle": {
@@ -3164,7 +3164,7 @@
         "description": "Message for importMergeStatusInfo"
     },
     "streamingStatus": {
-        "message": "生成中...",
+        "message": "正在生成…",
         "description": "Message for streamingStatus"
     },
     "enableFormulaOnlyOnGemini": {
@@ -3184,7 +3184,7 @@
         "description": "Message for detachedReaderOpened"
     },
     "detachedReaderOpenFailed": {
-        "message": "无法打开独立阅读器",
+        "message": "无法打开独立阅读器，请重试。",
         "description": "Message for detachedReaderOpenFailed"
     },
     "detachedReaderSessionExpired": {
@@ -3192,7 +3192,7 @@
         "description": "Message for detachedReaderSessionExpired"
     },
     "detachedReaderSourceUnavailable": {
-        "message": "源 ChatGPT 页面暂不可用",
+        "message": "原 ChatGPT 标签页不可用，请从原对话重新打开阅读器。",
         "description": "Message for detachedReaderSourceUnavailable"
     },
     "detachedReaderRefresh": {
@@ -3220,7 +3220,7 @@
         "description": "Message for detachedReaderExperimentalMessage"
     },
     "detachedReaderExperimentalConfirm": {
-        "message": "继续打开",
+        "message": "打开阅读器",
         "description": "Message for detachedReaderExperimentalConfirm"
     },
     "detachedReaderExperimentalCancel": {
@@ -3276,15 +3276,15 @@
         "description": "Button label for inserting the prompt cursor placeholder"
     },
     "promptContentRequired": {
-        "message": "提示词内容不能为空。",
+        "message": "请输入提示词内容。",
         "description": "Prompt validation message when content is empty"
     },
     "promptSaveFailed": {
-        "message": "提示词保存失败。",
+        "message": "提示词保存失败，请重试。",
         "description": "Prompt save generic error message"
     },
     "detachedReaderClosed": {
-        "message": "独立阅读器已关闭。",
+        "message": "独立阅读器已关闭",
         "description": "Message for detachedReaderClosed"
     },
     "pageAnnotationChip": {
@@ -3296,7 +3296,7 @@
         "description": "Title of the page annotation manager modal"
     },
     "pageAnnotationManagerCurrent": {
-        "message": "当前会话",
+        "message": "当前对话",
         "description": "Tab label for current-conversation annotations"
     },
     "pageAnnotationManagerAll": {
@@ -3304,7 +3304,7 @@
         "description": "Tab label for all annotations"
     },
     "pageAnnotationManagerAllHint": {
-        "message": "插入请切回“当前会话”。",
+        "message": "切换到“当前对话”后即可插入注释。",
         "description": "说明全部注释不能直接插入的提示"
     },
     "pageAnnotationManagerSearch": {
@@ -3336,7 +3336,7 @@
         "description": "Updated timestamp label in the annotation manager"
     },
     "pageAnnotationManagerConversation": {
-        "message": "会话",
+        "message": "对话",
         "description": "全部注释管理器中的会话归属标签"
     },
     "pageAnnotationManagerUnanchored": {
@@ -3368,11 +3368,11 @@
         "description": "Final confirmation title for deleting all annotations"
     },
     "pageAnnotationDeleteAllFinalMessage": {
-        "message": "这些注释将从当前浏览器配置文件中永久删除。",
+        "message": "这些注释将从此浏览器中永久删除。",
         "description": "Final confirmation message for deleting all annotations"
     },
     "pageAnnotationCopied": {
-        "message": "已复制！",
+        "message": "已复制",
         "description": "Toast when annotations are copied"
     },
     "pageAnnotationCopyFailed": {
@@ -3400,11 +3400,11 @@
         "description": "Description for the ChatGPT page annotation toggle"
     },
     "chatgptShowPageSelectionToolbarLabel": {
-        "message": "在 ChatGPT 页面显示这排按钮",
+        "message": "在 ChatGPT 页面显示选区按钮",
         "description": "Toggle for the ChatGPT page selection action toolbar"
     },
     "chatgptShowPageSelectionToolbarDesc": {
-        "message": "关闭后只隐藏 ChatGPT 页面的这排按钮，不影响阅读器或键盘复制。",
+        "message": "在 ChatGPT 页面选中文字后，显示复制、注释和高亮按钮。",
         "description": "Description for the ChatGPT page selection action toolbar toggle"
     },
     "pageControls": {
@@ -3444,7 +3444,7 @@
         "description": "打开已有页面注释的无障碍标签"
     },
     "pageAnnotationChipAction": {
-        "message": "打开当前会话注释",
+        "message": "打开当前对话的注释",
         "description": "从输入框打开当前会话注释管理器的无障碍标签"
     },
     "highlightColorBlue": {
@@ -3668,7 +3668,7 @@
         "description": "Settings center label."
     },
     "settingsHideOfficialNavigation": {
-        "message": "显示插件目录时隐藏 ChatGPT 自带导航",
+        "message": "显示消息目录时隐藏 ChatGPT 导航",
         "description": "Settings center label."
     },
     "settingsReaderBodyFont": {
@@ -3688,7 +3688,7 @@
         "description": "Settings center label."
     },
     "settingsSortPosition": {
-        "message": "按消息顺序",
+        "message": "按正文位置",
         "description": "Settings center label."
     },
     "settingsDefaultBookmarkSort": {
@@ -3696,11 +3696,11 @@
         "description": "Settings center label."
     },
     "settingsResetReaderNotice": {
-        "message": "再次显示 Reader 提示",
+        "message": "再次显示独立阅读器提示",
         "description": "Settings center label."
     },
     "settingsReaderNoticeReset": {
-        "message": "Reader 提示已重置",
+        "message": "独立阅读器提示已重置",
         "description": "Settings center label."
     },
     "sortTimeDesc": {
@@ -3888,7 +3888,7 @@
         "description": "Settings and interaction label: settingsSelectionCopy"
     },
     "settingsSelectionAnnotation": {
-        "message": "显示“添加注释”按钮",
+        "message": "显示“注释”按钮",
         "description": "Settings and interaction label: settingsSelectionAnnotation"
     },
     "settingsSelectionHighlight": {
@@ -3896,7 +3896,7 @@
         "description": "Settings and interaction label: settingsSelectionHighlight"
     },
     "settingsSelectionSharedDesc": {
-        "message": "用于页面和 Reader。",
+        "message": "同时用于 ChatGPT 页面和阅读器。",
         "description": "Settings and interaction label: settingsSelectionSharedDesc"
     },
     "settingsInputEnhancementControl": {
@@ -3956,7 +3956,7 @@
         "description": "Shared content cleanup preference."
     },
     "settingsIncludeCodeBlocksDesc": {
-        "message": "关闭后，在阅读器、复制 Markdown 和导出中省略整块代码；手动选中的文字仍按原样复制。",
+        "message": "在阅读器、Markdown 复制和导出中保留代码块；手动选区仍按选中内容复制。",
         "description": "Shared content cleanup preference."
     },
     "settingsGroupPosition": {
@@ -3996,7 +3996,7 @@
         "description": "Settings and interaction label: settingsGroupFormulaImages"
     },
     "settingsGroupMessageImages": {
-        "message": "整条消息的 PNG 图片",
+        "message": "消息 PNG 图片",
         "description": "Settings and interaction label: settingsGroupMessageImages"
     },
     "settingsGroupMessageButtons": {
@@ -4036,7 +4036,7 @@
         "description": "Pinned page action configuration"
     },
     "settingsGroupFormulaButtonsHint": {
-        "message": "选择鼠标移到回复中的公式上时显示哪些按钮；输入公式时的预览预览中的导出不受这些开关影响。",
+        "message": "选择鼠标移到回复公式上时显示的按钮；输入预览中的导出操作单独设置。",
         "description": "Settings copy for settingsGroupFormulaButtonsHint"
     },
     "settingsGroupSelectionHint": {
@@ -4084,7 +4084,7 @@
         "description": "Settings copy for settingsReaderBodyWidthDesc"
     },
     "settingsInputFormulaSuggestionsDesc": {
-        "message": "在输入公式时的预览内键入 \\ 时，显示可以直接插入的 LaTeX 命令。",
+        "message": "在公式内输入 \\，查看可插入的 LaTeX 命令。",
         "description": "Settings copy for settingsInputFormulaSuggestionsDesc"
     },
     "settingsInputFormulaPreviewDesc": {
@@ -4144,7 +4144,7 @@
         "description": "Settings UI: settingsMessageTimestamp"
     },
     "settingsPreviewChars": {
-        "message": "字",
+        "message": "字符",
         "description": "Settings UI: settingsPreviewChars"
     },
     "settingsComposerAnnotations": {
@@ -4172,7 +4172,7 @@
         "description": "Settings UI: settingsPreviewComposer"
     },
     "settingsTransferTitle": {
-        "message": "配置文件",
+        "message": "设置文件",
         "description": "Settings UI: settingsTransferTitle"
     },
     "settingsTransferHint": {
@@ -4180,19 +4180,19 @@
         "description": "Settings UI: settingsTransferHint"
     },
     "settingsExport": {
-        "message": "导出配置",
+        "message": "导出设置",
         "description": "Settings UI: settingsExport"
     },
     "settingsImport": {
-        "message": "导入配置",
+        "message": "导入设置",
         "description": "Settings UI: settingsImport"
     },
     "settingsRestore": {
-        "message": "恢复上次配置",
+        "message": "恢复上次设置",
         "description": "Settings UI: settingsRestore"
     },
     "settingsExportNotice": {
-        "message": "JSON 文件包含按钮显示、固定按钮偏好、外观、阅读及导出选项；不包含令牌、账号信息、对话、书签、注释、高亮、提示词及自定义模板。请将文件保存在可信的位置。",
+        "message": "JSON 文件包含按钮显示与固定偏好、外观、阅读和导出设置；不含资料库内容、对话、提示词、自定义模板、账号信息或凭据。请存放在可信的位置。",
         "description": "Settings UI: settingsExportNotice"
     },
     "settingsExportConfirm": {
@@ -4200,7 +4200,7 @@
         "description": "Settings UI: settingsExportConfirm"
     },
     "settingsExportDone": {
-        "message": "配置文件已导出。",
+        "message": "设置文件已导出。",
         "description": "Settings UI: settingsExportDone"
     },
     "settingsImportNotice": {
@@ -4208,35 +4208,35 @@
         "description": "Settings UI: settingsImportNotice"
     },
     "settingsImportConfirm": {
-        "message": "应用所选配置",
+        "message": "应用所选设置",
         "description": "Settings UI: settingsImportConfirm"
     },
     "settingsImportDone": {
-        "message": "配置已应用，已保留导入前的配置恢复点。",
+        "message": "设置已应用，可恢复导入前的设置。",
         "description": "Settings UI: settingsImportDone"
     },
     "settingsImportNoChanges": {
-        "message": "无需修改配置。",
+        "message": "没有需要修改的设置。",
         "description": "Settings UI: settingsImportNoChanges"
     },
     "settingsImportConflict": {
-        "message": "预览后配置已发生变化，请重新选择文件并核对变更。",
+        "message": "预览后设置已发生变化，请重新选择文件核对变更。",
         "description": "Settings UI: settingsImportConflict"
     },
     "settingsImportQuota": {
-        "message": "配置存储空间不足，当前配置未修改。",
+        "message": "设置存储空间不足，当前设置未改变。",
         "description": "Settings UI: settingsImportQuota"
     },
     "settingsImportInvalid": {
-        "message": "文件无效、过大或配置格式不受支持，当前配置未修改。",
+        "message": "文件无效、过大或格式不受支持，当前设置未改变。",
         "description": "Settings UI: settingsImportInvalid"
     },
     "settingsTransferFailed": {
-        "message": "未能完成操作，请检查当前配置后重试。",
+        "message": "操作未完成，请检查当前设置后重试。",
         "description": "Settings UI: settingsTransferFailed"
     },
     "settingsRecoveryEmpty": {
-        "message": "暂无可恢复的上次配置。",
+        "message": "暂无可恢复的上次设置。",
         "description": "Settings UI: settingsRecoveryEmpty"
     },
     "settingsValueOn": {
@@ -4276,7 +4276,7 @@
         "description": "Settings UI: settingsPreferenceBehaviorShowSaveMessages"
     },
     "settingsPreferenceBehaviorShowWordCount": {
-        "message": "字数统计",
+        "message": "字符数",
         "description": "Settings UI: settingsPreferenceBehaviorShowWordCount"
     },
     "settingsPreferenceBehaviorShowMessageTimestamp": {
@@ -4288,7 +4288,7 @@
         "description": "Settings UI: settingsPreferenceBehaviorShowCopyPng"
     },
     "settingsPreferenceBehaviorSaveContextOnly": {
-        "message": "仅保存上下文",
+        "message": "书签只保存内容摘要",
         "description": "Settings UI: settingsPreferenceBehaviorSaveContextOnly"
     },
     "settingsPreferenceBehaviorPinnedMessageControls": {
@@ -4296,7 +4296,7 @@
         "description": "Settings UI: settingsPreferenceBehaviorPinnedMessageControls"
     },
     "settingsPreferenceReaderRenderCodeInReader": {
-        "message": "阅读器显示代码块",
+        "message": "阅读器代码语法高亮",
         "description": "Settings UI: settingsPreferenceReaderRenderCodeInReader"
     },
     "settingsPreferenceReaderShowOutlineInReader": {
@@ -4304,7 +4304,7 @@
         "description": "Settings UI: settingsPreferenceReaderShowOutlineInReader"
     },
     "settingsPreferenceReaderPersistAnnotations": {
-        "message": "保存注释",
+        "message": "保存新建的注释",
         "description": "Settings UI: settingsPreferenceReaderPersistAnnotations"
     },
     "settingsPreferenceReaderDefaultOpenMode": {
@@ -4328,11 +4328,11 @@
         "description": "Settings UI: settingsPreferenceReaderContentMaxWidthPx"
     },
     "settingsPreferenceReaderCommentExportPromptPosition": {
-        "message": "注释提示词位置",
+        "message": "复制注释时的提示词位置",
         "description": "Settings UI: settingsPreferenceReaderCommentExportPromptPosition"
     },
     "settingsPreferenceReaderCommentExportSortMode": {
-        "message": "注释导出排序",
+        "message": "注释复制顺序",
         "description": "Settings UI: settingsPreferenceReaderCommentExportSortMode"
     },
     "settingsPreferenceContentPreserveLinks": {
@@ -4404,7 +4404,7 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorAtomicMarkdownCopyShortcut"
     },
     "settingsPreferenceChatgptBehaviorShowMessageStepper": {
-        "message": "目录导航箭头",
+        "message": "消息导航箭头",
         "description": "Settings UI: settingsPreferenceChatgptBehaviorShowMessageStepper"
     },
     "settingsPreferenceChatgptBehaviorShowPageBookmarkControl": {
@@ -4460,7 +4460,7 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorPageWidthScale"
     },
     "settingsPreferenceChatgptBehaviorNavigationSeekStepPx": {
-        "message": "导航加载步长",
+        "message": "查找未加载消息的滚动步长",
         "description": "Settings UI: settingsPreferenceChatgptBehaviorNavigationSeekStepPx"
     },
     "settingsPreferenceAppearanceThemeMode": {
@@ -4472,11 +4472,11 @@
         "description": "Settings UI: settingsPreferenceAppearanceFontSizePx"
     },
     "settingsPreferenceAppearanceAccentColor": {
-        "message": "强调色",
+        "message": "主色",
         "description": "Settings UI: settingsPreferenceAppearanceAccentColor"
     },
     "settingsPreferenceBookmarksSortMode": {
-        "message": "收藏排序",
+        "message": "书签排序",
         "description": "Settings UI: settingsPreferenceBookmarksSortMode"
     },
     "settingsPreferenceLanguage": {
@@ -4488,7 +4488,7 @@
         "description": "Settings UI: settingsPreferenceBehaviorMessageControlsBookmarkToggle"
     },
     "settingsPreferenceBehaviorMessageControlsCopyMarkdown": {
-        "message": "消息复制 Markdown按钮",
+        "message": "消息复制 Markdown 按钮",
         "description": "Settings UI: settingsPreferenceBehaviorMessageControlsCopyMarkdown"
     },
     "settingsPreferenceBehaviorMessageControlsCopyPromptReply": {
@@ -4592,7 +4592,7 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorInputEnhancementListsUnordered"
     },
     "settingsButtonsSelectionHint": {
-        "message": "复制、注释和高亮按钮随文字选择显示；这些偏好同步应用于阅读器。",
+        "message": "选中文字后显示复制、注释和高亮按钮。这些设置也用于阅读器。",
         "description": "Settings selection preview hint"
     },
     "settingsButtonsDirectoryHint": {
@@ -4604,7 +4604,7 @@
         "description": "Settings UI: settingsReloadForUpdate"
     },
     "settingsImportUnsupported": {
-        "message": "文件或已存配置的版本不受支持，未导入任何配置。",
+        "message": "此文件或已保存的设置需要其他版本的 AI-MarkDone，未导入任何设置。",
         "description": "Settings UI: settingsImportUnsupported"
     },
     "settingsFormulaExample": {
@@ -4616,7 +4616,7 @@
         "description": "Settings UI: settingsFormulaExampleInline"
     },
     "settingsFormulaExampleDisplay": {
-        "message": "独立公式",
+        "message": "行间公式",
         "description": "Settings UI: settingsFormulaExampleDisplay"
     },
     "settingsFormulaExampleCompletion": {
@@ -4655,11 +4655,26 @@
         "message": "海湾蓝",
         "description": "Settings appearance color control"
     },
-    "themeAccentLightPink": { "message": "浅粉色", "description": "Settings appearance color control" },
-    "settingsGroupConfiguration": { "message": "配置文件", "description": "Settings data subgroup" },
-    "settingsGroupLibraryData": { "message": "资料库", "description": "Settings data subgroup" },
-    "settingsGroupCloudBackup": { "message": "云端备份", "description": "Settings data subgroup" },
-    "settingsGroupLocalBackup": { "message": "本地备份", "description": "Settings data subgroup" },
+    "themeAccentLightPink": {
+        "message": "浅粉色",
+        "description": "Settings appearance color control"
+    },
+    "settingsGroupConfiguration": {
+        "message": "设置文件",
+        "description": "Settings data subgroup"
+    },
+    "settingsGroupLibraryData": {
+        "message": "资料库",
+        "description": "Settings data subgroup"
+    },
+    "settingsGroupCloudBackup": {
+        "message": "云端备份",
+        "description": "Settings data subgroup"
+    },
+    "settingsGroupLocalBackup": {
+        "message": "本地备份",
+        "description": "Settings data subgroup"
+    },
     "themeAccentCustom": {
         "message": "自定义 RGB 色值",
         "description": "Settings appearance color control"
@@ -4669,7 +4684,7 @@
         "description": "Settings appearance color control"
     },
     "themeAccentRgbInvalid": {
-        "message": "请输入六位色值，例如 FF6699。",
+        "message": "请输入六位十六进制色值，例如 FF6699。",
         "description": "Settings appearance color control"
     },
     "tabFeatureOverview": {
@@ -4681,7 +4696,7 @@
         "description": "Feature overview interface label"
     },
     "featureOverviewLead": {
-        "message": "按功能查看 AI-MarkDone 的用途和使用入口。",
+        "message": "查看 AI-MarkDone 的功能、用途和使用入口。",
         "description": "Feature overview interface label"
     },
     "featureOverviewSearchPlaceholder": {
@@ -4817,7 +4832,7 @@
         "description": "Feature overview usage note"
     },
     "featureOverviewReaderSendTitle": {
-        "message": "阅读器发送",
+        "message": "继续提问",
         "description": "Feature overview title"
     },
     "featureOverviewReaderSendDescription": {
@@ -4849,7 +4864,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewReaderSeparateEntry": {
-        "message": "ChatGPT 网站右下角工具栏 → 独立阅读器",
+        "message": "ChatGPT 页面工具栏 → 独立阅读器",
         "description": "Feature overview entry"
     },
     "featureOverviewReaderSeparateNote": {
@@ -4877,7 +4892,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewNavigationDirectoryNote": {
-        "message": "目录需要开启；未加载的历史不一定已包含在列表中。",
+        "message": "新安装默认开启，现有设置保持不变；未加载的历史可能不在列表中。",
         "description": "Feature overview usage note"
     },
     "featureOverviewNavigationPreviewTitle": {
@@ -4921,7 +4936,7 @@
         "description": "Feature overview group title"
     },
     "featureOverviewSectionCopyExportSummary": {
-        "message": "Markdown、图片和文件输出。",
+        "message": "Markdown 复制和文件导出。",
         "description": "Feature overview group introduction"
     },
     "featureOverviewCopyMarkdownTitle": {
@@ -4933,11 +4948,11 @@
         "description": "Feature overview description"
     },
     "featureOverviewCopyMarkdownEntry": {
-        "message": "消息工具栏或阅读器 → 复制 Markdown",
+        "message": "回复底部工具栏或阅读器 → 复制 Markdown",
         "description": "Feature overview entry"
     },
     "featureOverviewCopyQuestionReplyTitle": {
-        "message": "提问＋回复复制",
+        "message": "复制提问＋回复",
         "description": "Feature overview title"
     },
     "featureOverviewCopyQuestionReplyDescription": {
@@ -4945,11 +4960,11 @@
         "description": "Feature overview description"
     },
     "featureOverviewCopyQuestionReplyEntry": {
-        "message": "消息工具栏 → 悬停复制 → 提问＋回复",
+        "message": "回复底部工具栏 → 悬停复制 Markdown → 复制提问＋回复",
         "description": "Feature overview entry"
     },
     "featureOverviewCopyImageTitle": {
-        "message": "回复图片复制",
+        "message": "复制回复图片",
         "description": "Feature overview title"
     },
     "featureOverviewCopyImageDescription": {
@@ -4957,11 +4972,11 @@
         "description": "Feature overview description"
     },
     "featureOverviewCopyImageEntry": {
-        "message": "消息工具栏 → 悬停复制 → 复制为 PNG",
+        "message": "回复底部工具栏 → 悬停复制 Markdown → 复制为 PNG",
         "description": "Feature overview entry"
     },
     "featureOverviewCopySelectionTitle": {
-        "message": "选区 Markdown 复制",
+        "message": "复制选区 Markdown",
         "description": "Feature overview title"
     },
     "featureOverviewCopySelectionDescription": {
@@ -4985,7 +5000,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewExportFormatsEntry": {
-        "message": "消息工具栏或目录预览 → 导出",
+        "message": "回复底部工具栏或目录预览 → 导出",
         "description": "Feature overview entry"
     },
     "featureOverviewExportFormatsNote": {
@@ -5001,7 +5016,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewExportImageSettingsEntry": {
-        "message": "设置 → 复制与导出 → 消息图片",
+        "message": "设置 → 复制与导出 → 消息 PNG 图片",
         "description": "Feature overview entry"
     },
     "featureOverviewSectionInputTitle": {
@@ -5089,7 +5104,7 @@
         "description": "Feature overview usage note"
     },
     "featureOverviewInputPromptNotesTitle": {
-        "message": "提示词与注释插入",
+        "message": "提示词与注释一同插入",
         "description": "Feature overview title"
     },
     "featureOverviewInputPromptNotesDescription": {
@@ -5109,7 +5124,7 @@
         "description": "Feature overview group introduction"
     },
     "featureOverviewFormulaSourceTitle": {
-        "message": "公式源码复制",
+        "message": "复制公式源码",
         "description": "Feature overview title"
     },
     "featureOverviewFormulaSourceDescription": {
@@ -5189,7 +5204,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewLibrarySaveReplyEntry": {
-        "message": "消息工具栏或阅读器 → 书签",
+        "message": "回复底部工具栏或阅读器 → 书签",
         "description": "Feature overview entry"
     },
     "featureOverviewLibrarySavePageTitle": {
@@ -5225,7 +5240,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewLibraryFoldersDescription": {
-        "message": "按主题归类收藏，修改文件夹和书签名称，或移动到其他文件夹。",
+        "message": "按主题整理书签，修改文件夹和书签名称，或移动到其他文件夹。",
         "description": "Feature overview description"
     },
     "featureOverviewLibraryFoldersEntry": {
@@ -5241,7 +5256,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewLibraryBatchEntry": {
-        "message": "资料库 → 书签 → 管理",
+        "message": "资料库 → 书签 → 批量管理",
         "description": "Feature overview entry"
     },
     "featureOverviewLibrarySummariesTitle": {
@@ -5265,7 +5280,7 @@
         "description": "Feature overview group title"
     },
     "featureOverviewSectionMarksSummary": {
-        "message": "原文标记、意见整理和后续追问。",
+        "message": "注释、高亮和后续追问。",
         "description": "Feature overview group introduction"
     },
     "featureOverviewMarksAddNoteTitle": {
@@ -5317,7 +5332,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewMarksNotesManageDescription": {
-        "message": "集中查找、编辑或删除标记，打开原对话；高亮支持批量改色，当前对话注释可插入输入框。",
+        "message": "查找、编辑或删除注释和高亮，打开原对话，批量修改高亮颜色，或将注释插入输入框。",
         "description": "Feature overview description"
     },
     "featureOverviewMarksNotesManageEntry": {
@@ -5341,7 +5356,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewMarksNotesTemplateDescription": {
-        "message": "自定义原文、注释和提示词的排列方式，并按创建时间或正文位置整理注释。",
+        "message": "设置原文与注释的排列方式，将提示词放在前面或后面，并按时间或正文位置排序。",
         "description": "Feature overview description"
     },
     "featureOverviewMarksNotesTemplateEntry": {
@@ -5349,7 +5364,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewMarksOrganizeTitle": {
-        "message": "对话归档",
+        "message": "整理对话",
         "description": "Feature overview title"
     },
     "featureOverviewMarksOrganizeDescription": {
@@ -5361,7 +5376,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewSectionSettingsBackupTitle": {
-        "message": "个性设置与备份",
+        "message": "设置与备份",
         "description": "Feature overview group title"
     },
     "featureOverviewSectionSettingsBackupSummary": {
@@ -5385,7 +5400,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewSettingsButtonsDescription": {
-        "message": "按使用习惯保留页面、消息、公式、选区和目录按钮，并固定常用动作。",
+        "message": "选择显示哪些页面、消息、公式、选区和目录按钮，并固定常用操作。",
         "description": "Feature overview description"
     },
     "featureOverviewSettingsButtonsEntry": {
@@ -5449,7 +5464,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewBackupSettingsTransferEntry": {
-        "message": "设置 → 数据与备份 → 配置文件",
+        "message": "设置 → 数据与备份 → 设置文件",
         "description": "Feature overview entry"
     },
     "featureOverviewBackupSettingsTransferNote": {
@@ -5463,5 +5478,105 @@
     "featureOverviewEntryColumnLabel": {
         "message": "说明",
         "description": "Feature overview table column header"
+    },
+    "pdfImageUnavailable": {
+        "message": "图片未能加载",
+        "description": "Label for PDF images that could not load"
+    },
+    "readerCommentMinimize": {
+        "message": "收起",
+        "description": "Annotation editor Minimize"
+    },
+    "readerCommentExpand": {
+        "message": "放大",
+        "description": "Annotation editor Expand"
+    },
+    "readerCommentRestore": {
+        "message": "恢复",
+        "description": "Annotation editor Restore"
+    },
+    "readerCommentDiscardDraft": {
+        "message": "放弃草稿",
+        "description": "Annotation editor DiscardDraft"
+    },
+    "readerCommentDraftSaving": {
+        "message": "正在保存草稿…",
+        "description": "Annotation editor DraftSaving"
+    },
+    "readerCommentDraftSaved": {
+        "message": "草稿已保存在此浏览器",
+        "description": "Annotation editor DraftSaved"
+    },
+    "readerCommentDraftSessionOnly": {
+        "message": "草稿仅保留在当前页面",
+        "description": "Annotation editor DraftSessionOnly"
+    },
+    "readerCommentDraftFailed": {
+        "message": "草稿尚未保存，请保持窗口打开并重试。",
+        "description": "Annotation editor DraftFailed"
+    },
+    "readerCommentDraftConflict": {
+        "message": "草稿已在另一个窗口中更改。当前输入仍在，请复制后再重新打开。",
+        "description": "Annotation editor DraftConflict"
+    },
+    "readerCommentDraftRestored": {
+        "message": "已恢复保存的草稿",
+        "description": "Annotation editor DraftRestored"
+    },
+    "readerCommentRetryDraft": {
+        "message": "重试保存草稿",
+        "description": "Annotation editor RetryDraft"
+    },
+    "readerCommentDrag": {
+        "message": "移动注释窗口",
+        "description": "Annotation editor Drag"
+    },
+    "readerCommentSaving": {
+        "message": "正在保存注释…",
+        "description": "Annotation editor Saving"
+    },
+    "readerCommentCloseKeepDraft": {
+        "message": "关闭并保留草稿",
+        "description": "Annotation editor CloseKeepDraft"
+    },
+    "readerCommentDraftLimit": {
+        "message": "草稿过长或存储已满。当前输入仍在，请复制或保存为注释。",
+        "description": "Annotation editor DraftLimit"
+    },
+    "readerCommentDiscardConfirm": {
+        "message": "放弃这份草稿？",
+        "description": "Annotation editor DiscardConfirm"
+    },
+    "readerCommentDeleteConfirm": {
+        "message": "删除这条注释？",
+        "description": "Annotation editor DeleteConfirm"
+    },
+    "readerCommentKeepWriting": {
+        "message": "继续编辑",
+        "description": "Annotation editor KeepWriting"
+    },
+    "infoEnlargeImage": {
+        "message": "放大图片",
+        "description": "Annotation editor infoEnlargeImage"
+    },
+    "infoRestoreImage": {
+        "message": "恢复图片大小",
+        "description": "Annotation editor infoRestoreImage"
+    },
+    "detachedReaderMissingSession": {
+        "message": "请从 ChatGPT 页面打开阅读器，开始阅读。",
+        "description": "Annotation editor detachedReaderMissingSession"
+    },
+    "detachedReaderStartFailed": {
+        "message": "无法打开阅读器，请从 ChatGPT 页面重新打开。",
+        "description": "Annotation editor detachedReaderStartFailed"
+    },
+    "readerCommentSaveFailed": {
+        "message": "注释尚未保存，当前输入仍在，请重试。",
+        "description": "Annotation editor SaveFailed"
+    },
+    "chatgptDirectoryNavigationFailed": {
+        "message": "未能定位这条回复，请滚动对话后重试。",
+        "description": "Feedback when a message directory jump cannot locate the reply"
     }
 }

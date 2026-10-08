@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Recover unfinished annotation drafts in this browser, with separate controls to keep or discard them.
+
+### Changed
+- Show the message directory by default on new installations while preserving every existing user's setting.
+- Read alongside a movable annotation window, with minimize and expand controls that keep writing in place.
+- Refined Chinese and English labels, help, errors, and first-use guidance with clearer actions and saving details.
+
+### Fixed
+- Fixed blank PDF message exports when ChatGPT prepares its own print view.
+- Keep selected messages in the same order without duplicates across Markdown, PDF, and PNG exports.
+- Preserve code fences, language, indentation, blank lines, and inline code when copying and rendering Markdown.
+- Preserve fenced blocks and inline code in ChatGPT's updated code display, without including language headers or Run controls as reply text.
+- Keep Reader and exports readable when preserved source is empty, and refresh Reader when source links change.
+- Wrap wide code and tables in PDF exports, fit wide formulas, and wait briefly for images before printing.
+- Show a useful message when a Directory jump cannot locate its reply.
+
 ## [6.1.0] - 2026-10-02
 
 ### Added

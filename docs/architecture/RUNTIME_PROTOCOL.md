@@ -191,6 +191,9 @@ Repository 在当前标签页内维护 `Map<conversationKey, ConversationPool>`�
 - `annotations:update`
 - `annotations:remove`
 - `annotations:navigate`
+- `annotations:draftRead`
+- `annotations:draftWrite`
+- `annotations:draftRemove`
 - background → content `annotations:focus`
 
 用途：
@@ -202,6 +205,7 @@ Repository 在当前标签页内维护 `Map<conversationKey, ConversationPool>`�
 - `annotations:navigate` 只接受 ChatGPT exact-host document，background 创建一个新 ChatGPT tab 并把一次性 `{ tabId, conversationId, annotationId }` intent 放入 `storage.session`；新页面通过 `content:ready` 校验当前 conversationId 后收到 `annotations:focus`
 - `annotations:focus` 只在当前页面 conversationId 与 intent 一致时打开 Reader 并聚焦精确 annotation；验证失败不做近似跳转
 - annotation payload 只传可序列化的 document、target、quote、selectors、comment、timestamps 和 revision，不传 DOM、Range 或页面运行时对象
+- Draft requests use canonical document/message/selection identity and a separate local recovery bundle. Write/remove require an expected revision; the background storage queue is authoritative. Draft recovery does not gate on `reader.persistAnnotations` and does not create a saved annotation. Synthetic page targets use runtime memory instead of these durable requests. Unsupported/corrupt stored versions reject writes, and quota/conflict failures preserve the editor input. This family is separate from `readerSession:draft`, which bridges the ChatGPT composer.
 
 ### Prompt library
 

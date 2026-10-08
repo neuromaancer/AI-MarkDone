@@ -81,6 +81,8 @@ superseded. They are not alternate current ChatGPT architectures.
 
 - `docs/design.md`
   - single authority for product feel, UI tokens, component rules, Shadow DOM style injection, and UI-system governance
+- `docs/WRITING.md`
+  - bilingual product writing, interface language patterns, and maintainer review boundaries
 
 ### Testing
 

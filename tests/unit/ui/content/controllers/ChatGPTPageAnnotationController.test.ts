@@ -362,6 +362,7 @@ describe('ChatGPTPageAnnotationController', () => {
             selectionToolbarButton('page-comment-add')!.click();
             const shadow = controller['overlay']!.getShadow();
             const textarea = shadow.querySelector('textarea')!;
+            expect(textarea.getAttribute('aria-label')).toBe(textarea.placeholder);
             textarea.value = 'A note'; textarea.dispatchEvent(new Event('input', { bubbles: true }));
             document.title = '研究笔记';
             shadow.querySelector<HTMLButtonElement>('[data-action="save"]')!.click();
@@ -917,6 +918,14 @@ describe('ChatGPTPageAnnotationController', () => {
         expect(input).not.toBeNull();
         input!.value = 'Keep this context';
         input!.dispatchEvent(new Event('input', { bubbles: true }));
+        document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+        expect(controller['commentPopover'].isOpen()).toBe(true);
+        expect(controller['store'].listForConversation()).toHaveLength(0);
+        shadow.querySelector<HTMLButtonElement>('[data-action="close"]')!.click();
+        await vi.waitFor(() => expect(controller['commentPopover'].isOpen()).toBe(false));
+        dispatchPointerDown(320, 240); selectRange(range); dispatchPointerCancel(320, 240); await flushSelectionFrame();
+        selectionToolbarButton('page-comment-add')!.click();
+        await vi.waitFor(() => expect(shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!.value).toBe('Keep this context'));
         shadow.querySelector<HTMLButtonElement>('[data-action="save"]')?.click();
         await vi.waitFor(() => expect(controller['store'].listForConversation()).toHaveLength(1));
 
@@ -928,6 +937,25 @@ describe('ChatGPTPageAnnotationController', () => {
         expect(selectionToolbarButton('page-comment-add')).toBeTruthy();
 
         controller.dispose();
+    });
+
+    it('closes the old conversation editor through the source-change trigger before rebinding records', async () => {
+        const message = mountMessage('<p>before <code>inline code</code> after</p>');
+        const root = message.querySelector<HTMLElement>('.markdown.prose')!; const code = message.querySelector<HTMLElement>('code')!;
+        const range = document.createRange(); range.selectNodeContents(code); selectRange(range); mockGeometry(root, code, range);
+        const source = createContentSource(); const original = source.read();
+        const controller = new ChatGPTPageAnnotationController(new ChatGPTAdapter(), { contentSource: source, materialization: createMaterialization(message), surfaceAdapter: createEvidenceSurfaceAdapter(message) });
+        try {
+            controller.init(); await vi.waitFor(() => expect(controller['store'].getDocument()?.conversationId).toBe('test'));
+            dispatchPointerUp(320, 240); await flushSelectionFrame(); selectionToolbarButton('page-comment-add')!.click();
+            expect(controller['commentPopover'].isOpen()).toBe(true);
+            const nextDocument = { ...original.document!, key: 'chatgpt:conversation:next', conversationId: 'next' };
+            vi.spyOn(source, 'read').mockReturnValue({ ...original, document: nextDocument, snapshot: original.snapshot ? { ...original.snapshot, document: nextDocument } : null } as any);
+            controller['handleSourceChanged']();
+            await vi.waitFor(() => expect(controller['store'].getDocument()?.conversationId).toBe('next'));
+            expect(controller['commentPopover'].isOpen()).toBe(false);
+            expect(controller['mode']).toBe('closed');
+        } finally { controller.dispose(); }
     });
 
     it('keeps the toolbar available after saving when annotation markers mount into the message root', async () => {

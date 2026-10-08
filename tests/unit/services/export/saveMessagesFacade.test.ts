@@ -96,11 +96,41 @@ describe('exportTurnsMarkdown', () => {
 
         const markdown = vi.mocked(downloadText).mock.calls[0]![0].content;
         const pdf = vi.mocked(printPdf).mock.calls[0]![0].html;
+        expect(vi.mocked(printPdf).mock.calls[0]![0].imageUnavailableLabel).toBe('pdfImageUnavailable');
         const png = vi.mocked(renderMessageDocumentPng).mock.calls[0]![0].sections[0].assistantMarkdown;
         expect(markdown).toContain('[paper](https://example.com)');
         expect(pdf).toContain('https://example.com');
         expect(png).toContain('[paper](https://example.com)');
         for (const output of [markdown, pdf, png]) expect(output).not.toContain('const answer');
+    });
+
+    it.each([true, false])('keeps an empty-source snapshot readable across formats (include code: %s)', async (includeCodeBlocks) => {
+        const code = '    first()\n\n\n    ```\n    last()';
+        const body = `Answer\n\n\`\`\`\`ts\n${code}\n\`\`\`\``;
+        const turn = { user: 'Question', assistant: body, assistantSource: '', index: 0 };
+        const contentCleanup = { preserveLinks: true, includeCodeBlocks };
+        vi.mocked(downloadText).mockClear();
+        vi.mocked(printPdf).mockClear();
+        vi.mocked(renderMessageDocumentPng).mockClear();
+
+        await exportTurnsMarkdown([turn], [0], metadata, { t, contentCleanup });
+        await exportTurnsPdf([turn], [0], metadata, { t, contentCleanup });
+        await exportTurnsPng([turn], [0], metadata, { t, contentCleanup });
+
+        const markdown = vi.mocked(downloadText).mock.calls[0]![0].content;
+        const pdf = document.createElement('div');
+        pdf.innerHTML = vi.mocked(printPdf).mock.calls[0]![0].html;
+        const png = vi.mocked(renderMessageDocumentPng).mock.calls[0]![0].sections[0].assistantMarkdown;
+        expect(markdown).toContain('Answer');
+        expect(pdf.querySelector('.assistant-response')?.textContent).toContain('Answer');
+        expect(png).toBe(includeCodeBlocks ? body : 'Answer');
+        if (includeCodeBlocks) {
+            expect(markdown).toContain(body);
+            expect(pdf.querySelector('pre code')?.textContent).toBe(`${code}\n`);
+        } else {
+            expect(markdown).not.toContain('first()');
+            expect(pdf.querySelector('pre')).toBeNull();
+        }
     });
 });
 

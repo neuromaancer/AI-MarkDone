@@ -390,6 +390,20 @@ export class ChatGPTAdapter extends SiteAdapter {
 
     normalizeDOM(root: HTMLElement): void {
         this.unwrapComponentBlocks(root);
+        // Host markers carry code semantics even when ChatGPT omits native pre/code tags.
+        root.querySelectorAll<HTMLElement>('[data-markdown-copy="code-block"]').forEach((source) => {
+            if (source.tagName === 'PRE') return;
+            const pre = root.ownerDocument.createElement('pre');
+            for (const attribute of Array.from(source.attributes)) pre.setAttribute(attribute.name, attribute.value);
+            pre.append(...Array.from(source.childNodes));
+            source.replaceWith(pre);
+        });
+        root.querySelectorAll<HTMLElement>('[data-markdown-copy="inline-code"]').forEach((source) => {
+            if (source.tagName === 'CODE') return;
+            const code = root.ownerDocument.createElement('code');
+            code.textContent = source.textContent;
+            source.replaceWith(code);
+        });
 
         root.querySelectorAll('[data-testid="webpage-citation-pill"]').forEach((pill) => {
             const wrapper = pill.parentElement;
@@ -477,6 +491,7 @@ export class ChatGPTAdapter extends SiteAdapter {
 
     isNoiseNode(node: Node, context: NoiseContext): boolean {
         if (!(node instanceof HTMLElement)) return false;
+        if (node.matches('[data-markdown-copy="exclude"]')) return true;
 
         if (node.classList.contains('sr-only')) {
             return true;

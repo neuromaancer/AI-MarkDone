@@ -327,7 +327,7 @@ describe('BookmarksPanel', () => {
         const fullscreenButton = shadow.querySelector<HTMLButtonElement>('[data-action="workspace-fullscreen"]')!;
         fullscreenButton.click();
         expect(panelWindow?.dataset.fullscreen).toBe('1');
-        expect(fullscreenButton.getAttribute('aria-label')).toBe('Exit fullscreen');
+        expect(fullscreenButton.getAttribute('aria-label')).toBe('Exit full screen');
         expect(shadow.querySelector<HTMLInputElement>('[data-role="settings-search"]')).toBe(settingsSearch);
         expect(settingsSearch.value).toBe('formula');
         expect(settingsScroll.scrollTop).toBe(146);
@@ -425,7 +425,7 @@ describe('BookmarksPanel', () => {
         expect(refreshedAboutActiveTab?.querySelector('.social-follow-card')).toBeTruthy();
         expect(refreshedAboutActiveTab?.querySelector('.sponsor-brand-mark')).toBeNull();
         expect(refreshedAboutActiveTab?.querySelector('.info-hero__body')?.textContent).toContain('personal project');
-        expect(refreshedAboutActiveTab?.querySelector('.info-hero__title')?.textContent).toBe('Built from real workflow friction');
+        expect(refreshedAboutActiveTab?.querySelector('.info-hero__title')?.textContent).toBe('Built for everyday ChatGPT tasks');
         expect(refreshedAboutActiveTab?.querySelector('.info-profile-card')).toBeTruthy();
         expect(refreshedAboutActiveTab?.querySelector('.info-profile')).toBeTruthy();
         expect(refreshedAboutActiveTab?.querySelector('.info-profile__avatar')).toBeTruthy();
@@ -437,16 +437,16 @@ describe('BookmarksPanel', () => {
         expect(refreshedAboutActiveTab?.querySelector('[data-action="contact-email"]')).toBeNull();
         const sponsorCta = refreshedAboutActiveTab?.querySelector<HTMLAnchorElement>('[data-action="sponsor-github"]');
         expect(sponsorCta).toBeNull();
-        expect(refreshedAboutActiveTab?.textContent).not.toContain('Support Development');
-        expect(refreshedAboutActiveTab?.textContent).not.toContain('AI-MarkDone is open source. Star us on GitHub.');
+        expect(refreshedAboutActiveTab?.textContent).not.toContain('Support development');
+        expect(refreshedAboutActiveTab?.textContent).not.toContain('AI-MarkDone is open source. You can support it with a star on GitHub.');
         expect(refreshedAboutActiveTab?.textContent).not.toContain('If this project helps you');
         expect(refreshedAboutActiveTab?.textContent).not.toContain('Support the project with a coffee if you want to.');
         expect(refreshedAboutActiveTab?.textContent).not.toContain('Feedback and contact');
         expect(refreshedAboutActiveTab?.textContent).not.toContain('zhaoliangbin42@gmail.com');
         expect(refreshedAboutActiveTab?.textContent).toContain('Why I built AI-MarkDone');
-        expect(refreshedAboutActiveTab?.textContent).toContain('copy the whole block first');
+        expect(refreshedAboutActiveTab?.textContent).toContain('copy one formula without extracting it from an entire reply');
         expect(refreshedAboutActiveTab?.textContent).toContain('Xiaohongshu');
-        expect(refreshedAboutActiveTab?.textContent).toContain('Feel free to follow me');
+        expect(refreshedAboutActiveTab?.querySelector('.info-profile__bio')?.textContent).toContain('enjoys exploring AI tools in my spare time');
         expect(refreshedAboutActiveTab?.textContent).toContain('Find me on Xiaohongshu');
         expect(refreshedAboutActiveTab?.textContent).not.toContain('Mappamory');
 
@@ -491,11 +491,11 @@ describe('BookmarksPanel', () => {
         expect(sponsorCtaActive?.target).toBe('_blank');
         expect(sponsorCtaActive?.rel).toContain('noopener');
         expect(sponsorCtaActive?.rel).toContain('noreferrer');
-        expect(refreshedSponsorActiveTab?.textContent).toContain('Support Development');
-        expect(refreshedSponsorActiveTab?.textContent).toContain('AI-MarkDone is open source. Star us on GitHub.');
+        expect(refreshedSponsorActiveTab?.textContent).toContain('Support development');
+        expect(refreshedSponsorActiveTab?.textContent).toContain('AI-MarkDone is open source. You can support it with a star on GitHub.');
         expect(refreshedSponsorActiveTab?.textContent).toContain('If this project helps you');
         expect(refreshedSponsorActiveTab?.textContent).toContain('Support the project with a coffee if you want to.');
-        expect(refreshedSponsorActiveTab?.textContent).toContain('Thanks to Sponsors');
+        expect(refreshedSponsorActiveTab?.textContent).toContain('Thanks to supporters');
         expect(refreshedSponsorActiveTab?.textContent).toContain('@匿名（Danke!）');
         expect(refreshedSponsorActiveTab?.textContent).toContain('@。（特别喜欢那个目录条功能，请你喝瓶水）');
 
@@ -529,7 +529,7 @@ describe('BookmarksPanel', () => {
         expect(feedbackWebsiteCta?.rel).toContain('noopener');
         expect(feedbackWebsiteCta?.rel).toContain('noreferrer');
         expect(refreshedFeedbackActiveTab?.textContent).toContain('AI-MarkDone website');
-        expect(refreshedFeedbackActiveTab?.textContent).toContain('Copy Email');
+        expect(refreshedFeedbackActiveTab?.textContent).toContain('Copy email address');
 
         faqTabButton!.click();
 
@@ -538,7 +538,7 @@ describe('BookmarksPanel', () => {
         expect(shadow.querySelector('.aimd-panel-title')?.textContent).toBe('FAQ');
         expect(refreshedFaqActiveTab?.querySelector('.aimd-faq')).toBeTruthy();
         expect(refreshedFaqActiveTab?.querySelector('.info-disclosure')).toBeTruthy();
-        expect(refreshedFaqActiveTab?.textContent).toContain('Which platforms does this extension support?');
+        expect(refreshedFaqActiveTab?.textContent).toContain('Where can I use AI-MarkDone?');
         expect(refreshedFaqActiveTab?.textContent).toContain('How do I copy a formula?');
         expect(refreshedFaqActiveTab?.textContent).toContain('Click it in the original reply');
 
@@ -931,7 +931,7 @@ describe('BookmarksPanel', () => {
 
         expect(shadow.querySelector('.aimd-panel-title')?.textContent).toBe('Settings');
         expect(shadow.querySelector<HTMLInputElement>('[data-role="bookmark-query"]')?.getAttribute('placeholder')).toBe('Search bookmarks');
-        expect(shadow.querySelector<HTMLElement>('.settings-panel')?.textContent).toContain('Storage Used');
+        expect(shadow.querySelector<HTMLElement>('.settings-panel')?.textContent).toContain('Storage used');
 
         await setLocale('zh_CN');
         await flushUi();

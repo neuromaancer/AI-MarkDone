@@ -76,7 +76,8 @@ import {
     type AppearanceSnapshot,
 } from '../../../style/appearance';
 import { getKatexCssWithRuntimeFontUrls, getKatexRuntimeFontFaceCss, hasKatexMarkup } from '../../../core/export/katexAssets';
-import { ReaderCommentPopover } from './ReaderCommentPopover';
+import { ReaderCommentPopover, getAnnotationEditorLabels } from './ReaderCommentPopover';
+import { createAnnotationDraftIdentity, type AnnotationDraftIdentity } from '../../../contracts/annotationDrafts';
 import { ReaderCommentExportPopover } from './ReaderCommentExportPopover';
 import { ReaderCommentListPopover } from './ReaderCommentListPopover';
 import { ReaderAnnotationManagerPopover } from './ReaderAnnotationManagerPopover';
@@ -412,6 +413,7 @@ export class ReaderPanel {
         this.annotationDocument = nextAnnotationDocument;
         this.highlights.bind(nextAnnotationDocument);
         if (documentChanged) {
+            if (this.overlaySession) this.commentPopover.close(this.overlaySession.shadow, false);
             this.annotationLoadGeneration += 1;
             this.unsubscribeAnnotationChanges?.();
             this.unsubscribeAnnotationChanges = null;
@@ -1241,6 +1243,7 @@ export class ReaderPanel {
             canOpenConversation: this.canOpenConversation(),
         });
 
+        const restoreCommentEditor = this.commentPopover.preserveForRender();
         const { element: backdrop, isNew: isNewBackdrop } = ensureBackdropElement(this.overlaySession.backdropRoot, 'panel-stage__overlay');
         const { element: panel, isNew: isNewPanel } = ensureStableElementFromHtml<HTMLElement>(
             this.overlaySession.surfaceRoot,
@@ -1258,6 +1261,7 @@ export class ReaderPanel {
             ignoreEscapeWhileComposing: true,
             trapTabWithin: panel ?? this.overlaySession.host,
         });
+        restoreCommentEditor(panel);
         if (this.motionNeedsOpen && (isNewBackdrop || isNewPanel)) {
             this.overlaySession.openSurface({ surface: panel, backdrop });
             this.focusLifecycle.scheduleInitialFocus({
@@ -1796,10 +1800,9 @@ export class ReaderPanel {
         else this.persistentComments.delete(record.itemId);
     }
 
-    private async persistNewComment(record: ReaderCommentRecord): Promise<void> {
-        const document = this.annotationDocument;
+    private async persistNewComment(record: ReaderCommentRecord, document = this.annotationDocument): Promise<void> {
         const item = this.getCurrentItem();
-        const target = item ? this.getAnnotationTarget(item) : null;
+        const target = record.target ?? (item ? this.getAnnotationTarget(item) : null);
         if (!this.persistAnnotations || !document || !target) {
             saveReaderComment(READER_COMMENT_SCOPE_ID, record);
             this.activeCommentId = record.id;
@@ -1813,16 +1816,16 @@ export class ReaderPanel {
             throw new Error(result.ok ? 'Annotation save returned no annotation' : result.message);
         }
         const saved = fromReaderAnnotationRecord(result.data.annotation, document);
+        if (readerAnnotationDocumentKeyOrNull(this.annotationDocument) !== readerAnnotationDocumentKey(document)) return;
         this.setPersistentComment(saved);
         this.activeCommentId = saved.id;
         this.syncCommentUi();
         this.syncCommentControls();
     }
 
-    private async persistUpdatedComment(record: ReaderCommentRecord): Promise<void> {
-        const document = this.annotationDocument;
+    private async persistUpdatedComment(record: ReaderCommentRecord, document = this.annotationDocument): Promise<void> {
         const item = this.getCurrentItem();
-        const target = item ? this.getAnnotationTarget(item) : null;
+        const target = record.target ?? (item ? this.getAnnotationTarget(item) : null);
         if (!document || !target || record.revision === undefined) {
             saveReaderComment(READER_COMMENT_SCOPE_ID, record);
             return;
@@ -1832,18 +1835,17 @@ export class ReaderPanel {
         if (!result.ok || !result.data.annotation) {
             throw new Error(result.ok ? 'Annotation update returned no annotation' : result.message);
         }
-        this.setPersistentComment(fromReaderAnnotationRecord(result.data.annotation, document));
+        if (readerAnnotationDocumentKeyOrNull(this.annotationDocument) === readerAnnotationDocumentKey(document)) this.setPersistentComment(fromReaderAnnotationRecord(result.data.annotation, document));
     }
 
-    private async persistRemovedComment(record: ReaderCommentRecord): Promise<void> {
-        const document = this.annotationDocument;
+    private async persistRemovedComment(record: ReaderCommentRecord, document = this.annotationDocument): Promise<void> {
         if (!document || record.revision === undefined) {
             removeReaderComment(READER_COMMENT_SCOPE_ID, record.itemId, record.id);
             return;
         }
         const result = await readerAnnotationsClient.remove(document, record.id, record.revision);
         if (!result.ok) throw new Error(result.message);
-        this.removePersistentComment(record);
+        if (readerAnnotationDocumentKeyOrNull(this.annotationDocument) === readerAnnotationDocumentKey(document)) this.removePersistentComment(record);
     }
 
     private markAnchorState(record: ReaderCommentRecord, state: 'anchored' | 'unanchored'): void {
@@ -2035,31 +2037,30 @@ export class ReaderPanel {
                 sourceMarkdown,
                 hasSelection: selection.hasSelection,
             };
+            if (!item) return;
+            const document = this.annotationDocument;
+            const record = createReaderCommentRecord({ id: `comment-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+                itemId: item.id, comment: '', range: frozenSelection.range, root: markdownRoot, selectedUnits: frozenSelection.selectedUnits });
+            record.target = target ?? undefined;
             this.openCommentPopover({
                 mode: 'create',
                 anchorRect: commentButton.getBoundingClientRect(),
                 initialText: '',
                 selectedSource: sourceMarkdown,
+                draftIdentity: createAnnotationDraftIdentity(document, target?.assistantMessageId, { sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote, textPosition: record.selectors.textPosition }),
+                runtimeDraftKey: JSON.stringify([item.meta?.url ?? '', item.id, item.sourceContent ?? item.content, record.sourceMarkdown, record.selectors.textQuote, record.selectors.textPosition]),
                 sessionOnly: !this.annotationDocument || !this.persistAnnotations || !target,
                 onSave: (value) => {
-                    const item = this.getCurrentItem();
-                    if (!item) return;
-                    const record = createReaderCommentRecord({
-                        id: `comment-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-                        itemId: item.id,
-                        comment: value,
-                        range: frozenSelection.range,
-                        root: markdownRoot,
-                        selectedUnits: frozenSelection.selectedUnits,
-                    });
+                    if (readerAnnotationDocumentKeyOrNull(document) !== readerAnnotationDocumentKeyOrNull(this.annotationDocument)) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
+                    const next = { ...record, comment: value };
                     if (!this.annotationDocument || !this.persistAnnotations) {
-                        saveReaderComment(READER_COMMENT_SCOPE_ID, record);
+                        saveReaderComment(READER_COMMENT_SCOPE_ID, next);
                         this.activeCommentId = record.id;
                         this.syncCommentUi();
                         this.syncCommentControls();
                         return;
                     }
-                    return this.persistNewComment(record).catch((error) => {
+                    return this.persistNewComment(next, document).catch((error) => {
                         this.notify(error instanceof Error ? error.message : this.getLabel('readerCommentPersistenceUnavailable', 'Annotation could not be saved.'));
                         throw error;
                     });
@@ -2154,18 +2155,22 @@ export class ReaderPanel {
             this.scrollCommentRectIntoView(resolved.unionRect);
         }
         const contentAnchorRect = resolved?.unionRect ? this.toViewportRect(resolved.unionRect) : null;
+        const document = this.annotationDocument;
         this.openCommentPopover({
             mode: 'edit',
             anchorRect: contentAnchorRect ?? fallbackRect,
             initialText: record.comment,
             selectedSource: record.sourceMarkdown,
+            draftIdentity: createAnnotationDraftIdentity(document, record.target?.assistantMessageId ?? target?.assistantMessageId, { annotationId: record.id, sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote }),
+            runtimeDraftKey: JSON.stringify([item?.meta?.url ?? '', item?.id ?? record.itemId, item?.sourceContent ?? item?.content ?? '', record.id]),
             sessionOnly: !this.annotationDocument || !target || record.revision === undefined,
             onSave: async (value) => {
+                if (readerAnnotationDocumentKeyOrNull(document) !== readerAnnotationDocumentKeyOrNull(this.annotationDocument)) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
                 await this.persistUpdatedComment({
                     ...record,
                     comment: value,
                     updatedAt: Date.now(),
-                }).catch((error) => {
+                }, document).catch((error) => {
                     this.notify(error instanceof Error ? error.message : this.getLabel('readerCommentPersistenceUnavailable', 'Annotation could not be saved.'));
                     throw error;
                 });
@@ -2174,7 +2179,8 @@ export class ReaderPanel {
             },
             onDelete: async () => {
                 try {
-                    await this.persistRemovedComment(record);
+                    if (readerAnnotationDocumentKeyOrNull(document) !== readerAnnotationDocumentKeyOrNull(this.annotationDocument)) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
+                    await this.persistRemovedComment(record, document);
                 } catch (error) {
                     this.notify(String(error));
                     throw error;
@@ -2208,6 +2214,8 @@ export class ReaderPanel {
         initialText: string;
         selectedSource: string;
         sessionOnly: boolean;
+        draftIdentity?: AnnotationDraftIdentity | null;
+        runtimeDraftKey?: string;
         onSave: (value: string) => void | Promise<void>;
         onDelete?: () => void;
         onCancel?: () => void;
@@ -2222,8 +2230,11 @@ export class ReaderPanel {
             selectedSource: params.selectedSource,
             anchorRect: params.anchorRect,
             initialText: params.initialText,
+            draftIdentity: params.draftIdentity,
+            runtimeDraftKey: params.runtimeDraftKey,
             mode: params.mode,
             labels: {
+                ...getAnnotationEditorLabels((key, fallback) => this.getLabel(key, fallback)),
                 addTitle: this.getLabel('readerCommentAddTitle', 'Add annotation'),
                 editTitle: this.getLabel('readerCommentEditTitle', 'Edit annotation'),
                 close: this.getLabel('btnClose', 'Close'),

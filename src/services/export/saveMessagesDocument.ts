@@ -184,7 +184,3 @@ export function buildMessageDocument(
 `,
     };
 }
-
-export function selectTurns(turns: ChatTurn[], selectedIndices: number[]): ChatTurn[] {
-    return selectedIndices.map((i) => turns[i]).filter((x): x is ChatTurn => Boolean(x));
-}

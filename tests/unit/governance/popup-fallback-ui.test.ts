@@ -55,7 +55,7 @@ describe('fallback popup UI', () => {
         expect(html).toContain('href="https://claude.ai/"');
         expect(html).toContain('href="https://chat.deepseek.com/"');
         expect(html).toContain('Formula copy');
-        expect(html).toContain('Open a supported site to use AI-MarkDone.');
+        expect(html).toContain('Open ChatGPT and use the toolbar below a reply.');
     });
 
     it('localizes every user-facing popup label through extension i18n', () => {

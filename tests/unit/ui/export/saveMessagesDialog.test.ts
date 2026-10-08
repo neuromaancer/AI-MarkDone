@@ -89,7 +89,7 @@ describe('SaveMessagesDialog', () => {
 
         expect(shadow.querySelector('[data-role="overlay-backdrop-root"] .panel-stage__overlay')).toBeTruthy();
         expect(shadow.querySelector('[data-role="overlay-surface-root"] .panel-window.panel-window--dialog.panel-window--save')).toBeTruthy();
-        expect(shadow.querySelector('.panel-window--save .panel-header__meta h2')?.textContent).toBe('Save Messages As');
+        expect(shadow.querySelector('.panel-window--save .panel-header__meta h2')?.textContent).toBe('Export messages');
         expect(shadow.querySelector('.panel-window--save .panel-kicker')).toBeNull();
         expect(shadow.querySelectorAll('.panel-window--save .panel-footer')).toHaveLength(1);
         expect(source).toContain('OverlaySession');
@@ -355,9 +355,9 @@ describe('SaveMessagesDialog', () => {
 
         const progressBars = shadow.querySelectorAll('[role="progressbar"]');
         expect(progressBars).toHaveLength(2);
-        expect(progressBars[0].getAttribute('aria-label')).toBe('Image rendering');
+        expect(progressBars[0].getAttribute('aria-label')).toBe('Image progress');
         expect(Number(progressBars[0].getAttribute('aria-valuenow'))).toBeGreaterThan(0);
-        expect(progressBars[1].getAttribute('aria-label')).toBe('Total export');
+        expect(progressBars[1].getAttribute('aria-label')).toBe('Overall progress');
         expect(shadow.textContent).toContain('2/5');
         expect(shadow.querySelector<HTMLButtonElement>('[data-action="cancel-png-export"]')?.textContent).toBe('Cancel');
 
@@ -482,7 +482,7 @@ describe('SaveMessagesDialog', () => {
         shadow.querySelector<HTMLButtonElement>('[data-action="save-turns"]')!.click();
         await flushUi();
 
-        expect(shadow.textContent).toContain('正在编码第 2/2 段');
+        expect(shadow.textContent).toContain('正在处理第 2/2 段图片');
         expect(shadow.querySelectorAll('[role="progressbar"]')).toHaveLength(2);
 
         resolveExport();
@@ -521,13 +521,13 @@ describe('SaveMessagesDialog', () => {
         expect(host).toBeTruthy();
         const shadow = host!.shadowRoot!;
 
-        expect(shadow.querySelector('.panel-window--save .panel-header__meta h2')?.textContent).toBe('Save Messages As');
-        expect(shadow.textContent).toContain('Select All');
+        expect(shadow.querySelector('.panel-window--save .panel-header__meta h2')?.textContent).toBe('Export messages');
+        expect(shadow.textContent).toContain('Select all');
 
         await setLocale('zh_CN');
         await flushUi();
 
-        expect(shadow.querySelector('.panel-window--save .panel-header__meta h2')?.textContent).toBe('保存消息');
+        expect(shadow.querySelector('.panel-window--save .panel-header__meta h2')?.textContent).toBe('导出消息');
         expect(shadow.textContent).toContain('全选');
     });
 

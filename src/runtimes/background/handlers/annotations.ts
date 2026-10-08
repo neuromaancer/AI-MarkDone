@@ -13,6 +13,7 @@ import { backgroundStorageQueue } from '../../../drivers/background/storage/asyn
 import { localStoragePort } from '../../../drivers/background/storage/localStoragePort';
 import { browser, browserCompat } from '../../../drivers/shared/browser';
 import { isChatGPTPageUrl } from '../../../contracts/chatgptHosts';
+import { handleAnnotationDraftRequest } from './annotationDrafts';
 
 type HandlerResult = { response: ExtResponse };
 const pendingNavigationByTab = new Map<number, ReaderAnnotationNavigatePayload>();
@@ -118,6 +119,8 @@ export async function consumeReaderAnnotationNavigationIntent(tabId: number, url
 
 export async function handleReaderAnnotationRequest(request: ExtRequest): Promise<HandlerResult | null> {
     if (!isAnnotationRequest(request)) return null;
+    const draft = await handleAnnotationDraftRequest(request);
+    if (draft) return draft;
 
     switch (request.type) {
         case 'annotations:list': {

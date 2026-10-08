@@ -150,6 +150,24 @@ describe('ReaderPanel comments', () => {
         textarea!.value = 'Needs clarification';
         textarea!.dispatchEvent(new Event('input', { bubbles: true }));
 
+        document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+        expect(textarea!.value).toBe('Needs clarification');
+        expect((panel as any).commentPopover.isOpen()).toBe(true);
+        shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="close"]')!.click();
+        await vi.waitFor(() => expect((panel as any).commentPopover.isOpen()).toBe(false));
+        document.dispatchEvent(new Event('selectionchange'));
+        document.dispatchEvent(new Event('pointerup'));
+        await Promise.resolve();
+        shadow.querySelectorAll<HTMLButtonElement>('.reader-comment-action__button')[1]!.click();
+        await vi.waitFor(() => expect(shadow.querySelector<HTMLTextAreaElement>('.reader-comment-popover__input')!.value).toBe('Needs clarification'));
+        const reopenedInput = shadow.querySelector<HTMLTextAreaElement>('.reader-comment-popover__input')!;
+        (panel as any).toggleFullscreen();
+        expect(shadow.querySelector('.reader-comment-popover__input')).toBe(reopenedInput);
+        expect(reopenedInput.isConnected).toBe(true);
+        expect(reopenedInput.value).toBe('Needs clarification');
+        const resizedMarkdownRoot = shadow.querySelector<HTMLElement>('.reader-markdown')!;
+        installLayoutMocks(range, resizedMarkdownRoot, Array.from(resizedMarkdownRoot.querySelectorAll<HTMLElement>('[data-aimd-unit-id]')));
+
         shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="save"]')!.click();
         await Promise.resolve();
 
@@ -363,7 +381,8 @@ describe('ReaderPanel comments', () => {
 
         shadow.querySelector<HTMLButtonElement>('.reader-comment-anchor')!.click();
         await Promise.resolve();
-        shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="cancel"]')!.click();
+        shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="delete"]')!.click();
+        shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="confirm-delete"]')!.click();
         await Promise.resolve();
 
         expect(listReaderComments(scopeId, 'a')).toHaveLength(0);
@@ -794,7 +813,7 @@ describe('ReaderPanel comments', () => {
             textarea.value = text;
             textarea.dispatchEvent(new Event('input', { bubbles: true }));
             shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="save"]')!.click();
-            await Promise.resolve();
+            await vi.waitFor(() => expect((panel as any).commentPopover.isOpen()).toBe(false));
         }
 
         const anchors = Array.from(shadow.querySelectorAll<HTMLElement>('.reader-comment-anchor'));

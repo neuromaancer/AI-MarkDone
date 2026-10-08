@@ -876,13 +876,13 @@ describe('SendPopover', () => {
         pop.open({ shadow, anchor: footerLeft, sendPort: createContentSendPort(adapter), theme: 'light', initialText: 'hi' });
 
         expect(footerLeft.querySelector('.send-popover__head strong')?.textContent).toBe('Send');
-        expect(footerLeft.querySelector('.send-popover__resize-handle')?.getAttribute('aria-label')).toBe('Resize send popover');
+        expect(footerLeft.querySelector('.send-popover__resize-handle')?.getAttribute('aria-label')).toBe('Resize message window');
 
         await setLocale('zh_CN');
         await Promise.resolve();
 
         expect(footerLeft.querySelector('.send-popover__head strong')?.textContent).toBe('发送');
-        expect(footerLeft.querySelector('.send-popover__resize-handle')?.getAttribute('aria-label')).toBe('调整发送浮层大小');
+        expect(footerLeft.querySelector('.send-popover__resize-handle')?.getAttribute('aria-label')).toBe('调整消息窗口大小');
 
         pop.close(shadow, { syncBack: false });
     });

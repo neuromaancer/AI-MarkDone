@@ -9,6 +9,20 @@ function t(key: string, args?: any): string {
 }
 
 describe('buildMarkdownExport', () => {
+    it('uses the same deduplicated source-order selection as PDF and PNG', () => {
+        const turns: ChatTurn[] = [
+            { user: 'first question', assistant: 'first answer', index: 10 },
+            { user: 'second question', assistant: 'second answer', index: 20 },
+        ];
+        const meta: ConversationMetadata = {
+            url: 'https://chatgpt.com/c/1', exportedAt: '2026-03-01T00:00:00.000Z',
+            title: 'Conversation', count: 2, platform: 'ChatGPT',
+        };
+        const result = buildMarkdownExport(turns, [1, 0, 1, -1, 0.5, 99], meta, t)!;
+        expect(result.markdown.match(/## exportAssistantLabel/g)).toHaveLength(2);
+        expect(result.markdown.indexOf('first question')).toBeLessThan(result.markdown.indexOf('second question'));
+    });
+
     it('returns null when no selected messages', () => {
         const meta: ConversationMetadata = {
             url: 'https://chatgpt.com/c/1',
@@ -87,4 +101,3 @@ describe('buildMarkdownExport', () => {
         expect(res!.markdown).not.toContain('# exportMessagePrefix:3');
     });
 });
-

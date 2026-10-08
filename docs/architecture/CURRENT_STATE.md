@@ -2,6 +2,59 @@
 
 本文描述 AI-MarkDone 当前仓库已经落地的结构事实，用于帮助开发者和 Codex 理解“现在是什么”。它不描述目标蓝图，也不描述未来计划。
 
+> **Directory installation default (2026-10-08)**
+>
+> Only `runtime.onInstalled` with reason `install` may initialize an absent
+> `app_settings` record with the Directory enabled. The existing background
+> storage queue makes this initialization idempotent and preserves any existing
+> record, including older/partial settings. Read-only settings requests await
+> pending installation work; queued user writes do not await a later queued
+> install operation. Update events and ordinary startup never opt users in.
+> The shared fallback/migration/reset defaults remain disabled to preserve old
+> installations that never saved settings. No schema or preference field changes.
+
+> **Annotation drafts and content fidelity (2026-10-07)**
+>
+> Page and Reader share the nonmodal `ReaderCommentPopover` and its draft session.
+> Background serializes recovery writes through the existing storage queue into
+> `aimd:annotation_drafts:v1`, with revision compare-and-swap, bounded local
+> retention and fail-closed handling of unsupported/corrupt bundles. Drafts are
+> separate from formal annotation bundles and `reader.persistAnnotations`.
+> Canonical conversation/message/selection identity allows browser-local recovery;
+> page-only targets retain caller-scoped runtime drafts. No draft is included in
+> Library backups, saved annotation counts or annotation exports.
+>
+> Markdown code source spans protect fenced, indented and inline code from
+> cleanup. The parser selects safe fences and preserves internal whitespace;
+> the weighted counter uses the same code boundaries while retaining its existing
+> CJK/ASCII weighting. Reader/copy/export fall back from empty preserved source to
+> the readable body, and source-only changes invalidate Reader projection.
+> Current-message DOM and historical snapshot ownership are unchanged.
+> The feedback-specific live retest additionally captured native semantic code
+> markers without `pre`/`code` tags. The ChatGPT clone normalizer maps only the
+> observed `code-block`/`inline-code` markers and excludes host controls; parser
+> language extraction prefers explicit CodeMirror metadata. This adaptation is
+> shared by current-message compilation and DOM pool capture.
+>
+> PDF retains the isolated frame and adds bounded image preparation, descriptive
+> unavailable-image text, non-scrolling print code/tables, pagination hints and
+> width fitting for display formulas. The frame prepares an A4-like printable
+> width before the native print layout exists and remeasures on `beforeprint`;
+> final paper selection remains the native print dialog's responsibility.
+
+> **Message export boundary (2026-10-03)**
+>
+> Save Messages projects one captured Reader source into `ChatTurn[]` and applies
+> the same content-cleanup preferences for Markdown, PDF and PNG. All three
+> formats use `buildMessageExportDocument` to validate selection positions,
+> deduplicate them and preserve source order; format-specific formula rewriting
+> stays at the Markdown output boundary. PDF renders those sections into a
+> temporary same-origin iframe and prints that frame. It never prints the host
+> window: ChatGPT's `beforeprint` handler creates its own print root and hides
+> sibling body content, which would otherwise hide the extension's document.
+> KaTeX assets and font readiness belong to the frame, and frame `afterprint`
+> owns cleanup. The timeout fallback retains the frame while print media is active.
+
 > **产品范围更新（2026-09-11）**：后续产品工作仅面向 ChatGPT，权威决策见 [FEATURES.md](../FEATURES.md#产品范围决策2026-09-11已确认)。本文保留其他平台运行时的事实记录，以准确描述仍然存在的遗留代码；它们不再构成新功能适配要求。三色高亮、统一资料库及八类设置中心已在 ChatGPT 落地；它们沿用已记录的独立存储与组织合同，打开管理面板不会自动迁移历史资料。
 
 > **ChatGPT discovery current boundary (2026-08-26)**
@@ -211,7 +264,7 @@
   - `ChatGPTConversationNavigation` 的 off-screen 主路径使用 ChatGPT 持久化的 sibling turn slots，而不是按总高度推算目标像素：它只用当前已挂载且 identity 唯一的 user/assistant anchors 校准 canonical sequence 与宿主 slot sequence 的单一 offset，不读取 React/Fiber、私有 virtualizer 或 `conversation-turn-N` 数字。宿主可能在外层持久 slot 与内层 `section[data-turn]` 上重复 `data-message-id`/`data-turn-id-container`；PageIndex 的相邻性必须先归一到有同类 sibling 的外层 slot，不能把最近的重复 marker 当作列表项。一次导航只扫描一次 slot group并复用同一 target slot；精确 slot 首次滚动后若仍在滚动视口外，最多再重试两次，已到视口内则等待宿主水合。若没有可信 target slot，则在显式 Directory/Stepper/Reader locate/Bookmark Go/pending action 内，以 Surface 稳定 ID 顺序和 scroll-root 中心游标执行有界单调寻迹：目标 ordinal 与游标 ordinal 的符号决定上下方向，符号翻转即越界并缩小步长。每步重新读取 Surface/DOM，寻迹最多 200 步；滚动边界按宿主普通 `[0, max]` 或 `column-reverse` 的 `[-max, 0]` 坐标范围判断；用户在 Settings 中配置初始步长为 1000–5000 CSS 像素、400 像素递进，运行中仍按越界和停滞自适应减半，缺少配置时才使用 120–2000 CSS 像素的兼容默认范围，并继续受现有总 timeout、停滞次数和滚动边界限制；不使用全局比例、像素插值或私有 virtualizer。精确 anchor 的最终滚动必须在 bounded alignment window 内连续两次保持 tolerance；anchor 断开或持续漂移要 fail closed，用户主动滚动则立即停止自动纠偏。普通导航不新增全页 `MutationObserver`、`ResizeObserver` 或常驻 timer，诊断 observer 仅在显式 debug 模式短暂启用。
   - 右下角旧的 `ChatGPTTopScrollController` 已删除。`ChatGPTMessageStepperController` 复用原有 lower-right host，提供“刷新消息导航”按钮；点击后通过共享 route helper 设置空 `message` 参数并刷新当前 ChatGPT conversation。旧 `autoTopTimeoutMs` 设置、滑块和到顶采样逻辑不再存在。
   - ChatGPT conversation route 识别只由共享 route helper 定义；内容发现的路由生命周期只由 `ChatGPTConversationContentRuntime` 持有。Directory、Toolbar、Stepper 与 Conversation Surface 信任 Runtime 已绑定的 page/canonical document，不再各自重解析 URL 来判断内容是否可用；内容链路没有 500 ms RouteWatcher。其它非内容功能若仍使用共享 RouteWatcher，不构成正文发现输入。
-  - `ChatGPTDirectoryController` + `ChatGPTDirectoryRail` 是默认关闭、用户可开启的 ChatGPT right-side surface，由 `chatgptDirectory.enabled` 控制。目录宿主在 Runtime 初始化时独立挂载到 `document.body`，使用与 lower-right controls 相同的 page-level fixed portal；body 尚未创建时才暂挂到 `document.documentElement`。Directory 生产路径只订阅一个 Surface Frame，并在一次 `reconcile(frame)` 中同时更新条目、可见性、DOM geometry、书签投影与 active observer，因此不存在“Shadow DOM 已有条目但 rail 仍隐藏”的独立状态。所有 obtained turns 都进入目录；未挂载项保留条目，挂载项使用完整 message group 计算高亮。当前 DOM hydration window 变小不得缩短目录。无 canonical ID 时目录仍工作，但不读取消息书签状态。rail/preview 几何与官方导航隐藏规则保持原有 tokenized、fail-open 边界，不修改官方 DOM，也不影响 Reader、Save Messages、复制或书签存储。
+  - `ChatGPTDirectoryController` + `ChatGPTDirectoryRail` 是新安装默认开启、现有用户保留开关状态的 ChatGPT right-side surface，由 `chatgptDirectory.enabled` 控制。目录宿主在 Runtime 初始化时独立挂载到 `document.body`，使用与 lower-right controls 相同的 page-level fixed portal；body 尚未创建时才暂挂到 `document.documentElement`。Directory 生产路径只订阅一个 Surface Frame，并在一次 `reconcile(frame)` 中同时更新条目、可见性、DOM geometry、书签投影与 active observer，因此不存在“Shadow DOM 已有条目但 rail 仍隐藏”的独立状态。所有 obtained turns 都进入目录；未挂载项保留条目，挂载项使用完整 message group 计算高亮。当前 DOM hydration window 变小不得缩短目录。无 canonical ID 时目录仍工作，但不读取消息书签状态。rail/preview 几何与官方导航隐藏规则保持原有 tokenized、fail-open 边界，不修改官方 DOM，也不影响 Reader、Save Messages、复制或书签存储。
   - `ChatGPTMessageStepperController` 是独立于 directory rail 的轻量 lower-right surface：它以单个圆形品牌按钮收起，悬停、焦点或点击向左展开玻璃抽屉，内部按原顺序提供管理面板入口、当前页面收藏、独立阅读器、Prompts、刷新消息导航及 Input Enhancement；上一条/下一条按钮仍由该 controller 管理行为与状态，但交由 Directory 独立停靠在页面右下角、品牌按钮上方，竖排为上/下箭头，不进入抽屉或 pin 选项。Escape/外部点击收起，内部焦点保持展开，窄屏可横向滚动，减少动画设置关闭过渡。刷新消息导航按钮只调用共享 `?message=` route helper 并刷新，不执行滚动寻迹；其余按钮和左右键导航保持现有设置与安全边界。
   - `ChatGPTComposerEditingController` 继续持有官方 composer 绑定、键盘优先级、列表删除和公式助手，观察与编辑链路不变。配置入口已迁入 Settings 的 Input & Prompts 分类；总开关显示 `available && enabled`，主动开启才使两项都满足，关闭保留子项值。不再挂载加号旁增强按钮、配置弹层或单独语法弹层。
   - composer 事件优先级固定为 IME/重入放行 → 已打开公式联想 → Cmd/Ctrl + Enter 发送与 Shift + Enter 宿主行为 → 已启用列表类型的 Backspace/Delete → 已启用粗体快捷键 → 普通 Enter。Enter 换行关闭时，普通文本 Enter 交还 ChatGPT，只有命中已启用真实列表类型才拦截。行前缀只做廉价候选检查，`markdownListEditing` 继续以 Lezer CommonMark AST 确认 `OrderedList` / `BulletList → ListItem`；有序/无序开关分别关闭对应类型全部规则。续写、拆分、空项退出、连续 sibling 重编号、loose list、引用、嵌套、等宽 marker 删除、二次合并和完整中间行删除继续共用纯规则与一个 native range edit；代码块、伪 marker、跳号边界、IME 和失败编辑交还宿主，不允许 `replaceChildren` 重建 ProseMirror。
@@ -361,7 +414,7 @@ flowchart TD
 
 ### ChatGPT Directory And Stepper
 
-- ChatGPT right-side directory rail 当前是默认开启、用户可关闭的 surface；content runtime 会创建 `ChatGPTDirectoryController`，实际显示由 `chatgptDirectory.enabled` 与 perf kill switch 控制。
+- ChatGPT right-side directory rail 仅在首次安装且缺少设置记录时默认开启；现有用户不会因升级被开启。content runtime 会创建 `ChatGPTDirectoryController`，实际显示由 `chatgptDirectory.enabled` 与 perf kill switch 控制。
 - `ChatGPTDirectoryController` / `ChatGPTDirectoryRail` 必须继续共享 active position、round discovery 与 `navigateChatGPTDirectoryTarget(...)`，不得新增第二套定位模型。
 - Directory 点击在当前 Surface 中按 turn/assistant identity 重新读取 ordinal，避免历史补齐后、rail 延迟重绘前的旧序号误拒绝。仅 `directory` / `stepper` 来源允许在其他 round 缺少 user identity 时定位目标自身的唯一 typed host slot；按序号校准仍要求完整身份，Reader / Bookmark 与未标记来源保持原有校验和滚动行为。
 - Directory / Stepper 向旧消息寻址并到达当前滚动顶部时，最多等待 1.2 秒供 ChatGPT 补载历史；期间仍只依靠已有 Surface 更新和短暂定时复查，不引入额外内容发现或网络请求。等待无进展即按原失败结果结束，Reader / Bookmark 保持原有边界行为。
@@ -487,4 +540,4 @@ Identity is layered: conversation/document scope contains an assistant-ID keyed 
 - `featureOverview.ts` is a read-only localized catalogue with stable group/item IDs. It supplies eight groups and 50 currently available user functions, with basic actions consolidated. Actual function names occupy the left table column; the right explains their purpose first, then lists the semantic entry, optional shortcut and necessary availability/saving note. `FeatureOverviewTabView` renders the existing `features` information tab, filters plain text, provides group jumps and routes related settings through the existing category navigation. It owns no content discovery, browser calls, storage writes or settings copy. Displayed terms follow `CONTEXT.md`; stored user prompts and custom templates are untouched.
 - `BookmarksPanelShell` places the eight Settings categories and five information links in one `.settings-navigation-scroll`, with a divider before Feature overview, Changelog, FAQ, About the author and Feedback. Only Mappamory and Buy Me Coffee remain in the fixed featured footer. Information tabs and Settings keep the existing active-module, focus and node-reuse lifecycle.
 - The shell embeds full screen immediately before Close in the panel's upper-right corner, without a separate title bar or footer. Hidden title metadata retains the existing dialog-label and workflow references; adjacent content headings or search fields reserve only the needed icon clearance. `data-fullscreen` changes the tokenized panel geometry within the current viewport; it does not call the browser Fullscreen API. `BookmarksPanel` retains the mode only while open and clears it in `finishHide`. Toggling preserves mounted tabs, category, search, selection and scroll state; no preference schema, runtime protocol, storage key or portable-file format changes.
-- The catalogue records Directory's actual default-off setting and opt-in annotation saving, plus temporary excerpts and separate-reader dependencies. This documentation correction does not change defaults. Branch/regeneration discovery and delayed official action-bar admission remain separate concerns; the overview does not represent them as resolved. Browser acceptance evidence remains a separate task and cannot be inferred from the catalogue or component tests.
+- The catalogue records Directory's first-install default-on behavior and preserved existing settings, plus opt-in annotation saving, temporary excerpts and separate-reader dependencies. The original catalogue addition did not change defaults; the 2026-10-08 installation initializer applies only to a fresh installation with no stored settings record. Branch/regeneration discovery and delayed official action-bar admission remain separate concerns; the overview does not represent them as resolved. Browser acceptance evidence remains a separate task and cannot be inferred from the catalogue or component tests.

@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import remarkParse from 'remark-parse';
 import type { ContentCleanupSettings } from '../settings/content';
+import { normalizeMarkdownWhitespace, protectMarkdownCode } from './markdownCodeProtection';
 
 export type ChatGPTReferenceNoiseOptions = {
     stripCitationMarkers?: boolean;
@@ -16,8 +17,6 @@ const DEFAULT_CHATGPT_REFERENCE_NOISE_OPTIONS: Required<ChatGPTReferenceNoiseOpt
     stripBareUrls: true,
 };
 
-const PROTECTED_CODE_TOKEN_PREFIX = '\uE000AIMD_CODE_';
-const PROTECTED_CODE_TOKEN_SUFFIX = '\uE001';
 const CHATGPT_COMPONENT_DIRECTIVE_RE = /^[ \t]{0,3}:::([A-Za-z][\w-]*)\{([^\n{}]*)\}[ \t]*\n([\s\S]*?)\n[ \t]{0,3}:::[ \t]*$/gm;
 const CHATGPT_COMPONENT_ATTR_RE = /(?:^|\s)(?:id|variant|type|title)=["'][^"']*["']/;
 
@@ -35,30 +34,6 @@ type MarkdownAstNode = {
     };
     children?: MarkdownAstNode[];
 };
-
-function protectMarkdownCode(markdown: string): { masked: string; restore: (value: string) => string } {
-    const protectedBlocks: string[] = [];
-    const protect = (value: string): string => {
-        const index = protectedBlocks.push(value) - 1;
-        return `${PROTECTED_CODE_TOKEN_PREFIX}${index}${PROTECTED_CODE_TOKEN_SUFFIX}`;
-    };
-
-    const maskedFences = markdown.replace(
-        /^([ \t]*)(`{3,}|~{3,})[^\n]*(?:\n[\s\S]*?^\1\2[ \t]*$|[\s\S]*$)/gm,
-        (match) => protect(match)
-    );
-    const masked = maskedFences.replace(/`[^`\n]+`/g, (match) => protect(match));
-
-    return {
-        masked,
-        restore(value: string): string {
-            return value.replace(
-                new RegExp(`${PROTECTED_CODE_TOKEN_PREFIX}(\\d+)${PROTECTED_CODE_TOKEN_SUFFIX}`, 'g'),
-                (_match, index: string) => protectedBlocks[Number(index)] ?? ''
-            );
-        },
-    };
-}
 
 function visitMarkdownAst(node: MarkdownAstNode, visitor: (node: MarkdownAstNode) => void): void {
     visitor(node);
@@ -250,7 +225,7 @@ export function normalizeChatGPTReaderMarkdown(markdown: string, cleanupOptions?
     const cleaned = cleanChatGPTReferenceNoise(source, cleanupOptions);
     const withLatexDelimiters = normalizeLatexDelimiters(cleaned);
     const withMathDelimiters = normalizeMarkdownMathDelimiters(withLatexDelimiters);
-    return withMathDelimiters.replace(/\n{3,}/g, '\n\n').trim();
+    return normalizeMarkdownWhitespace(withMathDelimiters);
 }
 
 /** Preserve the captured source; apply reader/copy/export preferences only at output. */

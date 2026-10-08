@@ -1,5 +1,6 @@
 import { isMarkLibraryOperation, type MarkLibraryOperation } from './markLibrary';
 import { isHighlightRecord, type HighlightRecord } from './highlights';
+import { isAnnotationDraftIdentity, type AnnotationDraftPayload } from './annotationDrafts';
 import {
     isReaderAnnotationDocument,
     isReaderAnnotationRecord,
@@ -291,6 +292,9 @@ export type ExtRequest =
     | { v: ProtocolVersion; id: RequestId; type: 'highlights:update'; payload: { document: ReaderAnnotationDocument; highlight: HighlightRecord; expectedRevision: number } }
     | { v: ProtocolVersion; id: RequestId; type: 'highlights:remove'; payload: { document: ReaderAnnotationDocument; highlightId: string; expectedRevision: number } }
     | { v: ProtocolVersion; id: RequestId; type: 'annotations:list'; payload?: ReaderAnnotationListPayload }
+    | { v: ProtocolVersion; id: RequestId; type: 'annotations:draftRead'; payload: AnnotationDraftPayload }
+    | { v: ProtocolVersion; id: RequestId; type: 'annotations:draftWrite'; payload: AnnotationDraftPayload }
+    | { v: ProtocolVersion; id: RequestId; type: 'annotations:draftRemove'; payload: AnnotationDraftPayload }
     | { v: ProtocolVersion; id: RequestId; type: 'annotations:create'; payload: ReaderAnnotationCreatePayload }
     | { v: ProtocolVersion; id: RequestId; type: 'annotations:update'; payload: ReaderAnnotationUpdatePayload }
     | { v: ProtocolVersion; id: RequestId; type: 'annotations:remove'; payload: ReaderAnnotationRemovePayload }
@@ -428,6 +432,9 @@ export function isExtRequest(value: unknown): value is ExtRequest {
         'markLibrary:get', 'markLibrary:mutate',
         'highlights:list', 'highlights:create', 'highlights:update', 'highlights:remove',
         'annotations:list',
+        'annotations:draftRead',
+        'annotations:draftWrite',
+        'annotations:draftRemove',
         'annotations:create',
         'annotations:update',
         'annotations:remove',
@@ -542,6 +549,13 @@ export function isExtRequest(value: unknown): value is ExtRequest {
     }
     if (type.startsWith('annotations:')) {
         const payload = rec.payload;
+        if (type === 'annotations:draftRead' || type === 'annotations:draftWrite' || type === 'annotations:draftRemove') {
+            if (typeof payload !== 'object' || payload === null) return false;
+            const draft = payload as Record<string, unknown>;
+            return isAnnotationDraftIdentity(draft.identity)
+                && (type === 'annotations:draftRead' || (Number.isInteger(draft.expectedRevision) && (draft.expectedRevision as number) >= 0))
+                && (type !== 'annotations:draftWrite' || typeof draft.text === 'string');
+        }
         if (type === 'annotations:list') {
             if (payload === undefined) return true;
             if (typeof payload !== 'object' || payload === null) return false;

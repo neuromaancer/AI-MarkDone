@@ -40,7 +40,7 @@ function projectTurns(turns: ChatTurn[], settings: ContentCleanupSettings = DEFA
         ...turn,
         assistant: !settings.preserveLinks
             ? omitMarkdownCodeBlocks(turn.assistant)
-            : turn.assistantSource !== undefined
+            : turn.assistantSource?.trim()
             ? projectChatGPTMarkdown(turn.assistantSource, settings)
             : settings.includeCodeBlocks ? turn.assistant : omitMarkdownCodeBlocks(turn.assistant),
     }));
@@ -78,7 +78,7 @@ export async function exportTurnsPdf(
     try {
         const plan = buildPdfPrintPlan(projectTurns(turns, options.contentCleanup), selectedIndices, metadata, options.t);
         if (!plan) return { ok: true, noop: true };
-        await printPdf({ html: plan.html, containerId: plan.containerId });
+        await printPdf(plan);
         return { ok: true, noop: false };
     } catch (err: any) {
         return {

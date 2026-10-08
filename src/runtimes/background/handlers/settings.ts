@@ -9,6 +9,7 @@ import type { ProtocolErrorCode } from '../../../contracts/protocol';
 import { backgroundStorageQueue } from '../../../drivers/background/storage/asyncQueue';
 import { syncStoragePort } from '../../../drivers/background/storage/syncStoragePort';
 import { loadAndNormalize, planGetAll, planGetCategory, planReset, planSetCategory } from '../../../services/settings/settingsService';
+import { DEFAULT_SETTINGS } from '../../../core/settings/types';
 
 type HandlerResult = { response: ExtResponse };
 
@@ -47,19 +48,44 @@ async function persistSettings(next: unknown): Promise<void> {
     await syncStoragePort.set({ [LEGACY_STORAGE_KEYS.appSettingsKey]: next });
 }
 
+let installSettingsReady: Promise<void> = Promise.resolve();
+
+export function initializeSettingsForInstall(reason?: string): Promise<void> {
+    if (reason !== 'install') return Promise.resolve();
+    const operation = backgroundStorageQueue.enqueue(async () => {
+        const raw = await syncStoragePort.get(LEGACY_STORAGE_KEYS.appSettingsKey);
+        if (Object.prototype.hasOwnProperty.call(raw, LEGACY_STORAGE_KEYS.appSettingsKey)) return;
+        const initial = structuredClone(DEFAULT_SETTINGS);
+        initial.chatgptDirectory.enabled = true;
+        await persistSettings(initial);
+    });
+    // A failed install write must not prevent later user-initiated settings operations.
+    installSettingsReady = operation.catch(() => undefined);
+    return operation;
+}
+
+async function readInitializedSettings(): Promise<unknown> {
+    for (;;) {
+        const ready = installSettingsReady;
+        await ready;
+        const stored = await loadStoredSettings();
+        if (ready === installSettingsReady) return stored;
+    }
+}
+
 export async function handleSettingsRequest(request: ExtRequest): Promise<HandlerResult | null> {
     if (!request.type.startsWith('settings:')) return null;
 
     try { switch (request.type) {
         case 'settings:export': {
             try {
-                const current = loadAndNormalize(await loadStoredSettings());
+                const current = loadAndNormalize(await readInitializedSettings());
                 return { response: ok(request.id, request.type, { file: createSettingsFile(current, browser.runtime.getManifest().version) }) };
             } catch(error) {const mapped=toErrorCode(error);return {response:err(request.id,request.type,mapped.code,mapped.message)};}
         }
         case 'settings:previewImport': {
             try {
-                const current = loadAndNormalize(await loadStoredSettings());
+                const current = loadAndNormalize(await readInitializedSettings());
                 const preview = await previewSettingsImport(current, request.payload?.fileText,browser.runtime.getManifest().version);
                 return { response: ok(request.id, request.type, { preview }) };
             } catch (error) {
@@ -101,12 +127,12 @@ export async function handleSettingsRequest(request: ExtRequest): Promise<Handle
             });
         }
         case 'settings:getAll': {
-            const stored = await loadStoredSettings();
+            const stored = await readInitializedSettings();
             const normalized = loadAndNormalize(stored);
             return { response: ok(request.id, request.type, {...planGetAll(normalized),capabilities:{appVersion:browser.runtime.getManifest().version,settingsVersion:5,settingsFileFormatVersion:1,buttonsPreferences:true}}) };
         }
         case 'settings:getCategory': {
-            const stored = await loadStoredSettings();
+            const stored = await readInitializedSettings();
             const normalized = loadAndNormalize(stored);
             try {
                 const result = planGetCategory(normalized, request.payload?.category);

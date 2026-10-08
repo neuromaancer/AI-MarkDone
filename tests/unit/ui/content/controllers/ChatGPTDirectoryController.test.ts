@@ -17,7 +17,10 @@ import {
 const navigationMocks = vi.hoisted(() => ({
     scrollToBookmarkTargetWithRetry: vi.fn(),
     highlightNavigationTarget: vi.fn(),
+    showToast: vi.fn(),
 }));
+
+vi.mock('@/utils/toast', () => ({ showToast: navigationMocks.showToast }));
 
 vi.mock('@/drivers/content/bookmarks/navigation', () => ({
     scrollToBookmarkTargetWithRetry: navigationMocks.scrollToBookmarkTargetWithRetry,
@@ -362,6 +365,22 @@ describe('ChatGPTDirectoryController', () => {
             assistantMessageId: 'a2',
         }), expect.anything());
         controller.dispose();
+    });
+
+    it.each(['failed', 'rejected'] as const)('reports an unsuccessful real directory click (%s)', async (kind) => {
+        navigationMocks.showToast.mockClear();
+        const adapter = new ChatGPTTestAdapter();
+        const navigation = { navigate: vi.fn(() => kind === 'rejected'
+            ? Promise.reject(new Error('navigation unavailable'))
+            : Promise.resolve({ ok: false as const, reason: 'hydration-timeout' as const })), cancelActive: vi.fn() };
+        const controller = createDirectoryController(adapter, { subscribe: vi.fn(() => () => undefined) }, null, { navigation });
+        (controller as any).ensureRail();
+        setCanonicalSnapshot(adapter, buildSnapshot());
+        controller.render();
+        document.getElementById('aimd-chatgpt-directory-rail')!.shadowRoot!
+            .querySelector<HTMLButtonElement>('.rail__item')!.click();
+        await vi.advanceTimersByTimeAsync(0);
+        expect(navigationMocks.showToast).toHaveBeenCalledWith(expect.objectContaining({ tone: 'error' }));
     });
 
     it('routes an unmounted round click through its persistent host slot when turn wrappers repeat the slot marker', async () => {

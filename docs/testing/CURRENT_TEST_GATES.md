@@ -343,6 +343,28 @@ content remains consumable after DOM virtualization and SPA navigation.
 
 # Current ChatGPT discovery gate (DOM-authoritative tab-local pools)
 
+## First-install Directory default (2026-10-08)
+
+First-install Directory defaults are covered through the actual background
+`onInstalled` event in `settings-first-install.test.ts`: fresh install,
+update/ordinary reads without a settings key, v1–v5 partial records, explicit
+on/off, existing null/undefined records, duplicate install events, delayed
+storage, in-flight reads, user writes ahead of installation and storage failure.
+Only fresh-install initialization enables the Directory; legacy reads and
+migrations remain unchanged. Settings transfer tests preserve their existing
+missing-field/import semantics.
+
+## Annotation drafts and content fidelity (2026-10-07)
+
+- Annotation editing must enter through native selection → Page/Reader Annotate, not only direct editor construction. Cover outside reading, close/reopen recovery, minimize/expand, drag containment, IME, formal save failure, pending destructive actions, source changes and Reader redraws. The production `reader-comments` fixture remains the visual source.
+- Draft contract/session/background tests cover canonical versus page-only identity, target isolation, late reads, old-session ownership, revision conflicts, deletion/recreation, corrupt/future storage, retention, count/text/byte limits and unavailable storage without truncating input. Drafts must remain separate from formal annotation preferences, counts and backups.
+- Content fixtures cover code language, indentation, repeated blank lines, embedded backticks, tilde/long fences, inline code and code-viewer line breaks. Verify the real toolbar Copy trigger, Reader rendering, weighted counts and Markdown/PDF/PNG source projection; retain partial-selection literal behavior.
+- PDF checks include delayed/failed images and localized alt descriptions through the real export trigger, plus actual browser layout/output for long code, wide tables, long formulas and cross-page text. CSS-string assertions alone do not prove that overflow or pagination is correct.
+- Locale and hardcoded fallback checks cover key/substitution parity, image-action accessibility names, independent Reader startup errors and popup guidance. Review long Chinese/English content at narrow widths and 200% reflow.
+- The runtime performance harness samples selected atomic units before annotation-editor focus, checks clearing after the focus transition, and closes the real editor before steady-state metrics. Missing editor/close controls fail the harness; selector timeouts are not swallowed. Selection, long-task, MIME and deferred-projection budgets remain unchanged.
+
+The normal core, smoke, acceptance, type-check and Chrome/Firefox build gates remain required. Component/browser fixtures and generated PDF evidence do not replace installed-extension ChatGPT or native Firefox print acceptance.
+
 The active production contract is ADR-0024:
 
 - `ChatGPTPageIndex` is the only Page Monitor; no second observer is allowed.

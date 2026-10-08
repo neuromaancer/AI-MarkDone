@@ -1,10 +1,10 @@
 {
     "extName": {
-        "message": "AI-MarkDone — ChatGPT Productivity Suite",
+        "message": "AI-MarkDone — Reader and export for ChatGPT",
         "description": "Message for extName"
     },
     "extDescription": {
-        "message": "Supercharge your ChatGPT workflow: reader, bookmarks, Prompts, and Markdown/PDF/PNG export.",
+        "message": "Read, annotate, bookmark, and export ChatGPT replies as Markdown, PDF, or PNG.",
         "description": "Message for extDescription"
     },
     "popupSupportedSites": {
@@ -12,7 +12,7 @@
         "description": "Label above the supported-site list in the extension popup"
     },
     "popupChatGptHint": {
-        "message": "Full AI-MarkDone workspace",
+        "message": "Read, annotate, bookmark, and export replies",
         "description": "Capability hint for ChatGPT in the extension popup"
     },
     "popupFormulaCopyHint": {
@@ -20,7 +20,7 @@
         "description": "Capability hint for formula-copy sites in the extension popup"
     },
     "popupUnsupportedPageFooter": {
-        "message": "Open a supported site to use AI-MarkDone.",
+        "message": "Open ChatGPT and use the toolbar below a reply. Click the extension icon for Library and Settings.",
         "description": "Footer guidance shown when the extension popup opens on an unsupported page"
     },
     "popupLogoAlt": {
@@ -36,7 +36,7 @@
         "description": "Accessible label for removing the current ChatGPT page bookmark"
     },
     "chatgptPageControlSplitView": {
-        "message": "Open separate reader",
+        "message": "Open separate Reader",
         "description": "Accessible label for the detached Reader page control"
     },
     "chatgptPageControlPrompts": {
@@ -52,7 +52,7 @@
         "description": "Message for btnCopy"
     },
     "btnCopied": {
-        "message": "Copied!",
+        "message": "Copied",
         "description": "Message for btnCopied"
     },
     "btnCopyAsPng": {
@@ -60,7 +60,7 @@
         "description": "Message for btnCopyAsPng"
     },
     "btnCopyAsPngCopied": {
-        "message": "PNG copied!",
+        "message": "PNG copied",
         "description": "Message for btnCopyAsPngCopied"
     },
     "btnCopyAsPngDownloaded": {
@@ -96,7 +96,7 @@
         "description": "Message for formulaAssetSaved"
     },
     "formulaAssetRendering": {
-        "message": "Rendering...",
+        "message": "Rendering…",
         "description": "Message for formulaAssetRendering"
     },
     "btnBookmark": {
@@ -104,7 +104,7 @@
         "description": "Message for btnBookmark"
     },
     "btnRemoveBookmark": {
-        "message": "Remove Bookmark",
+        "message": "Remove bookmark",
         "description": "Message for btnRemoveBookmark"
     },
     "btnReader": {
@@ -120,7 +120,7 @@
         "description": "Message for btnExport"
     },
     "btnWordCount": {
-        "message": "Word Count",
+        "message": "Character count",
         "description": "Message for btnWordCount"
     },
     "btnClose": {
@@ -168,7 +168,7 @@
         "description": "Message for btnSave"
     },
     "loading": {
-        "message": "Loading...",
+        "message": "Loading…",
         "description": "Message for loading"
     },
     "noContent": {
@@ -176,11 +176,11 @@
         "description": "Message for noContent"
     },
     "openingPreview": {
-        "message": "Opening Preview...",
+        "message": "Opening preview…",
         "description": "Message for openingPreview"
     },
     "saving": {
-        "message": "Saving...",
+        "message": "Saving…",
         "description": "Message for saving"
     },
     "done": {
@@ -188,15 +188,15 @@
         "description": "Message for done"
     },
     "copyAppSettings": {
-        "message": "Copy App Settings",
+        "message": "Copy settings",
         "description": "Message for copyAppSettings"
     },
     "resetAppSettings": {
-        "message": "Reset App Settings",
+        "message": "Reset settings",
         "description": "Message for resetAppSettings"
     },
     "readerTitle": {
-        "message": "AI-Markdone Reader",
+        "message": "AI-MarkDone Reader",
         "description": "Message for readerTitle"
     },
     "readerOutlineLabel": {
@@ -232,7 +232,7 @@
         "description": "Accessible label for dragging a Reader sticky block"
     },
     "toggleFullscreen": {
-        "message": "Toggle fullscreen",
+        "message": "Toggle full screen",
         "description": "Message for toggleFullscreen"
     },
     "previousMessage": {
@@ -252,23 +252,23 @@
         "description": "Directory navigation tooltip with keyboard shortcut."
     },
     "navigateHint": {
-        "message": "\"← →\" to navigate",
+        "message": "Use ← and → to switch messages",
         "description": "Message for navigateHint"
     },
     "typeYourMessage": {
-        "message": "Type your message...",
+        "message": "Type a message…",
         "description": "Message for typeYourMessage"
     },
     "saveMessages": {
-        "message": "Save Messages",
+        "message": "Export messages",
         "description": "Message for saveMessages"
     },
     "selectAll": {
-        "message": "Select All",
+        "message": "Select all",
         "description": "Message for selectAll"
     },
     "deselectAll": {
-        "message": "Deselect All",
+        "message": "Deselect all",
         "description": "Message for deselectAll"
     },
     "invertSelection": {
@@ -276,19 +276,19 @@
         "description": "Invert the current selection"
     },
     "readerMode": {
-        "message": "Reader Mode",
+        "message": "Reader mode",
         "description": "Message for readerMode"
     },
     "contentNotFound": {
-        "message": "Content not found",
+        "message": "Content unavailable. Try reopening this reply.",
         "description": "Message for contentNotFound"
     },
     "bookmarkUnavailable": {
-        "message": "This message is not ready to bookmark",
+        "message": "This message is not ready to bookmark. Try again after it finishes loading.",
         "description": "Message shown when a conversation message lacks stable bookmark data"
     },
     "bookmarkUnreliableLocation": {
-        "message": "Cannot reliably locate the original message",
+        "message": "The original message could not be located. Open its conversation to find it.",
         "description": "Shown when a saved message has no unique identity on this conversation branch"
     },
     "bookmarkDuplicateManagedInLibrary": {
@@ -296,39 +296,39 @@
         "description": "Shown when the bookmark button cannot choose one old record to remove"
     },
     "copyFailed": {
-        "message": "Copy failed",
+        "message": "Could not copy. Try again.",
         "description": "Message for copyFailed"
     },
     "clipboardImageWriteFailed": {
-        "message": "PNG copy failed",
+        "message": "Could not copy the PNG. Try again.",
         "description": "Message for clipboardImageWriteFailed"
     },
     "clipboardImageWriteUnsupported": {
-        "message": "This browser does not support copying PNG images",
+        "message": "This browser does not support PNG copying. Save the image instead.",
         "description": "Message for clipboardImageWriteUnsupported"
     },
     "openFailed": {
-        "message": "Open failed",
+        "message": "Could not open. Try again.",
         "description": "Message for openFailed"
     },
     "exportOptions": {
-        "message": "Export Options",
+        "message": "Export options",
         "description": "Message for exportOptions"
     },
     "selectExportMethod": {
-        "message": "Choose export method:",
+        "message": "Choose an export format",
         "description": "Message for selectExportMethod"
     },
     "keepFolderStructure": {
-        "message": "Keep Folder Structure",
+        "message": "Keep folder structure",
         "description": "Message for keepFolderStructure"
     },
     "exportAsFolders": {
-        "message": "Export as hierarchical folders and bookmarks",
+        "message": "Include folders and bookmarks",
         "description": "Message for exportAsFolders"
     },
     "flatList": {
-        "message": "Flat List",
+        "message": "Flat list",
         "description": "Message for flatList"
     },
     "exportBookmarksOnly": {
@@ -344,11 +344,11 @@
         "description": "Message for renameTo"
     },
     "autoRename": {
-        "message": "Auto Rename",
+        "message": "Rename automatically",
         "description": "Message for autoRename"
     },
     "clickCopy": {
-        "message": "Click copy",
+        "message": "Copy",
         "description": "Message for clickCopy"
     },
     "btnCopyText": {
@@ -380,7 +380,7 @@
         "description": "Message for readerCommentEditTitle"
     },
     "readerCommentPlaceholder": {
-        "message": "Write your annotation...",
+        "message": "Write an annotation…",
         "description": "Message for readerCommentPlaceholder"
     },
     "readerCommentSave": {
@@ -388,7 +388,7 @@
         "description": "Message for readerCommentSave"
     },
     "readerCommentSaveShortcut": {
-        "message": "Ctrl/Cmd + Enter to save",
+        "message": "Cmd/Ctrl + Enter to save",
         "description": "Keyboard shortcut hint shown beside the Reader annotation save button"
     },
     "readerCommentSaved": {
@@ -396,7 +396,7 @@
         "description": "Message for readerCommentSaved"
     },
     "readerCommentSessionOnly": {
-        "message": "Only kept in this session.",
+        "message": "Kept for this page session only.",
         "description": "Reader annotation confirmation when persistence is disabled or unavailable"
     },
     "readerCommentDeleted": {
@@ -468,7 +468,7 @@
         "description": "Reader annotation manager loading state"
     },
     "readerCommentListError": {
-        "message": "Could not load annotations.",
+        "message": "Could not load annotations. Try again.",
         "description": "Reader annotation manager error state"
     },
     "readerCommentUpdatedAt": {
@@ -484,7 +484,7 @@
         "description": "Reader annotation manager unanchored state"
     },
     "readerCommentPersistenceUnavailable": {
-        "message": "Annotations could not be loaded.",
+        "message": "Could not complete the annotation action. Try again.",
         "description": "Reader annotation persistence error"
     },
     "readerCommentDeleteTitle": {
@@ -492,7 +492,7 @@
         "description": "Reader annotation delete confirmation title"
     },
     "readerCommentDeleteMessage": {
-        "message": "This annotation will be deleted from this browser profile.",
+        "message": "This annotation will be deleted from this browser.",
         "description": "Reader annotation delete confirmation message"
     },
     "readerCommentOpenOtherConversation": {
@@ -500,7 +500,7 @@
         "description": "Reader annotation cross conversation navigation"
     },
     "readerCommentSourceUnavailable": {
-        "message": "The source reply is not available in this Reader.",
+        "message": "This reply is unavailable in Reader. Open the original conversation to find it.",
         "description": "Reader annotation source unavailable"
     },
     "readerAnnotationPersistenceLabel": {
@@ -532,11 +532,11 @@
         "description": "Message for readerCommentTemplateHint"
     },
     "readerCommentTemplatePlaceholder": {
-        "message": "Write your annotation template here...",
+        "message": "Write an annotation template…",
         "description": "Message for readerCommentTemplatePlaceholder"
     },
     "readerCommentTemplateInsertSelectedSource": {
-        "message": "Insert selected source",
+        "message": "Insert selected text",
         "description": "Message for readerCommentTemplateInsertSelectedSource"
     },
     "readerCommentTemplateInsertPlaceholder": {
@@ -544,15 +544,15 @@
         "description": "Message for readerCommentTemplateInsertPlaceholder"
     },
     "readerCommentTemplateInsertUserComment": {
-        "message": "Insert user annotation",
+        "message": "Insert annotation",
         "description": "Message for readerCommentTemplateInsertUserComment"
     },
     "readerCommentTemplateTokenSelectedSource": {
-        "message": "Selected source",
+        "message": "Selected text",
         "description": "Message for readerCommentTemplateTokenSelectedSource"
     },
     "readerCommentTemplateTokenUserComment": {
-        "message": "User annotation",
+        "message": "Annotation",
         "description": "Message for readerCommentTemplateTokenUserComment"
     },
     "readerSettingsLabel": {
@@ -576,11 +576,11 @@
         "description": "Message for readerDefaultOpenModeDesc"
     },
     "readerOpenModeFullscreen": {
-        "message": "Fullscreen",
+        "message": "Full screen",
         "description": "Message for readerOpenModeFullscreen"
     },
     "readerOpenModePanel": {
-        "message": "Panel",
+        "message": "Window",
         "description": "Message for readerOpenModePanel"
     },
     "readerBodyFontSizeLabel": {
@@ -600,11 +600,11 @@
         "description": "Message for readerContentWidthDesc"
     },
     "readerDetachedNoticeResetLabel": {
-        "message": "Separate reader notice",
+        "message": "Separate Reader notice",
         "description": "Message for readerDetachedNoticeResetLabel"
     },
     "readerDetachedNoticeResetDesc": {
-        "message": "Reset this to show the experimental notice again the next time you open a separate reader from the lower-right controls.",
+        "message": "Show the notice again the next time you open a separate Reader from the page controls.",
         "description": "Message for readerDetachedNoticeResetDesc"
     },
     "appearanceSettingsLabel": {
@@ -612,11 +612,11 @@
         "description": "Message for appearanceSettingsLabel"
     },
     "globalFontSizeLabel": {
-        "message": "Extension text size",
+        "message": "Interface text size",
         "description": "Message for globalFontSizeLabel"
     },
     "globalFontSizeDesc": {
-        "message": "Adjust AI-MarkDone interface text from 12px to 20px.",
+        "message": "Set AI-MarkDone interface text size from 12px to 20px.",
         "description": "Message for globalFontSizeDesc"
     },
     "decreaseFontSize": {
@@ -628,11 +628,11 @@
         "description": "Message for increaseFontSize"
     },
     "themeAccentColorLabel": {
-        "message": "Extension accent color",
+        "message": "Accent color",
         "description": "Message for themeAccentColorLabel"
     },
     "themeAccentColorDesc": {
-        "message": "Choose the accent color used by primary actions, links, focus rings, and selected states.",
+        "message": "Set the color for primary buttons, links, focus indicators, and selections.",
         "description": "Message for themeAccentColorDesc"
     },
     "themeAccentDefaultBlue": {
@@ -656,11 +656,11 @@
         "description": "Message for themeAccentAmber"
     },
     "advancedSettingsLabel": {
-        "message": "Advanced Settings",
+        "message": "Advanced settings",
         "description": "Message for advancedSettingsLabel"
     },
     "advancedSettingsDesc": {
-        "message": "Show focused controls for fine-tuning extension behavior.",
+        "message": "Fine-tune navigation, shortcuts, and other extension behavior.",
         "description": "Message for advancedSettingsDesc"
     },
     "readerCommentPromptListLabel": {
@@ -684,7 +684,7 @@
         "description": "Label for Reader annotation ordering"
     },
     "readerCommentSortModeDesc": {
-        "message": "Choose whether annotation lists and copied annotations follow creation time or text position.",
+        "message": "Order annotation lists and copied annotations by creation time or position in the text.",
         "description": "Description for Reader annotation ordering"
     },
     "readerCommentSortCreated": {
@@ -696,7 +696,7 @@
         "description": "Annotation sort option by text position"
     },
     "readerCommentTemplateSettingsLabel": {
-        "message": "Format for copying annotations",
+        "message": "Annotation copy format",
         "description": "Message for readerCommentTemplateSettingsLabel"
     },
     "readerCommentTemplateSettingsDesc": {
@@ -724,7 +724,7 @@
         "description": "Message for readerCommentPromptRestoreDefaultsTitle"
     },
     "readerCommentPromptRestoreDefaultsMessage": {
-        "message": "Restoring the starter prompts will replace all of your current prompts. Do you want to continue?",
+        "message": "Replace all current prompts with the starter prompts?",
         "description": "Message for readerCommentPromptRestoreDefaultsMessage"
     },
     "readerCommentPromptEdit": {
@@ -760,15 +760,15 @@
         "description": "Message for readerCommentPromptTitlePlaceholder"
     },
     "readerCommentPromptContentPlaceholder": {
-        "message": "Write the prompt header shown above copied annotations...",
+        "message": "Write instructions to include with copied annotations…",
         "description": "Message for readerCommentPromptContentPlaceholder"
     },
     "readerCommentPromptDeleteTitle": {
-        "message": "Delete prompt",
+        "message": "Delete prompt?",
         "description": "Message for readerCommentPromptDeleteTitle"
     },
     "readerCommentPromptDeleteMessage": {
-        "message": "Delete this prompt from Reader settings?",
+        "message": "This prompt will be removed from the saved prompts.",
         "description": "Message for readerCommentPromptDeleteMessage"
     },
     "readerCommentPromptPickerTitle": {
@@ -784,7 +784,7 @@
         "description": "Message for readerCommentInsertIntoSend"
     },
     "saveMessagesTitle": {
-        "message": "Save Messages As",
+        "message": "Export messages",
         "description": "Message for saveMessagesTitle"
     },
     "formatMarkdown": {
@@ -816,7 +816,7 @@
         "description": "PNG render stage shown while preparing the image"
     },
     "pngExportStageCompiling": {
-        "message": "Compiling Markdown",
+        "message": "Preparing Markdown",
         "description": "PNG render stage shown while compiling Markdown"
     },
     "pngExportStageLayout": {
@@ -828,11 +828,11 @@
         "description": "PNG render stage and current segment count"
     },
     "pngExportStageEncoding": {
-        "message": "Encoding segment $1",
+        "message": "Saving image segment $1",
         "description": "PNG encoding stage and current segment count"
     },
     "pngExportStageFinalizing": {
-        "message": "Finalizing image",
+        "message": "Finishing image",
         "description": "PNG render stage shown while finalizing the image"
     },
     "pngExportZipping": {
@@ -860,15 +860,15 @@
         "description": "Message shown when PNG export is cancelled"
     },
     "pngExportRenderProgressLabel": {
-        "message": "Image rendering",
+        "message": "Image progress",
         "description": "Accessible label for the detailed PNG rendering progress bar"
     },
     "pngExportTotalProgressLabel": {
-        "message": "Total export",
+        "message": "Overall progress",
         "description": "Accessible label for the total PNG export progress bar"
     },
     "pngExportWidthPresetLabel": {
-        "message": "Width of a full-message PNG",
+        "message": "Message PNG width",
         "description": "Message for pngExportWidthPresetLabel"
     },
     "pngExportWidthPresetDesc": {
@@ -876,7 +876,7 @@
         "description": "Message for pngExportWidthPresetDesc"
     },
     "pngExportWidthValueLabel": {
-        "message": "Width value",
+        "message": "Width in pixels",
         "description": "Message for pngExportWidthValueLabel"
     },
     "pngExportWidthValueDesc": {
@@ -900,7 +900,7 @@
         "description": "Message for pngExportWidthPresetCustom"
     },
     "pngExportPixelRatioLabel": {
-        "message": "Sharpness of a full-message PNG",
+        "message": "Message PNG resolution",
         "description": "Message for pngExportPixelRatioLabel"
     },
     "pngExportPixelRatioDesc": {
@@ -908,7 +908,7 @@
         "description": "Message for pngExportPixelRatioDesc"
     },
     "saveBookmarkTitle": {
-        "message": "Save Bookmark",
+        "message": "Save bookmark",
         "description": "Message for saveBookmarkTitle"
     },
     "labelTitle": {
@@ -920,15 +920,15 @@
         "description": "Message for labelFolder"
     },
     "languageChanged": {
-        "message": "Language Changed",
+        "message": "Language changed",
         "description": "Message for languageChanged"
     },
     "reloadMessage": {
-        "message": "Please reload the page to apply the new language setting.",
+        "message": "Refresh this page to use the new language.",
         "description": "Message for reloadMessage"
     },
     "reloadNow": {
-        "message": "Reload Now",
+        "message": "Refresh now",
         "description": "Message for reloadNow"
     },
     "later": {
@@ -960,15 +960,15 @@
         "description": "Message for send"
     },
     "search": {
-        "message": "Search...",
+        "message": "Search…",
         "description": "Message for search"
     },
     "sortByTime": {
-        "message": "Sort by: Time",
+        "message": "Sort by time",
         "description": "Message for sortByTime"
     },
     "sortAlpha": {
-        "message": "Sort by: A-Z",
+        "message": "Sort A–Z",
         "description": "Message for sortAlpha"
     },
     "sortByTimeLabel": {
@@ -980,23 +980,23 @@
         "description": "Message for sortAlphaLabel"
     },
     "sortByTimeAscTitle": {
-        "message": "Sort by: Time (Oldest first)",
+        "message": "Oldest first",
         "description": "Message for sortByTimeAscTitle"
     },
     "sortByTimeDescTitle": {
-        "message": "Sort by: Time (Newest first)",
+        "message": "Newest first",
         "description": "Message for sortByTimeDescTitle"
     },
     "sortAlphaAscTitle": {
-        "message": "Sort by: A-Z",
+        "message": "Title A–Z",
         "description": "Message for sortAlphaAscTitle"
     },
     "sortAlphaDescTitle": {
-        "message": "Sort by: Z-A",
+        "message": "Title Z–A",
         "description": "Message for sortAlphaDescTitle"
     },
     "createFolder": {
-        "message": "Create new folder",
+        "message": "Create folder",
         "description": "Message for createFolder"
     },
     "importBookmarks": {
@@ -1020,7 +1020,7 @@
         "description": "Message for selectBookmarkItem"
     },
     "newSubfolder": {
-        "message": "New Subfolder",
+        "message": "New subfolder",
         "description": "Message for newSubfolder"
     },
     "createSubfolder": {
@@ -1052,7 +1052,7 @@
         "description": "Message for deleteFolderConfirm"
     },
     "openConversation": {
-        "message": "Open in Conversation",
+        "message": "Open in conversation",
         "description": "Message for openConversation"
     },
     "openConversationLabel": {
@@ -1072,31 +1072,31 @@
         "description": "Message for deleteBookmark"
     },
     "titleRequired": {
-        "message": "Title is required",
+        "message": "Enter a title.",
         "description": "Message for titleRequired"
     },
     "titleTooLong": {
-        "message": "Title must be 100 characters or less",
+        "message": "Use a title of 100 characters or fewer.",
         "description": "Message for titleTooLong"
     },
     "titleForbiddenChars": {
-        "message": "Title contains invalid characters",
+        "message": "Remove unsupported characters from the title.",
         "description": "Message for titleForbiddenChars"
     },
     "titleForbiddenCharsDetailed": {
-        "message": "Title cannot contain: $1",
+        "message": "Remove these characters from the title: $1",
         "description": "Message for titleForbiddenCharsDetailed"
     },
     "errorCalculating": {
-        "message": "Error calculating",
+        "message": "Could not calculate",
         "description": "Message for errorCalculating"
     },
     "inputMessage": {
-        "message": "Input Message",
+        "message": "Message",
         "description": "Message for inputMessage"
     },
     "enterBookmarkTitle": {
-        "message": "Enter bookmark title...",
+        "message": "Enter a bookmark title…",
         "description": "Message for enterBookmarkTitle"
     },
     "renameBookmarkLabel": {
@@ -1104,19 +1104,19 @@
         "description": "Message for renameBookmarkLabel"
     },
     "saveBookmark": {
-        "message": "Save Bookmark",
+        "message": "Save bookmark",
         "description": "Message for saveBookmark"
     },
     "moveBookmarksToFolder": {
-        "message": "Move Bookmarks to Folder",
+        "message": "Move bookmarks",
         "description": "Message for moveBookmarksToFolder"
     },
     "newFolder": {
-        "message": "New Folder",
+        "message": "New folder",
         "description": "Message for newFolder"
     },
     "newSubfolderTitle": {
-        "message": "New Subfolder",
+        "message": "New subfolder",
         "description": "Message for newSubfolderTitle"
     },
     "enterFolderName": {
@@ -1124,7 +1124,7 @@
         "description": "Message for enterFolderName"
     },
     "loadingFolders": {
-        "message": "Loading folders...",
+        "message": "Loading folders…",
         "description": "Message for loadingFolders"
     },
     "general": {
@@ -1144,11 +1144,11 @@
         "description": "Message for behavior"
     },
     "toolbarPageActionsSettingsLabel": {
-        "message": "Toolbar & Page Actions",
+        "message": "Toolbar & page actions",
         "description": "Message for toolbarPageActionsSettingsLabel"
     },
     "buttonsEntrypointsSettingsLabel": {
-        "message": "Buttons & Entrypoints",
+        "message": "Buttons & entry points",
         "description": "Message for buttonsEntrypointsSettingsLabel"
     },
     "buttonsEntrypointsSettingsDesc": {
@@ -1156,7 +1156,7 @@
         "description": "Message for buttonsEntrypointsSettingsDesc"
     },
     "chatgptReadingInputSettingsLabel": {
-        "message": "ChatGPT Reading & Input",
+        "message": "ChatGPT reading & input",
         "description": "Message for chatgptReadingInputSettingsLabel"
     },
     "readerWorkflowSettingsLabel": {
@@ -1164,7 +1164,7 @@
         "description": "Message for readerWorkflowSettingsLabel"
     },
     "copyFormulaExportSettingsLabel": {
-        "message": "Copy, Formula & Export",
+        "message": "Copy, formulas & export",
         "description": "Message for copyFormulaExportSettingsLabel"
     },
     "chatgptDirectorySettingsLabel": {
@@ -1172,7 +1172,7 @@
         "description": "Message for chatgptDirectorySettingsLabel"
     },
     "chatgptSettingsLabel": {
-        "message": "ChatGPT Settings",
+        "message": "ChatGPT settings",
         "description": "Message for chatgptSettingsLabel"
     },
     "messageToolbarLabel": {
@@ -1180,11 +1180,11 @@
         "description": "Message for messageToolbarLabel"
     },
     "messageToolbarDesc": {
-        "message": "Turning this off hides the other AI-MarkDone buttons below replies too.",
+        "message": "Show AI-MarkDone actions below ChatGPT replies.",
         "description": "Message for messageToolbarDesc"
     },
     "chatgptRestorePositionAfterSendLabel": {
-        "message": "Keep my reading position after sending",
+        "message": "Keep reading position after sending",
         "description": "Message for chatgptRestorePositionAfterSendLabel"
     },
     "chatgptRestorePositionAfterSendDesc": {
@@ -1204,15 +1204,15 @@
         "description": "Option for disabling ChatGPT Markdown selection shortcut"
     },
     "chatgptAtomicMarkdownCopyModC": {
-        "message": "Ctrl/Cmd+C",
+        "message": "Cmd/Ctrl + C",
         "description": "Option for using the primary C shortcut for ChatGPT Markdown selection copy"
     },
     "chatgptAtomicMarkdownCopyModShiftC": {
-        "message": "Ctrl/Cmd+Shift+C",
+        "message": "Cmd/Ctrl + Shift + C",
         "description": "Option for using the shifted primary C shortcut for ChatGPT Markdown selection copy"
     },
     "chatgptInputEnhancementLabel": {
-        "message": "Use writing shortcuts in the ChatGPT input box",
+        "message": "Enable input enhancement",
         "description": "Settings label for making ChatGPT input enhancements available"
     },
     "chatgptInputEnhancementDesc": {
@@ -1224,11 +1224,11 @@
         "description": "Tooltip for the ChatGPT input enhancement button"
     },
     "chatgptInputEnhancementEnabledState": {
-        "message": "enabled",
+        "message": "Enabled",
         "description": "Accessible enabled state for the input enhancement button"
     },
     "chatgptInputEnhancementDisabledState": {
-        "message": "paused",
+        "message": "Paused",
         "description": "Accessible paused state for the input enhancement button"
     },
     "chatgptInputEnhancementTitle": {
@@ -1248,7 +1248,7 @@
         "description": "Runtime master switch label"
     },
     "chatgptInputEnhancementMasterDesc": {
-        "message": "Pause or resume all enhancements while keeping the choices below.",
+        "message": "Enable writing shortcuts using the options below.",
         "description": "Runtime master switch description"
     },
     "chatgptInputEnhancementEnterLabel": {
@@ -1284,7 +1284,7 @@
         "description": "Bold shortcut description"
     },
     "chatgptInputEnhancementFormulaSuggestionsLabel": {
-        "message": "Suggest formula commands as I type",
+        "message": "Suggest formula commands while typing",
         "description": "Formula suggestion label"
     },
     "chatgptInputEnhancementFormulaSuggestionsDesc": {
@@ -1296,7 +1296,7 @@
         "description": "Formula preview switch label"
     },
     "chatgptInputEnhancementFormulaPreviewDesc": {
-        "message": "Show a lightweight preview for inline and display formulas.",
+        "message": "Preview inline and display formulas while editing.",
         "description": "Formula preview switch description"
     },
     "chatgptInputEnhancementGuideLabel": {
@@ -1308,7 +1308,7 @@
         "description": "Input enhancement guide title"
     },
     "chatgptInputEnhancementGuideIntro": {
-        "message": "Markers stay visible while editing. Each behavior follows the switches in Input enhancement.",
+        "message": "Markdown markers remain visible while editing. Turn each option on or off under Input enhancement.",
         "description": "Input enhancement guide introduction"
     },
     "chatgptInputEnhancementGuideSyntaxTitle": {
@@ -1324,7 +1324,7 @@
         "description": "Ordered-list syntax description"
     },
     "chatgptInputEnhancementGuideUnorderedListSyntax": {
-        "message": "Unordered list item; + and * are also supported",
+        "message": "Bulleted list item; + and * also work",
         "description": "Unordered-list syntax description"
     },
     "chatgptInputEnhancementGuideInlineFormulaSyntax": {
@@ -1380,7 +1380,7 @@
         "description": "Formula suggestion trigger behavior"
     },
     "chatgptInputEnhancementGuidePromptTrigger": {
-        "message": "Type a backslash plus a Prompt trigger (for example, \\rewrite) to open Prompt suggestions; a backslash inside formulas remains a LaTeX trigger.",
+        "message": "Type a backslash and a prompt trigger, such as \\translate, to see matching prompts. Inside formulas, the backslash opens LaTeX suggestions.",
         "description": "Prompt suggestion trigger behavior"
     },
     "promptAutocompleteKeyboardHint": {
@@ -1428,19 +1428,19 @@
         "description": "Message for chatgptShowPageBookmarkControlLabel"
     },
     "chatgptShowPageBookmarkControlDesc": {
-        "message": "Bookmark this ChatGPT conversation.",
+        "message": "Bookmark the current ChatGPT conversation.",
         "description": "Message for chatgptShowPageBookmarkControlDesc"
     },
     "chatgptShowDetachedReaderControlLabel": {
-        "message": "Show Separate reader button",
+        "message": "Show Separate Reader button",
         "description": "Message for chatgptShowDetachedReaderControlLabel"
     },
     "chatgptShowDetachedReaderControlDesc": {
-        "message": "Open this conversation in a separate reader tab.",
+        "message": "Open this conversation in a separate Reader tab.",
         "description": "Message for chatgptShowDetachedReaderControlDesc"
     },
     "chatgptShowPromptControlLabel": {
-        "message": "Show Saved Prompts button",
+        "message": "Show Prompts button",
         "description": "Message for chatgptShowPromptControlLabel"
     },
     "chatgptShowPromptControlDesc": {
@@ -1448,7 +1448,7 @@
         "description": "Message for chatgptShowPromptControlDesc"
     },
     "chatgptArrowKeyMessageNavigationLabel": {
-        "message": "Use Left and Right to switch messages",
+        "message": "Use arrow keys to switch messages",
         "description": "Message for chatgptArrowKeyMessageNavigationLabel"
     },
     "chatgptArrowKeyMessageNavigationDesc": {
@@ -1484,7 +1484,7 @@
         "description": "Message for chatgptDirectoryEnabledLabel"
     },
     "chatgptDirectoryRetiredNotice": {
-        "message": "Enable the message directory under Settings → Reading & messages.",
+        "message": "Turn the message directory on or off under Settings → Reading & messages.",
         "description": "Message for chatgptDirectoryRetiredNotice"
     },
     "chatgptDirectoryEnabledDesc": {
@@ -1524,7 +1524,7 @@
         "description": "Message for chatgptDirectoryRightInsetDesc"
     },
     "chatgptDirectoryPreviewMaxCharsLabel": {
-        "message": "Words shown in a message preview",
+        "message": "Characters in a message preview",
         "description": "Message for chatgptDirectoryPreviewMaxCharsLabel"
     },
     "chatgptDirectoryPreviewMaxCharsDesc": {
@@ -1536,7 +1536,7 @@
         "description": "Message for reader"
     },
     "supportDevelopment": {
-        "message": "Support Development",
+        "message": "Support development",
         "description": "Message for supportDevelopment"
     },
     "ifProjectHelps": {
@@ -1552,7 +1552,7 @@
         "description": "Title shown when a content surface cannot reach the extension runtime"
     },
     "runtimeConnectionUnavailableMessage": {
-        "message": "AI-MarkDone could not connect to the extension runtime. Retry, or refresh this page if the problem continues.",
+        "message": "AI-MarkDone could not connect. Retry, or refresh this page if the problem continues.",
         "description": "Recovery guidance for a temporary extension runtime connection failure"
     },
     "runtimeContextInvalidatedMessage": {
@@ -1576,7 +1576,7 @@
         "description": "Title shown while canonical settings are loading"
     },
     "settingsLoadingMessage": {
-        "message": "Waiting for the extension runtime.",
+        "message": "Waiting for AI-MarkDone to respond.",
         "description": "Message shown while canonical settings are loading"
     },
     "createFirstFolder": {
@@ -1588,7 +1588,7 @@
         "description": "Message for noResultsTitle"
     },
     "noResultsHint": {
-        "message": "Try clearing search, type, or folder filters.",
+        "message": "Try another search or clear the filters.",
         "description": "Message for noResultsHint"
     },
     "clearFiltersBtn": {
@@ -1596,11 +1596,11 @@
         "description": "Message for clearFiltersBtn"
     },
     "migrationComplete": {
-        "message": "Migration Complete",
+        "message": "Migration complete",
         "description": "Message for migrationComplete"
     },
     "migratedBookmarks": {
-        "message": "Migrated $1 bookmark(s) to \"Import\" folder",
+        "message": "$1 bookmarks moved to the “Import” folder",
         "description": "Message for migratedBookmarks"
     },
     "deleteSelected": {
@@ -1624,7 +1624,7 @@
         "description": "Message for batchDelete"
     },
     "batchMove": {
-        "message": "Move To",
+        "message": "Move to",
         "description": "Message for batchMove"
     },
     "batchExport": {
@@ -1636,39 +1636,39 @@
         "description": "Message for batchClear"
     },
     "maxDepthExceeded": {
-        "message": "Maximum Depth Exceeded",
+        "message": "Folder limit reached",
         "description": "Message for maxDepthExceeded"
     },
     "maxDepthMessage": {
-        "message": "Maximum folder depth of 3 levels reached.",
+        "message": "Folders support up to four levels. Create a top-level folder or choose another location.",
         "description": "Message for maxDepthMessage"
     },
     "failedToCreateFolder": {
-        "message": "Failed to Create Folder",
+        "message": "Could not create folder",
         "description": "Message for failedToCreateFolder"
     },
     "folderNameExists": {
-        "message": "Folder name already exists.",
+        "message": "A folder with this name already exists. Choose another name.",
         "description": "Message for folderNameExists"
     },
     "folderNameNoSlash": {
-        "message": "Folder name cannot contain \"/\".",
+        "message": "Remove “/” from the folder name.",
         "description": "Message for folderNameNoSlash"
     },
     "folderNameTooLong": {
-        "message": "Folder name must be $1 characters or less.",
+        "message": "Use a folder name of $1 characters or fewer.",
         "description": "Message for folderNameTooLong"
     },
     "folderNameTraversal": {
-        "message": "Folder name cannot contain \"..\".",
+        "message": "Remove “..” from the folder name.",
         "description": "Message for folderNameTraversal"
     },
     "folderNameInvalidChars": {
-        "message": "Folder name contains invalid characters.",
+        "message": "Remove unsupported characters from the folder name.",
         "description": "Message for folderNameInvalidChars"
     },
     "folderNameControlChars": {
-        "message": "Folder name cannot contain control characters.",
+        "message": "Remove line breaks and other control characters from the folder name.",
         "description": "Message for folderNameControlChars"
     },
     "folderPathSegmentInvalid": {
@@ -1680,51 +1680,51 @@
         "description": "Message for spacesCollapsed"
     },
     "failedToRename": {
-        "message": "Failed to Rename",
+        "message": "Could not rename",
         "description": "Message for failedToRename"
     },
     "deleteBookmarkTitle": {
-        "message": "Delete Bookmark",
+        "message": "Delete bookmark?",
         "description": "Message for deleteBookmarkTitle"
     },
     "deleteBookmarkMessage": {
-        "message": "Are you sure you want to delete this bookmark?",
+        "message": "This bookmark will be deleted from this browser.",
         "description": "Message for deleteBookmarkMessage"
     },
     "noItemsSelected": {
-        "message": "No Items Selected",
+        "message": "No items selected",
         "description": "Message for noItemsSelected"
     },
     "pleaseSelectToExport": {
-        "message": "Please select items to export",
+        "message": "Select items to export.",
         "description": "Message for pleaseSelectToExport"
     },
     "noBookmarksSelected": {
-        "message": "No Bookmarks Selected",
+        "message": "No bookmarks selected",
         "description": "Message for noBookmarksSelected"
     },
     "noBookmarksToMove": {
-        "message": "No Bookmarks to Move",
+        "message": "No bookmarks to move",
         "description": "Message for noBookmarksToMove"
     },
     "noBookmarksToMoveNote": {
-        "message": "Note: Folders cannot be moved, only bookmarks.",
+        "message": "Select bookmarks to move. Folders are not included in this action.",
         "description": "Message for noBookmarksToMoveNote"
     },
     "storageFull": {
-        "message": "Storage Full",
+        "message": "Storage full",
         "description": "Message for storageFull"
     },
     "storageWarning": {
-        "message": "Storage Warning",
+        "message": "Storage warning",
         "description": "Message for storageWarning"
     },
     "importSuccessful": {
-        "message": "Import Successful",
+        "message": "Import complete",
         "description": "Message for importSuccessful"
     },
     "importFailed": {
-        "message": "Import Failed",
+        "message": "Import failed",
         "description": "Message for importFailed"
     },
     "conversation": {
@@ -1740,7 +1740,7 @@
         "description": "Message for copyMarkdown"
     },
     "atomicCopyMarkdownFailed": {
-        "message": "The Markdown selection could not be copied.",
+        "message": "Could not copy this selection. Select the text again and retry.",
         "description": "Notice after a Markdown selection copy fails"
     },
     "close": {
@@ -1768,7 +1768,7 @@
         "description": "Message for unknownError"
     },
     "sponsor": {
-        "message": "Sponsor",
+        "message": "Support",
         "description": "Message for sponsor"
     },
     "settings": {
@@ -1784,7 +1784,7 @@
         "description": "Message for settingsLanguageLabel"
     },
     "settingsLanguageDesc": {
-        "message": "Choose your preferred language",
+        "message": "Choose the interface language.",
         "description": "Message for settingsLanguageDesc"
     },
     "settingsDiscoveryDiagnosticsLabel": {
@@ -1804,11 +1804,11 @@
         "description": "Message for settingsDiscoveryDiagnosticsCopied"
     },
     "settingsDiscoveryDiagnosticsUnavailable": {
-        "message": "Discovery diagnostics are unavailable on this page",
+        "message": "Reading diagnostics are unavailable on this page.",
         "description": "Message for settingsDiscoveryDiagnosticsUnavailable"
     },
     "languageAuto": {
-        "message": "Auto (Browser Language)",
+        "message": "Automatic (browser language)",
         "description": "Message for languageAuto"
     },
     "languageEnglish": {
@@ -1824,7 +1824,7 @@
         "description": "Message for enableOnChatGPT"
     },
     "saveMessagesLabel": {
-        "message": "Show Save Messages button",
+        "message": "Show Export button",
         "description": "Message for saveMessagesLabel"
     },
     "saveMessagesDesc": {
@@ -1832,7 +1832,7 @@
         "description": "Message for saveMessagesDesc"
     },
     "wordCountLabel": {
-        "message": "Show character count beside replies",
+        "message": "Show character count",
         "description": "Settings order or statistics label."
     },
     "wordCountDesc": {
@@ -1840,11 +1840,11 @@
         "description": "Message for wordCountDesc"
     },
     "clickToCopyLabel": {
-        "message": "Message > Click to Copy",
+        "message": "Click formulas to copy",
         "description": "Message for clickToCopyLabel"
     },
     "clickToCopyDesc": {
-        "message": "Enable click-to-copy for math formulas",
+        "message": "Click a formula in a reply to copy its source.",
         "description": "Message for clickToCopyDesc"
     },
     "formulaSettingsLabel": {
@@ -1896,11 +1896,11 @@
         "description": "Message for formulaSourceFormatEquationStar"
     },
     "formulaAssetActionsLabel": {
-        "message": "Formula image actions",
+        "message": "Formula export buttons",
         "description": "Message for formulaAssetActionsLabel"
     },
     "formulaAssetActionsDesc": {
-        "message": "Formula hover actions are off by default. Enable the PNG / SVG / MathML copy and save actions you want to show.",
+        "message": "Choose which copy and save buttons appear above formulas.",
         "description": "Message for formulaAssetActionsDesc"
     },
     "formulaAssetFontSizeLabel": {
@@ -1920,11 +1920,11 @@
         "description": "Message for formulaAssetActionsSummaryAll"
     },
     "formulaAssetActionsSummaryNone": {
-        "message": "No formula actions enabled",
+        "message": "No actions enabled",
         "description": "Message for formulaAssetActionsSummaryNone"
     },
     "formulaAssetActionsSummaryCount": {
-        "message": "$1 action(s) enabled",
+        "message": "$1 actions enabled",
         "description": "Message for formulaAssetActionsSummaryCount"
     },
     "contextOnlySaveLabel": {
@@ -1940,7 +1940,7 @@
         "description": "Message for renderCodeBlocksLabel"
     },
     "renderCodeBlocksDesc": {
-        "message": "Code blocks remain visible without syntax colors when off.",
+        "message": "Add syntax colors to code in Reader.",
         "description": "Message for renderCodeBlocksDesc"
     },
     "readerOutlineToggleLabel": {
@@ -1952,7 +1952,7 @@
         "description": "Message for readerOutlineToggleDesc"
     },
     "supportDevDesc": {
-        "message": "AI-MarkDone is open source. Star us on GitHub.",
+        "message": "AI-MarkDone is open source. You can support it with a star on GitHub.",
         "description": "Message for supportDevDesc"
     },
     "starOnGitHub": {
@@ -1968,7 +1968,7 @@
         "description": "Message for buyMeCoffee"
     },
     "wechatAppreciationCode": {
-        "message": "微信赞赏码",
+        "message": "WeChat appreciation code",
         "description": "Message for wechatAppreciationCode"
     },
     "xiaohongshuAccount": {
@@ -1984,7 +1984,7 @@
         "description": "Message for followMe"
     },
     "aboutProfileBio": {
-        "message": "I am an engineering graduate student. I do not work directly in computer science, but I enjoy tinkering with AI tools in my spare time. Feel free to follow me.",
+        "message": "I am an engineering graduate student who enjoys exploring AI tools in my spare time.",
         "description": "Message for aboutProfileBio"
     },
     "aboutHeroEyebrow": {
@@ -1992,11 +1992,11 @@
         "description": "Eyebrow shown above the About page introduction"
     },
     "aboutHeroTitle": {
-        "message": "Built from real workflow friction",
+        "message": "Built for everyday ChatGPT tasks",
         "description": "Title of the About page introduction"
     },
     "aboutHeroDesc": {
-        "message": "AI-MarkDone is a personal project for making long AI conversations easier to read, organize, and reuse.",
+        "message": "AI-MarkDone is a personal project that helps you read, organize, and reuse long ChatGPT conversations.",
         "description": "Summary shown in the About page introduction"
     },
     "aboutProfileRole": {
@@ -2008,7 +2008,7 @@
         "description": "Message for aboutWebsiteTitle"
     },
     "aboutWebsiteDesc": {
-        "message": "Visit the AI-MarkDone website for guides and updates.",
+        "message": "Visit the website for guides and updates.",
         "description": "Message for aboutWebsiteDesc"
     },
     "aboutWebsiteButton": {
@@ -2112,11 +2112,11 @@
         "description": "Message for supportContactDesc"
     },
     "supportContactEmail": {
-        "message": "Email Feedback",
+        "message": "Email feedback",
         "description": "Message for supportContactEmail"
     },
     "supportContactCopyEmail": {
-        "message": "Copy Email",
+        "message": "Copy email address",
         "description": "Message for supportContactCopyEmail"
     },
     "feedbackHeroEyebrow": {
@@ -2164,7 +2164,7 @@
         "description": "Title of the Xiaohongshu community group card"
     },
     "communityXiaohongshuMeta": {
-        "message": "Invite valid through August 14, 2026",
+        "message": "This invite expired on August 14, 2026",
         "description": "Expiry notice shown on the Xiaohongshu community group card"
     },
     "communityXiaohongshuHint": {
@@ -2176,7 +2176,7 @@
         "description": "Alternative text for the Xiaohongshu community invite image"
     },
     "communityPrivacyNote": {
-        "message": "You can also join through my Xiaohongshu profile.",
+        "message": "Joining is optional. Other members may see your public profile. You can also join through my Xiaohongshu profile.",
         "description": "Privacy note shown below the community group cards"
     },
     "selectFolderLabel": {
@@ -2184,15 +2184,15 @@
         "description": "Message for selectFolderLabel"
     },
     "movingBookmarks": {
-        "message": "Moving <strong>$1</strong> bookmark(s)",
+        "message": "Moving <strong>$1</strong> bookmarks",
         "description": "Message for movingBookmarks"
     },
     "deleteBookmarkConfirm": {
-        "message": "Delete bookmark \"$1\"?",
+        "message": "Delete bookmark “$1”?",
         "description": "Message for deleteBookmarkConfirm"
     },
     "deleteBookmarkTip": {
-        "message": "Tip: You can export your bookmarks first to create a backup.",
+        "message": "Export the Library first if you need a backup.",
         "description": "Message for deleteBookmarkTip"
     },
     "noBookmarksSelectedMessage": {
@@ -2200,7 +2200,7 @@
         "description": "Message for noBookmarksSelectedMessage"
     },
     "pleaseSelectToMove": {
-        "message": "Please select items to move",
+        "message": "Select bookmarks to move.",
         "description": "Message for pleaseSelectToMove"
     },
     "storageQuotaExceeded": {
@@ -2228,11 +2228,11 @@
         "description": "Message for importFailedMessage"
     },
     "maxDepthSubfolderMessage": {
-        "message": "Cannot create subfolder: Maximum folder depth is $1 levels.\\n\\nPlease create a new root folder or organize within existing folders.",
+        "message": "Folders support up to $1 levels. Create a top-level folder or choose another location.",
         "description": "Message for maxDepthSubfolderMessage"
     },
     "maxDepthFolderMessage": {
-        "message": "Cannot create folder: Maximum folder depth is $1 levels.\\n\\nCurrent path would be: $2\\nDepth: $3\\n\\nPlease create a new root folder or organize within existing folders.",
+        "message": "Folders support up to $1 levels. The path $2 would use $3 levels. Choose a shorter path or a top-level folder.",
         "description": "Message for maxDepthFolderMessage"
     },
     "failedToCreateFolderMessage": {
@@ -2244,7 +2244,7 @@
         "description": "Message for failedToRenameFolderMessage"
     },
     "folderNameEmpty": {
-        "message": "Folder name cannot be empty",
+        "message": "Enter a folder name.",
         "description": "Message for folderNameEmpty"
     },
     "creatingSubfolderIn": {
@@ -2252,7 +2252,7 @@
         "description": "Message for creatingSubfolderIn"
     },
     "createFirstFolderBtn": {
-        "message": "Create First Folder",
+        "message": "Create folder",
         "description": "Message for createFirstFolderBtn"
     },
     "tabBookmarks": {
@@ -2316,7 +2316,7 @@
         "description": "Message for openGithubRepo"
     },
     "saveContextOnlyConfirm": {
-        "message": "Save context only? (OK=yes, Cancel=no)",
+        "message": "Save only excerpts in new bookmarks? Questions and replies longer than 500 characters will keep 250 from the start and 250 from the end.",
         "description": "Message for saveContextOnlyConfirm"
     },
     "repairConfirm": {
@@ -2392,11 +2392,11 @@
         "description": "Message for selectedCount"
     },
     "storageUsedLabel": {
-        "message": "Storage Used",
+        "message": "Storage used",
         "description": "Message for storageUsedLabel"
     },
     "storageCalculating": {
-        "message": "Calculating...",
+        "message": "Calculating…",
         "description": "Message for storageCalculating"
     },
     "backupTitle": {
@@ -2408,15 +2408,15 @@
         "description": "Message for backupWarning"
     },
     "exportAllBtn": {
-        "message": "Export All",
+        "message": "Export all",
         "description": "Message for exportAllBtn"
     },
     "dataManagement": {
-        "message": "Data Management",
+        "message": "Data management",
         "description": "Settings group label for Google Drive backup and local data backup"
     },
     "googleDriveBackupCardTitle": {
-        "message": "Google Drive Backup",
+        "message": "Google Drive backup",
         "description": "Settings data management card title for Google Drive backup"
     },
     "cloudBackupExperimentalLabel": {
@@ -2424,7 +2424,7 @@
         "description": "Short label marking Google Drive backup as experimental"
     },
     "localBackupCardTitle": {
-        "message": "Local Backup",
+        "message": "Local backup",
         "description": "Settings data management card title for local backup"
     },
     "localBackupTitle": {
@@ -2448,7 +2448,7 @@
         "description": "Cloud backup connected account status"
     },
     "cloudBackupConfigMissingStatus": {
-        "message": "Google Drive setup is missing",
+        "message": "Google Drive backup is unavailable in this version",
         "description": "Short cloud backup status when the Chrome build lacks OAuth configuration"
     },
     "cloudBackupSettings": {
@@ -2512,7 +2512,7 @@
         "description": "No cloud backups found title"
     },
     "cloudBackupNoSnapshotsDesc": {
-        "message": "Google Drive does not have any AI-MarkDone backups yet.",
+        "message": "Choose Back up now to save the first Library backup to Google Drive.",
         "description": "No cloud backups found message"
     },
     "cloudBackupRestorePreviewTitle": {
@@ -2556,7 +2556,7 @@
         "description": "Scope note for old cloud snapshots"
     },
     "cloudBackupStatusChecking": {
-        "message": "Checking Google Drive status...",
+        "message": "Checking Google Drive…",
         "description": "Cloud backup status check message"
     },
     "cloudBackupPrivacyNote": {
@@ -2588,35 +2588,35 @@
         "description": "Description for the Google Drive restore snapshot picker"
     },
     "cloudBackupProgressConfirmingAccess": {
-        "message": "Confirming Google Drive access...",
+        "message": "Checking Google Drive access…",
         "description": "Google Drive backup progress step for confirming short-lived access"
     },
     "cloudBackupProgressPreparingBookmarks": {
-        "message": "Preparing your Library...",
+        "message": "Preparing Library…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressCreatingSnapshot": {
-        "message": "Creating a verified snapshot...",
+        "message": "Preparing backup…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressUploadingDrive": {
-        "message": "Uploading to Google Drive...",
+        "message": "Uploading to Google Drive…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressVerifyingUpload": {
-        "message": "Reading the file back for verification...",
+        "message": "Checking uploaded backup…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressComplete": {
-        "message": "Finishing up...",
+        "message": "Finishing backup…",
         "description": "Google Drive backup progress step"
     },
     "cloudBackupProgressReadingList": {
-        "message": "Reading Google Drive backups...",
+        "message": "Loading Google Drive backups…",
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressDownloadingSnapshot": {
-        "message": "Downloading the selected backup...",
+        "message": "Downloading selected backup…",
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressBuildingPreview": {
@@ -2624,7 +2624,7 @@
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressWaitingConfirmation": {
-        "message": "Waiting for confirmation...",
+        "message": "Waiting for confirmation…",
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressApplyingMerge": {
@@ -2632,11 +2632,11 @@
         "description": "Google Drive restore progress step"
     },
     "cloudBackupProgressWorking": {
-        "message": "Working...",
+        "message": "Working…",
         "description": "Disabled modal footer label while Google Drive backup work is running"
     },
     "cloudBackupProgressTimeBudget": {
-        "message": "Timeout budget: $1 remaining",
+        "message": "Time before timeout: $1",
         "description": "Countdown label showing the remaining Google Drive backup operation timeout budget"
     },
     "cloudBackupSnapshotSizeUnknown": {
@@ -2680,11 +2680,11 @@
         "description": "Confirmation message for moving a Google Drive backup file to trash"
     },
     "selectMessagesLabel": {
-        "message": "Select messages to save:",
+        "message": "Select messages to export",
         "description": "Message for selectMessagesLabel"
     },
     "formatLabel": {
-        "message": "Format:",
+        "message": "Format",
         "description": "Message for formatLabel"
     },
     "selectedCountMessages": {
@@ -2692,11 +2692,11 @@
         "description": "Message for selectedCountMessages"
     },
     "dataAndStorage": {
-        "message": "Data & Storage",
+        "message": "Data & storage",
         "description": "Message for dataAndStorage"
     },
     "deleteSelectedTitle": {
-        "message": "Delete Selected Items",
+        "message": "Delete selected items?",
         "description": "Message for deleteSelectedTitle"
     },
     "deletePermanentlyPrefix": {
@@ -2716,23 +2716,23 @@
         "description": "Message for bookmarksCount"
     },
     "failedToExtractUserMessage": {
-        "message": "Could not read the question. Please try again.",
+        "message": "Could not read the question. Try again.",
         "description": "Message for failedToExtractUserMessage"
     },
     "failedToPrepareBookmark": {
-        "message": "Failed to prepare bookmark. Please try again.",
+        "message": "Could not prepare the bookmark. Try again.",
         "description": "Message for failedToPrepareBookmark"
     },
     "failedToToggleBookmark": {
-        "message": "Failed to toggle bookmark",
+        "message": "Could not update the bookmark. Try again.",
         "description": "Message for failedToToggleBookmark"
     },
     "failedToRenderContent": {
-        "message": "Failed to render content",
+        "message": "Could not display this content. Try reopening it.",
         "description": "Message for failedToRenderContent"
     },
     "exitFullscreen": {
-        "message": "Exit fullscreen",
+        "message": "Exit full screen",
         "description": "Message for exitFullscreen"
     },
     "importStatusNormal": {
@@ -2752,7 +2752,7 @@
         "description": "Message for importStatusDuplicate"
     },
     "importActionRenameMerge": {
-        "message": "Rename & Merge",
+        "message": "Rename & merge",
         "description": "Message for importActionRenameMerge"
     },
     "importActionMerge": {
@@ -2760,11 +2760,11 @@
         "description": "Message for importActionMerge"
     },
     "importConfirmationTitle": {
-        "message": "Import Confirmation",
+        "message": "Review import",
         "description": "Message for importConfirmationTitle"
     },
     "importingCount": {
-        "message": "Importing <strong>$1</strong> bookmark(s).",
+        "message": "Importing <strong>$1</strong> bookmarks",
         "description": "Message for importingCount"
     },
     "importSummaryNormal": {
@@ -2840,7 +2840,7 @@
         "description": "Message for pdfAssistantLabel"
     },
     "allPlatforms": {
-        "message": "All Platforms",
+        "message": "All platforms",
         "description": "Message for allPlatforms"
     },
     "bookmarkTypeFilterLabel": {
@@ -2876,15 +2876,15 @@
         "description": "Message for contextOnlyConfirmSummary"
     },
     "contextOnlyBenefitTitle": {
-        "message": "Benefit:",
+        "message": "Storage",
         "description": "Message for contextOnlyBenefitTitle"
     },
     "contextOnlyBenefitDesc": {
-        "message": "Significantly reduces storage usage.",
+        "message": "Uses less storage for long replies.",
         "description": "Message for contextOnlyBenefitDesc"
     },
     "contextOnlyTradeoffTitle": {
-        "message": "Trade-off:",
+        "message": "Saved content",
         "description": "Message for contextOnlyTradeoffTitle"
     },
     "contextOnlyTradeoffDesc": {
@@ -2896,11 +2896,11 @@
         "description": "Message for contextOnlyEnable"
     },
     "noFoldersCreateHint": {
-        "message": "No folders yet. Create one to get started!",
+        "message": "No folders yet. Create one to organize bookmarks.",
         "description": "Message for noFoldersCreateHint"
     },
     "loadingText": {
-        "message": "Loading...",
+        "message": "Loading…",
         "description": "Message for loadingText"
     },
     "positionNotAvailable": {
@@ -2908,7 +2908,7 @@
         "description": "Message for positionNotAvailable"
     },
     "clipboardWriteFailed": {
-        "message": "Clipboard write failed",
+        "message": "Could not copy. Try again.",
         "description": "Message for clipboardWriteFailed"
     },
     "savedStatus": {
@@ -2920,15 +2920,15 @@
         "description": "Message for removedStatus"
     },
     "sendFailed": {
-        "message": "Send failed",
+        "message": "Message not sent. Try again.",
         "description": "Message for sendFailed"
     },
     "sendEmpty": {
-        "message": "Empty",
+        "message": "Enter a message before sending.",
         "description": "Message for sendEmpty"
     },
     "sendingStatus": {
-        "message": "Sending...",
+        "message": "Sending…",
         "description": "Message for sendingStatus"
     },
     "sentStatus": {
@@ -2948,7 +2948,7 @@
         "description": "Message for readerPagerHint"
     },
     "resizeSendPopover": {
-        "message": "Resize send popover",
+        "message": "Resize message window",
         "description": "Message for resizeSendPopover"
     },
     "searchBookmarksPlaceholder": {
@@ -2964,7 +2964,7 @@
         "description": "Message for alreadyOnPageStatus"
     },
     "emptyBookmarksHint": {
-        "message": "Create a folder or import bookmarks to start browsing saved messages.",
+        "message": "Bookmark a reply or import a Library file to get started.",
         "description": "Message for emptyBookmarksHint"
     },
     "settingsPlatformChatgptDesc": {
@@ -2972,35 +2972,35 @@
         "description": "Message for settingsPlatformChatgptDesc"
     },
     "settingsShowSaveMessagesLabel": {
-        "message": "Show Save Messages",
+        "message": "Show Export button",
         "description": "Message for settingsShowSaveMessagesLabel"
     },
     "settingsShowSaveMessagesDesc": {
-        "message": "Show the Save Messages action where export is supported.",
+        "message": "Show the action for exporting messages.",
         "description": "Message for settingsShowSaveMessagesDesc"
     },
     "settingsShowWordCountLabel": {
-        "message": "Show Word Count",
+        "message": "Show character count",
         "description": "Message for settingsShowWordCountLabel"
     },
     "settingsShowWordCountDesc": {
-        "message": "Display word count information for saved and rendered content.",
+        "message": "Show the character count beside replies.",
         "description": "Message for settingsShowWordCountDesc"
     },
     "settingsEnableClickToCopyLabel": {
-        "message": "Enable click-to-copy",
+        "message": "Click formulas to copy",
         "description": "Message for settingsEnableClickToCopyLabel"
     },
     "settingsEnableClickToCopyDesc": {
-        "message": "Copy message content directly when supported surfaces are clicked.",
+        "message": "Click a formula to copy its source.",
         "description": "Message for settingsEnableClickToCopyDesc"
     },
     "settingsSaveContextOnlyLabel": {
-        "message": "Save context only",
+        "message": "Save only bookmark excerpts",
         "description": "Message for settingsSaveContextOnlyLabel"
     },
     "settingsSaveContextOnlyDesc": {
-        "message": "Only save the conversation context instead of the full thread when exporting or bookmarking.",
+        "message": "Save the beginning and end of long questions and replies in new bookmarks.",
         "description": "Message for settingsSaveContextOnlyDesc"
     },
     "settingsRenderCodeInReaderLabel": {
@@ -3008,7 +3008,7 @@
         "description": "Message for settingsRenderCodeInReaderLabel"
     },
     "settingsRenderCodeInReaderDesc": {
-        "message": "Keep code blocks visible while turning syntax colors on or off.",
+        "message": "Add syntax colors to code in Reader.",
         "description": "Message for settingsRenderCodeInReaderDesc"
     },
     "settingsInterfaceLanguageLabel": {
@@ -3016,7 +3016,7 @@
         "description": "Message for settingsInterfaceLanguageLabel"
     },
     "settingsInterfaceLanguageDesc": {
-        "message": "Auto follows the browser, or pin the UI to a specific locale.",
+        "message": "Follow the browser language or choose a language.",
         "description": "Message for settingsInterfaceLanguageDesc"
     },
     "backupBookmarksHint": {
@@ -3032,7 +3032,7 @@
         "description": "Message for sponsorOpenSourceNote"
     },
     "sponsorOpenSourceBody": {
-        "message": "If the project is useful, starring the repository is the fastest way to help. It improves discoverability and makes continued maintenance easier to justify.",
+        "message": "If AI-MarkDone is useful to you, a GitHub star helps others find the project.",
         "description": "Message for sponsorOpenSourceBody"
     },
     "sponsorDonateTitle": {
@@ -3040,15 +3040,15 @@
         "description": "Message for sponsorDonateTitle"
     },
     "sponsorDonateNote": {
-        "message": "Support development directly with the existing sponsor channels.",
+        "message": "Support development through Buy Me a Coffee or WeChat.",
         "description": "Message for sponsorDonateNote"
     },
     "sponsorDonateBody": {
-        "message": "If AI-MarkDone saves you time, you can also support development directly through the same two channels used in the shipped sponsor tab.",
+        "message": "If you would like to support AI-MarkDone, choose one of the options below. Contributions are optional.",
         "description": "Message for sponsorDonateBody"
     },
     "sponsorBmcNote": {
-        "message": "Quick international support",
+        "message": "Support through Buy Me a Coffee",
         "description": "Message for sponsorBmcNote"
     },
     "sponsorBmcAlt": {
@@ -3064,7 +3064,7 @@
         "description": "Message for sponsorWechatAlt"
     },
     "sponsorThanksTitle": {
-        "message": "Thanks to Sponsors",
+        "message": "Thanks to supporters",
         "description": "Message for sponsorThanksTitle"
     },
     "sponsorThanksDesc": {
@@ -3124,7 +3124,7 @@
         "description": "Message for importMergeSummaryRenamedTitles"
     },
     "importMergeSummaryFolderFallbacks": {
-        "message": "Folder fallbacks",
+        "message": "Folders moved to Import",
         "description": "Message for importMergeSummaryFolderFallbacks"
     },
     "importMergeImportedBookmarksTitle": {
@@ -3164,7 +3164,7 @@
         "description": "Message for importMergeStatusInfo"
     },
     "streamingStatus": {
-        "message": "Streaming...",
+        "message": "Generating…",
         "description": "Message for streamingStatus"
     },
     "enableFormulaOnlyOnGemini": {
@@ -3180,11 +3180,11 @@
         "description": "Message for enableFormulaOnlyOnDeepSeek"
     },
     "detachedReaderOpened": {
-        "message": "Separate reader opened",
+        "message": "Separate Reader opened",
         "description": "Message for detachedReaderOpened"
     },
     "detachedReaderOpenFailed": {
-        "message": "Separate reader could not be opened",
+        "message": "Could not open the separate Reader. Try again.",
         "description": "Message for detachedReaderOpenFailed"
     },
     "detachedReaderSessionExpired": {
@@ -3192,7 +3192,7 @@
         "description": "Message for detachedReaderSessionExpired"
     },
     "detachedReaderSourceUnavailable": {
-        "message": "Source ChatGPT page is unavailable",
+        "message": "The original ChatGPT tab is unavailable. Reopen Reader from the conversation.",
         "description": "Message for detachedReaderSourceUnavailable"
     },
     "detachedReaderRefresh": {
@@ -3212,7 +3212,7 @@
         "description": "Message for detachedReaderLocated"
     },
     "detachedReaderExperimentalTitle": {
-        "message": "Open separate reader?",
+        "message": "Open a separate Reader?",
         "description": "Message for detachedReaderExperimentalTitle"
     },
     "detachedReaderExperimentalMessage": {
@@ -3220,7 +3220,7 @@
         "description": "Message for detachedReaderExperimentalMessage"
     },
     "detachedReaderExperimentalConfirm": {
-        "message": "Continue",
+        "message": "Open Reader",
         "description": "Message for detachedReaderExperimentalConfirm"
     },
     "detachedReaderExperimentalCancel": {
@@ -3276,15 +3276,15 @@
         "description": "Button label for inserting the prompt cursor placeholder"
     },
     "promptContentRequired": {
-        "message": "Prompt content is required.",
+        "message": "Enter prompt content.",
         "description": "Prompt validation message when content is empty"
     },
     "promptSaveFailed": {
-        "message": "Prompt save failed.",
+        "message": "Could not save the prompt. Try again.",
         "description": "Prompt save generic error message"
     },
     "detachedReaderClosed": {
-        "message": "Separate reader closed.",
+        "message": "Separate Reader closed",
         "description": "Message for detachedReaderClosed"
     },
     "pageAnnotationChip": {
@@ -3304,7 +3304,7 @@
         "description": "Tab label for all annotations"
     },
     "pageAnnotationManagerAllHint": {
-        "message": "Switch to Current conversation to insert.",
+        "message": "Switch to Current conversation to insert annotations.",
         "description": "Hint explaining that all-conversation annotations cannot be inserted directly"
     },
     "pageAnnotationManagerSearch": {
@@ -3368,11 +3368,11 @@
         "description": "Final confirmation title for deleting all annotations"
     },
     "pageAnnotationDeleteAllFinalMessage": {
-        "message": "These annotations will be permanently removed from this browser profile.",
+        "message": "These annotations will be permanently deleted from this browser.",
         "description": "Final confirmation message for deleting all annotations"
     },
     "pageAnnotationCopied": {
-        "message": "Copied!",
+        "message": "Copied",
         "description": "Toast when annotations are copied"
     },
     "pageAnnotationCopyFailed": {
@@ -3400,11 +3400,11 @@
         "description": "Description for the ChatGPT page annotation toggle"
     },
     "chatgptShowPageSelectionToolbarLabel": {
-        "message": "Show the action row on ChatGPT",
+        "message": "Show selection buttons on ChatGPT",
         "description": "Toggle for the ChatGPT page selection action toolbar"
     },
     "chatgptShowPageSelectionToolbarDesc": {
-        "message": "Turning this off hides only the ChatGPT row; Reader buttons and keyboard copying stay available.",
+        "message": "Show Copy, Annotate, and Highlight after selecting text on ChatGPT.",
         "description": "Description for the ChatGPT page selection action toolbar toggle"
     },
     "pageControls": {
@@ -3444,7 +3444,7 @@
         "description": "Accessible label for opening an existing page annotation"
     },
     "pageAnnotationChipAction": {
-        "message": "Open current-conversation annotations",
+        "message": "Open annotations for this conversation",
         "description": "Accessible label for opening current-conversation annotations from the composer"
     },
     "highlightColorBlue": {
@@ -3532,7 +3532,7 @@
         "description": "Library interface label for libraryRetry"
     },
     "libraryRecordCount": {
-        "message": " $1 items",
+        "message": "$1 items",
         "description": "Library interface label for libraryRecordCount"
     },
     "libraryPreviousPage": {
@@ -3564,7 +3564,7 @@
         "description": "Library interface label for libraryMovedTo"
     },
     "libraryCurrentFolder": {
-        "message": "Current folder",
+        "message": "Current location",
         "description": "Library action label for libraryCurrentFolder"
     },
     "libraryTargetFolder": {
@@ -3624,7 +3624,7 @@
         "description": "Settings center label."
     },
     "settingsCategoryMarks": {
-        "message": "Highlights & notes",
+        "message": "Highlights & annotations",
         "description": "Settings center label."
     },
     "settingsCategoryExport": {
@@ -3668,7 +3668,7 @@
         "description": "Settings center label."
     },
     "settingsHideOfficialNavigation": {
-        "message": "Hide ChatGPT’s own message navigation",
+        "message": "Hide ChatGPT navigation when the directory is shown",
         "description": "Settings center label."
     },
     "settingsReaderBodyFont": {
@@ -3688,7 +3688,7 @@
         "description": "Settings center label."
     },
     "settingsSortPosition": {
-        "message": "By message order",
+        "message": "By text position",
         "description": "Settings center label."
     },
     "settingsDefaultBookmarkSort": {
@@ -3696,11 +3696,11 @@
         "description": "Settings center label."
     },
     "settingsResetReaderNotice": {
-        "message": "Show Reader notice again",
+        "message": "Show separate Reader notice again",
         "description": "Settings center label."
     },
     "settingsReaderNoticeReset": {
-        "message": "Reader notice reset",
+        "message": "Separate Reader notice reset",
         "description": "Settings center label."
     },
     "sortTimeDesc": {
@@ -3724,7 +3724,7 @@
         "description": "Message toolbar label."
     },
     "messageCharacterCount": {
-        "message": "$1 Chars",
+        "message": "$1 characters",
         "description": "Message toolbar label."
     },
     "operationCompleted": {
@@ -3888,7 +3888,7 @@
         "description": "Settings and interaction label: settingsSelectionCopy"
     },
     "settingsSelectionAnnotation": {
-        "message": "Show Add Annotation button",
+        "message": "Show Annotate button",
         "description": "Settings and interaction label: settingsSelectionAnnotation"
     },
     "settingsSelectionHighlight": {
@@ -3896,7 +3896,7 @@
         "description": "Settings and interaction label: settingsSelectionHighlight"
     },
     "settingsSelectionSharedDesc": {
-        "message": "Shared by the page and Reader.",
+        "message": "Applies to ChatGPT and Reader.",
         "description": "Settings and interaction label: settingsSelectionSharedDesc"
     },
     "settingsInputEnhancementControl": {
@@ -3956,7 +3956,7 @@
         "description": "Shared content cleanup preference."
     },
     "settingsIncludeCodeBlocksDesc": {
-        "message": "Omit whole code blocks from Reader, Markdown copy, and exports when off. Explicit text selections still copy as selected.",
+        "message": "Keep code blocks in Reader, Markdown copy, and exports. Text selections still copy what you select.",
         "description": "Shared content cleanup preference."
     },
     "settingsGroupPosition": {
@@ -3996,7 +3996,7 @@
         "description": "Settings and interaction label: settingsGroupFormulaImages"
     },
     "settingsGroupMessageImages": {
-        "message": "Full-message PNG images",
+        "message": "Message PNG images",
         "description": "Settings and interaction label: settingsGroupMessageImages"
     },
     "settingsGroupMessageButtons": {
@@ -4036,7 +4036,7 @@
         "description": "Pinned page action configuration"
     },
     "settingsGroupFormulaButtonsHint": {
-        "message": "Choose buttons shown above a formula in a ChatGPT reply. Export actions in the input-box preview remain available.",
+        "message": "Choose buttons shown above a formula in a ChatGPT reply. Input-preview export actions have separate settings.",
         "description": "Settings copy for settingsGroupFormulaButtonsHint"
     },
     "settingsGroupSelectionHint": {
@@ -4048,7 +4048,7 @@
         "description": "Settings copy for settingsGroupDrawerHint"
     },
     "settingsShowInputEnhancementButton": {
-        "message": "Show Input Enhancement button",
+        "message": "Show Input enhancement button",
         "description": "Settings copy for settingsShowInputEnhancementButton"
     },
     "settingsShowInputEnhancementButtonDesc": {
@@ -4084,7 +4084,7 @@
         "description": "Settings copy for settingsReaderBodyWidthDesc"
     },
     "settingsInputFormulaSuggestionsDesc": {
-        "message": "While typing inside a formula, enter \\ to see LaTeX commands you can insert.",
+        "message": "Type \\ inside a formula to see LaTeX commands you can insert.",
         "description": "Settings copy for settingsInputFormulaSuggestionsDesc"
     },
     "settingsInputFormulaPreviewDesc": {
@@ -4168,7 +4168,7 @@
         "description": "Settings UI: settingsPreviewSelection"
     },
     "settingsPreviewComposer": {
-        "message": "Ask anything…",
+        "message": "Enter a message…",
         "description": "Settings UI: settingsPreviewComposer"
     },
     "settingsTransferTitle": {
@@ -4192,7 +4192,7 @@
         "description": "Settings UI: settingsRestore"
     },
     "settingsExportNotice": {
-        "message": "The JSON file includes button visibility, appearance, reading and export options. It excludes tokens, account details, conversations, bookmarks, annotations, highlights, prompts and custom templates. Keep the file in a trusted place.",
+        "message": "The JSON file includes button visibility, pinned buttons, appearance, reading, and export preferences. It excludes Library content, conversations, prompts, custom templates, account details, and credentials. Store it somewhere you trust.",
         "description": "Settings UI: settingsExportNotice"
     },
     "settingsExportConfirm": {
@@ -4212,7 +4212,7 @@
         "description": "Settings UI: settingsImportConfirm"
     },
     "settingsImportDone": {
-        "message": "Settings applied. A recovery copy of the previous preferences is available.",
+        "message": "Settings applied. You can restore the preferences from before this import.",
         "description": "Settings UI: settingsImportDone"
     },
     "settingsImportNoChanges": {
@@ -4220,23 +4220,23 @@
         "description": "Settings UI: settingsImportNoChanges"
     },
     "settingsImportConflict": {
-        "message": "Settings changed since this preview. Select the file again to review the current changes.",
+        "message": "Settings changed after this preview. Select the file again to review the changes.",
         "description": "Settings UI: settingsImportConflict"
     },
     "settingsImportQuota": {
-        "message": "There is not enough settings storage space. Your configuration has not changed.",
+        "message": "Not enough space to save settings. Current settings are unchanged.",
         "description": "Settings UI: settingsImportQuota"
     },
     "settingsImportInvalid": {
-        "message": "This file is invalid, too large, or uses an unsupported settings format. Your configuration has not changed.",
+        "message": "This file is invalid, too large, or unsupported. Current settings are unchanged.",
         "description": "Settings UI: settingsImportInvalid"
     },
     "settingsTransferFailed": {
-        "message": "The operation could not be completed. Check the current settings before trying again.",
+        "message": "Could not complete the action. Check the current settings before retrying.",
         "description": "Settings UI: settingsTransferFailed"
     },
     "settingsRecoveryEmpty": {
-        "message": "No previous settings recovery is available.",
+        "message": "No previous settings are available to restore.",
         "description": "Settings UI: settingsRecoveryEmpty"
     },
     "settingsValueOn": {
@@ -4288,7 +4288,7 @@
         "description": "Settings UI: settingsPreferenceBehaviorShowCopyPng"
     },
     "settingsPreferenceBehaviorSaveContextOnly": {
-        "message": "Save context only",
+        "message": "Save only bookmark excerpts",
         "description": "Settings UI: settingsPreferenceBehaviorSaveContextOnly"
     },
     "settingsPreferenceBehaviorPinnedMessageControls": {
@@ -4296,7 +4296,7 @@
         "description": "Settings UI: settingsPreferenceBehaviorPinnedMessageControls"
     },
     "settingsPreferenceReaderRenderCodeInReader": {
-        "message": "Show code blocks in Reader",
+        "message": "Reader syntax highlighting",
         "description": "Settings UI: settingsPreferenceReaderRenderCodeInReader"
     },
     "settingsPreferenceReaderShowOutlineInReader": {
@@ -4304,7 +4304,7 @@
         "description": "Settings UI: settingsPreferenceReaderShowOutlineInReader"
     },
     "settingsPreferenceReaderPersistAnnotations": {
-        "message": "Save annotations",
+        "message": "Save new annotations",
         "description": "Settings UI: settingsPreferenceReaderPersistAnnotations"
     },
     "settingsPreferenceReaderDefaultOpenMode": {
@@ -4328,11 +4328,11 @@
         "description": "Settings UI: settingsPreferenceReaderContentMaxWidthPx"
     },
     "settingsPreferenceReaderCommentExportPromptPosition": {
-        "message": "Annotation prompt position",
+        "message": "Prompt position when copying annotations",
         "description": "Settings UI: settingsPreferenceReaderCommentExportPromptPosition"
     },
     "settingsPreferenceReaderCommentExportSortMode": {
-        "message": "Annotation export order",
+        "message": "Annotation copy order",
         "description": "Settings UI: settingsPreferenceReaderCommentExportSortMode"
     },
     "settingsPreferenceContentPreserveLinks": {
@@ -4404,7 +4404,7 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorAtomicMarkdownCopyShortcut"
     },
     "settingsPreferenceChatgptBehaviorShowMessageStepper": {
-        "message": "Directory navigation arrows",
+        "message": "Message navigation arrows",
         "description": "Settings UI: settingsPreferenceChatgptBehaviorShowMessageStepper"
     },
     "settingsPreferenceChatgptBehaviorShowPageBookmarkControl": {
@@ -4412,11 +4412,11 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorShowPageBookmarkControl"
     },
     "settingsPreferenceChatgptBehaviorShowDetachedReaderControl": {
-        "message": "Separate reader button",
+        "message": "Separate Reader button",
         "description": "Settings UI: settingsPreferenceChatgptBehaviorShowDetachedReaderControl"
     },
     "settingsPreferenceChatgptBehaviorShowPromptControl": {
-        "message": "Prompt Library button",
+        "message": "Prompts button",
         "description": "Settings UI: settingsPreferenceChatgptBehaviorShowPromptControl"
     },
     "settingsPreferenceChatgptBehaviorShowInputEnhancementControl": {
@@ -4460,7 +4460,7 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorPageWidthScale"
     },
     "settingsPreferenceChatgptBehaviorNavigationSeekStepPx": {
-        "message": "Navigation loading step",
+        "message": "Scroll step for unloaded messages",
         "description": "Settings UI: settingsPreferenceChatgptBehaviorNavigationSeekStepPx"
     },
     "settingsPreferenceAppearanceThemeMode": {
@@ -4592,7 +4592,7 @@
         "description": "Settings UI: settingsPreferenceChatgptBehaviorInputEnhancementListsUnordered"
     },
     "settingsButtonsSelectionHint": {
-        "message": "Copy, Annotation and Highlight buttons appear for selected text. These preferences also apply in Reader.",
+        "message": "Copy, Annotate, and Highlight appear after selecting text. These settings also apply to Reader.",
         "description": "Settings selection preview hint"
     },
     "settingsButtonsDirectoryHint": {
@@ -4604,7 +4604,7 @@
         "description": "Settings UI: settingsReloadForUpdate"
     },
     "settingsImportUnsupported": {
-        "message": "This file or stored configuration requires an unsupported version. No settings were imported.",
+        "message": "This file or saved settings require another version of AI-MarkDone. No settings were imported.",
         "description": "Settings UI: settingsImportUnsupported"
     },
     "settingsFormulaExample": {
@@ -4655,11 +4655,26 @@
         "message": "Bay blue",
         "description": "Settings appearance color control"
     },
-    "themeAccentLightPink": { "message": "Light pink", "description": "Settings appearance color control" },
-    "settingsGroupConfiguration": { "message": "Configuration files", "description": "Settings data subgroup" },
-    "settingsGroupLibraryData": { "message": "Library", "description": "Settings data subgroup" },
-    "settingsGroupCloudBackup": { "message": "Cloud backup", "description": "Settings data subgroup" },
-    "settingsGroupLocalBackup": { "message": "Local backup", "description": "Settings data subgroup" },
+    "themeAccentLightPink": {
+        "message": "Light pink",
+        "description": "Settings appearance color control"
+    },
+    "settingsGroupConfiguration": {
+        "message": "Settings files",
+        "description": "Settings data subgroup"
+    },
+    "settingsGroupLibraryData": {
+        "message": "Library",
+        "description": "Settings data subgroup"
+    },
+    "settingsGroupCloudBackup": {
+        "message": "Cloud backup",
+        "description": "Settings data subgroup"
+    },
+    "settingsGroupLocalBackup": {
+        "message": "Local backup",
+        "description": "Settings data subgroup"
+    },
     "themeAccentCustom": {
         "message": "Custom RGB color",
         "description": "Settings appearance color control"
@@ -4669,7 +4684,7 @@
         "description": "Settings appearance color control"
     },
     "themeAccentRgbInvalid": {
-        "message": "Enter six hexadecimal characters, for example FF6699.",
+        "message": "Enter a six-digit hexadecimal color, such as FF6699.",
         "description": "Settings appearance color control"
     },
     "tabFeatureOverview": {
@@ -4681,7 +4696,7 @@
         "description": "Feature overview interface label"
     },
     "featureOverviewLead": {
-        "message": "Browse AI-MarkDone functions, what they do, and where to use them.",
+        "message": "Find what AI-MarkDone can do and where to use each feature.",
         "description": "Feature overview interface label"
     },
     "featureOverviewSearchPlaceholder": {
@@ -4817,7 +4832,7 @@
         "description": "Feature overview usage note"
     },
     "featureOverviewReaderSendTitle": {
-        "message": "Reader sending",
+        "message": "Follow-up questions",
         "description": "Feature overview title"
     },
     "featureOverviewReaderSendDescription": {
@@ -4841,7 +4856,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewReaderSeparateTitle": {
-        "message": "Separate reader",
+        "message": "Separate Reader",
         "description": "Feature overview title"
     },
     "featureOverviewReaderSeparateDescription": {
@@ -4849,7 +4864,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewReaderSeparateEntry": {
-        "message": "ChatGPT website’s lower-right toolbar → Separate reader",
+        "message": "ChatGPT page controls → Separate Reader",
         "description": "Feature overview entry"
     },
     "featureOverviewReaderSeparateNote": {
@@ -4877,7 +4892,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewNavigationDirectoryNote": {
-        "message": "Enable the directory first. History that has not loaded may be missing.",
+        "message": "On by default for new installations; existing settings stay unchanged. Unloaded history may be missing.",
         "description": "Feature overview usage note"
     },
     "featureOverviewNavigationPreviewTitle": {
@@ -4921,7 +4936,7 @@
         "description": "Feature overview group title"
     },
     "featureOverviewSectionCopyExportSummary": {
-        "message": "Markdown, images, and file output.",
+        "message": "Markdown copying and file export.",
         "description": "Feature overview group introduction"
     },
     "featureOverviewCopyMarkdownTitle": {
@@ -4937,7 +4952,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewCopyQuestionReplyTitle": {
-        "message": "Question + reply copy",
+        "message": "Copy question + reply",
         "description": "Feature overview title"
     },
     "featureOverviewCopyQuestionReplyDescription": {
@@ -4945,11 +4960,11 @@
         "description": "Feature overview description"
     },
     "featureOverviewCopyQuestionReplyEntry": {
-        "message": "Reply toolbar → Hover Copy → Question + reply",
+        "message": "Reply toolbar → Hover Copy Markdown → Copy question + reply",
         "description": "Feature overview entry"
     },
     "featureOverviewCopyImageTitle": {
-        "message": "Reply image copy",
+        "message": "Copy reply as an image",
         "description": "Feature overview title"
     },
     "featureOverviewCopyImageDescription": {
@@ -4957,11 +4972,11 @@
         "description": "Feature overview description"
     },
     "featureOverviewCopyImageEntry": {
-        "message": "Reply toolbar → Hover Copy → Copy as PNG",
+        "message": "Reply toolbar → Hover Copy Markdown → Copy as PNG",
         "description": "Feature overview entry"
     },
     "featureOverviewCopySelectionTitle": {
-        "message": "Markdown selection copy",
+        "message": "Copy selected text as Markdown",
         "description": "Feature overview title"
     },
     "featureOverviewCopySelectionDescription": {
@@ -5001,7 +5016,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewExportImageSettingsEntry": {
-        "message": "Settings → Copy & export → Message images",
+        "message": "Settings → Copy & export → Message PNG images",
         "description": "Feature overview entry"
     },
     "featureOverviewSectionInputTitle": {
@@ -5013,7 +5028,7 @@
         "description": "Feature overview group introduction"
     },
     "featureOverviewInputNewlineTitle": {
-        "message": "Enter newline",
+        "message": "Enter for new lines",
         "description": "Feature overview title"
     },
     "featureOverviewInputNewlineDescription": {
@@ -5089,7 +5104,7 @@
         "description": "Feature overview usage note"
     },
     "featureOverviewInputPromptNotesTitle": {
-        "message": "Prompt and annotation insertion",
+        "message": "Insert prompts with annotations",
         "description": "Feature overview title"
     },
     "featureOverviewInputPromptNotesDescription": {
@@ -5109,7 +5124,7 @@
         "description": "Feature overview group introduction"
     },
     "featureOverviewFormulaSourceTitle": {
-        "message": "Formula source copy",
+        "message": "Copy formula source",
         "description": "Feature overview title"
     },
     "featureOverviewFormulaSourceDescription": {
@@ -5241,7 +5256,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewLibraryBatchEntry": {
-        "message": "Library → Bookmarks → Manage",
+        "message": "Library → Bookmarks → Manage selection",
         "description": "Feature overview entry"
     },
     "featureOverviewLibrarySummariesTitle": {
@@ -5265,7 +5280,7 @@
         "description": "Feature overview group title"
     },
     "featureOverviewSectionMarksSummary": {
-        "message": "Source marks, notes, and follow-up questions.",
+        "message": "Annotations, highlights, and follow-up questions.",
         "description": "Feature overview group introduction"
     },
     "featureOverviewMarksAddNoteTitle": {
@@ -5317,7 +5332,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewMarksNotesManageDescription": {
-        "message": "Find, edit, or delete marks and open their conversations; recolor highlights in batches or insert current-conversation notes into the input.",
+        "message": "Find, edit, or delete annotations and highlights, open their conversations, recolor highlights in batches, or insert annotations into the input box.",
         "description": "Feature overview description"
     },
     "featureOverviewMarksNotesManageEntry": {
@@ -5341,7 +5356,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewMarksNotesTemplateDescription": {
-        "message": "Customize the order of source text, notes, and prompts, and arrange annotations by time or text position.",
+        "message": "Set how source text and annotations appear together, place a prompt before or after them, and choose time or text order.",
         "description": "Feature overview description"
     },
     "featureOverviewMarksNotesTemplateEntry": {
@@ -5349,7 +5364,7 @@
         "description": "Feature overview entry"
     },
     "featureOverviewMarksOrganizeTitle": {
-        "message": "Conversation organization",
+        "message": "Organize conversations",
         "description": "Feature overview title"
     },
     "featureOverviewMarksOrganizeDescription": {
@@ -5385,7 +5400,7 @@
         "description": "Feature overview title"
     },
     "featureOverviewSettingsButtonsDescription": {
-        "message": "Keep the page, reply, formula, selection, and directory controls you use and keep common actions visible.",
+        "message": "Choose which page, reply, formula, selection, and directory buttons appear, and keep common actions visible.",
         "description": "Feature overview description"
     },
     "featureOverviewSettingsButtonsEntry": {
@@ -5449,7 +5464,7 @@
         "description": "Feature overview description"
     },
     "featureOverviewBackupSettingsTransferEntry": {
-        "message": "Settings → Data & backup → Configuration files",
+        "message": "Settings → Data & backup → Settings files",
         "description": "Feature overview entry"
     },
     "featureOverviewBackupSettingsTransferNote": {
@@ -5463,5 +5478,105 @@
     "featureOverviewEntryColumnLabel": {
         "message": "Description",
         "description": "Feature overview table column header"
+    },
+    "pdfImageUnavailable": {
+        "message": "Image unavailable",
+        "description": "Label for PDF images that could not load"
+    },
+    "readerCommentMinimize": {
+        "message": "Minimize",
+        "description": "Annotation editor Minimize"
+    },
+    "readerCommentExpand": {
+        "message": "Expand",
+        "description": "Annotation editor Expand"
+    },
+    "readerCommentRestore": {
+        "message": "Restore",
+        "description": "Annotation editor Restore"
+    },
+    "readerCommentDiscardDraft": {
+        "message": "Discard draft",
+        "description": "Annotation editor DiscardDraft"
+    },
+    "readerCommentDraftSaving": {
+        "message": "Saving draft…",
+        "description": "Annotation editor DraftSaving"
+    },
+    "readerCommentDraftSaved": {
+        "message": "Draft saved in this browser",
+        "description": "Annotation editor DraftSaved"
+    },
+    "readerCommentDraftSessionOnly": {
+        "message": "Draft kept for this page session",
+        "description": "Annotation editor DraftSessionOnly"
+    },
+    "readerCommentDraftFailed": {
+        "message": "Draft not saved. Keep this window open and retry.",
+        "description": "Annotation editor DraftFailed"
+    },
+    "readerCommentDraftConflict": {
+        "message": "This draft changed in another window. Your text is still here; copy it before reopening.",
+        "description": "Annotation editor DraftConflict"
+    },
+    "readerCommentDraftRestored": {
+        "message": "Saved draft restored",
+        "description": "Annotation editor DraftRestored"
+    },
+    "readerCommentRetryDraft": {
+        "message": "Retry saving draft",
+        "description": "Annotation editor RetryDraft"
+    },
+    "readerCommentDrag": {
+        "message": "Move annotation window",
+        "description": "Annotation editor Drag"
+    },
+    "readerCommentSaving": {
+        "message": "Saving annotation…",
+        "description": "Annotation editor Saving"
+    },
+    "readerCommentCloseKeepDraft": {
+        "message": "Close and keep draft",
+        "description": "Annotation editor CloseKeepDraft"
+    },
+    "readerCommentDraftLimit": {
+        "message": "The draft is too long or storage is full. Your text is still here; copy it or save the annotation.",
+        "description": "Annotation editor DraftLimit"
+    },
+    "readerCommentDiscardConfirm": {
+        "message": "Discard this draft?",
+        "description": "Annotation editor DiscardConfirm"
+    },
+    "readerCommentDeleteConfirm": {
+        "message": "Delete this annotation?",
+        "description": "Annotation editor DeleteConfirm"
+    },
+    "readerCommentKeepWriting": {
+        "message": "Keep writing",
+        "description": "Annotation editor KeepWriting"
+    },
+    "infoEnlargeImage": {
+        "message": "Enlarge image",
+        "description": "Annotation editor infoEnlargeImage"
+    },
+    "infoRestoreImage": {
+        "message": "Restore image size",
+        "description": "Annotation editor infoRestoreImage"
+    },
+    "detachedReaderMissingSession": {
+        "message": "Open Reader from the ChatGPT page to start reading.",
+        "description": "Annotation editor detachedReaderMissingSession"
+    },
+    "detachedReaderStartFailed": {
+        "message": "Could not open Reader. Reopen it from the ChatGPT page.",
+        "description": "Annotation editor detachedReaderStartFailed"
+    },
+    "readerCommentSaveFailed": {
+        "message": "Annotation not saved. Your text is still here; try again.",
+        "description": "Annotation editor SaveFailed"
+    },
+    "chatgptDirectoryNavigationFailed": {
+        "message": "Could not locate this reply. Scroll through the conversation and try again.",
+        "description": "Feedback when a message directory jump cannot locate the reply"
     }
 }

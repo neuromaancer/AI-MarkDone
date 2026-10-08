@@ -201,7 +201,7 @@ async function run(): Promise<void> {
     ensurePageTokens();
     const sessionId = getSessionId();
     if (!sessionId) {
-        renderStatus('Reader session is missing.');
+        renderStatus(t('detachedReaderMissingSession'));
         return;
     }
 
@@ -435,6 +435,6 @@ async function run(): Promise<void> {
     await showSession();
 }
 
-void run().catch((error) => {
-    renderStatus(error instanceof Error ? error.message : 'Detached reader failed to start.');
+void run().catch(() => {
+    renderStatus(t('detachedReaderStartFailed'));
 });

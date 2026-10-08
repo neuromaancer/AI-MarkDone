@@ -184,7 +184,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Extension context invalidated.'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(document.body.textContent).not.toContain('detachedReaderSessionExpired');
         expect(panelShow).not.toHaveBeenCalled();
@@ -202,7 +202,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Invalid readerSession:get response payload'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(document.body.textContent).not.toContain('detachedReaderSessionExpired');
         expect(panelShow).not.toHaveBeenCalled();
@@ -239,7 +239,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Invalid readerSession:get response payload'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(document.body.textContent).not.toContain('detachedReaderSessionExpired');
         expect(panelShow).not.toHaveBeenCalled();
@@ -271,7 +271,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Invalid readerSession:get response payload'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(panelShow).not.toHaveBeenCalled();
     });
@@ -303,7 +303,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Invalid readerSession:get response payload'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(panelShow).not.toHaveBeenCalled();
     });
@@ -335,7 +335,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Invalid bookmarks:positions response payload'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(panelShow).not.toHaveBeenCalled();
     });
@@ -367,7 +367,7 @@ describe('detached reader runtime entry', () => {
         });
 
         await import('@/runtimes/reader/entry');
-        await vi.waitFor(() => expect(document.body.textContent).toContain('Invalid bookmarks:positions response payload'));
+        await vi.waitFor(() => expect(document.body.textContent).toContain('detachedReaderStartFailed'));
 
         expect(panelShow).not.toHaveBeenCalled();
     });
