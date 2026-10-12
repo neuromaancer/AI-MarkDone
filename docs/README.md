@@ -25,6 +25,9 @@
 
 ### Refactor And Closeout Records
 
+- [README reference review](reviews/2026-10-12-readme-reference-review.md)
+  - mature extension references, bilingual landing-page structure and screenshot provenance
+
 - [6.2.0 review and release readiness](reviews/2026-10-12-6.2.0-release-readiness.md)
   - consolidated branch scope, feedback disposition, copy and pending release acceptance
 

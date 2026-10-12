@@ -31,7 +31,7 @@ Historical release records, user-authored prompts, custom templates and stored c
 ## README and release copy
 
 - `README.md` remains the English GitHub entry; `README.zh.md` is the independent Chinese version, as confirmed on 2026-10-12. Keep their scope, entrypoints, saving rules and installation guidance aligned without forcing a literal translation.
-- Introduce the author's practical reasons briefly, then explain first use and common tasks. Put developer commands below the user guidance; use Feature overview and the manual for the full function catalog.
+- Treat README as a project landing page: a short product introduction, prominent installation links, screenshots, linked feature highlights and a compact getting-started section. Keep the author's reasons in the later support/about area; move detailed operating and saving rules into linked docs or collapsed FAQ. This replaces the longer personal-introduction structure after the 2026-10-12 reference review.
 - Distinguish a version being prepared on a branch from a version available in a store or GitHub Release. Installation instructions must work for published artifacts; temporary Firefox loading belongs to development guidance.
 - Keep `CHANGELOG.md` in concise English Added/Changed/Fixed sections. The bilingual release notes and in-app changelogs may use the author's conversational opening and practical numbered updates. Preserve feedback credits and previous release records.
 - Versioned store-copy drafts live under `release/`. Names and short descriptions follow the locale catalog; long descriptions follow current feature and saving contracts, rather than stale public listings. Where stores have different installed versions, prepare the appropriate cumulative update summary.
