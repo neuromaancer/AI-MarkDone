@@ -1,7 +1,6 @@
 /* Shared by the workspace and its workflow dialogs; no host-page selectors. */
 :host {
   --_workspace-radius: calc(var(--aimd-radius-2xl) + var(--aimd-space-3));
-  --_workspace-field-radius: var(--aimd-radius-xl);
   --_workspace-navigation-size: calc(var(--aimd-text-base) * 0.875);
   --_workspace-surface: color-mix(in srgb, var(--aimd-workspace-surface) 91%, transparent);
   --_workspace-card: color-mix(in srgb, var(--aimd-workspace-card) 96%, transparent);
@@ -65,29 +64,13 @@
 :host .library-record:hover { background: var(--aimd-workspace-surface); }
 :host .library-record-copy strong, :host .library-record-content strong { font-size: var(--_workspace-navigation-size); font-weight: var(--aimd-font-medium); line-height: var(--aimd-leading-normal); }
 :host .library-record-copy span, :host .library-record-content>span { font-size: var(--aimd-text-sm); }
-:host .search-field, :host .aimd-field-control, :host .library-annotation-editor {
-  border: 1px solid var(--aimd-workspace-border); border-radius: var(--_workspace-field-radius);
-  background: var(--aimd-workspace-surface); box-shadow: var(--aimd-workspace-inset);
-}
 :host .search-field { min-height: var(--_bookmarks-control-height); }
 :host .search-field input { background: transparent; font-size: var(--_workspace-navigation-size); }
-:host .search-field:focus-within, :host .aimd-field-control:focus-visible, :host .library-annotation-editor:focus-visible { outline: 2px solid var(--aimd-focus-ring); outline-offset: 2px; }
 :host .secondary-btn, :host .primary-btn, :host .mock-modal__button, :host .settings-select-trigger, :host .settings-stepper-field {
-  border-radius: var(--aimd-radius-xl); box-shadow: var(--aimd-workspace-raised); border-color: var(--aimd-workspace-border); font-size: var(--aimd-text-sm);
-}
-:host .secondary-btn:not(.secondary-btn--primary) { background: var(--aimd-workspace-card); }
-:host .secondary-btn:not(.secondary-btn--primary):hover, :host .mock-modal__button--secondary:hover { background: var(--aimd-workspace-surface); }
-:host .secondary-btn:active, :host .primary-btn:active, :host .mock-modal__button:active { box-shadow: var(--aimd-workspace-inset); }
-:host .library-menu-items, :host .settings-select-menu,
-:host .mock-modal, :host .panel-window--reader-settings, :host .panel-window--bookmark-save {
-  background: var(--aimd-workspace-card); border: 1px solid var(--aimd-workspace-border); border-radius: var(--aimd-radius-2xl);
-  box-shadow: var(--aimd-shadow-lg), var(--aimd-workspace-edge-shadow);
+  font-size: var(--aimd-text-sm);
 }
 :host .library-menu-items { width: max-content; min-width: calc(var(--aimd-size-control-icon-panel) * 5); max-width: calc(100% - var(--aimd-space-4)); }
 :host .library-menu-items>.secondary-btn { box-shadow: none; border-color: transparent; justify-content: flex-start; white-space: nowrap; }
-:host .mock-modal__head, :host .mock-modal__footer, :host .panel-window--reader-settings>.panel-header, :host .panel-window--bookmark-save>.panel-header, :host .panel-window--reader-settings>.panel-footer, :host .panel-window--bookmark-save>.panel-footer { background: var(--aimd-workspace-surface); }
-:host .reader-settings-template__editor, :host .reader-settings-template__preview { background: var(--aimd-workspace-surface); border-color: var(--aimd-workspace-border); box-shadow: var(--aimd-workspace-inset); }
-:host .mock-modal-overlay { background: var(--aimd-workspace-scrim); backdrop-filter: none; -webkit-backdrop-filter: none; }
 :host .library-detail { background: var(--aimd-workspace-card); border: 1px solid var(--aimd-workspace-border); border-radius: var(--aimd-radius-2xl); box-shadow: var(--aimd-shadow-lg); margin: var(--aimd-space-3); }
 :host .library-detail blockquote, :host .picker-tree { background: var(--aimd-workspace-surface); box-shadow: var(--aimd-workspace-inset); }
 :host .batch-bar, :host .library-batch { border-radius: var(--aimd-radius-xl); border-color: var(--aimd-workspace-border); box-shadow: var(--aimd-workspace-raised); }

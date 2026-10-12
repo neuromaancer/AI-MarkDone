@@ -2,6 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 
+const releaseVersion: string = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')).version;
+
 vi.mock('@/drivers/shared/clients/settingsClientRpc', () => ({
     settingsClientRpc: {
         getAll: vi.fn(async () => ({
@@ -172,9 +174,9 @@ describe('BookmarksPanel', () => {
 
         expect(method).toContain('cloudBackupTestConnection');
         expect(method).toContain('cloudBackupManageBackups');
-        expect(method).toContain('cloudBackupConnectedAs');
+        expect(method).toContain('cloudBackupConnectedStatus');
         expect(method).toContain('cloudBackupPrivacyNote');
-        expect(method).toContain("privacy.className = 'cloud-backup-settings-modal__privacy'");
+        expect(method).toContain("privacy.className = 'cloud-backup-settings-modal__privacy aimd-material-card'");
         expect(method).toContain('showCloudBackupManager');
         expect(method).toContain('try {');
         expect(method).toContain('finally {');
@@ -210,7 +212,7 @@ describe('BookmarksPanel', () => {
         expect(source).toContain('cloud-backup-manager-list');
         expect(source).toContain("listRoot.dataset.state = 'loading'");
         expect(source).toContain("listRoot.dataset.state = 'empty'");
-        expect(source).toContain("trash.className = 'secondary-btn secondary-btn--danger cloud-backup-manager-trash'");
+        expect(source).toContain("trash.className = 'secondary-btn secondary-btn--danger cloud-backup-manager-trash aimd-material-button--danger'");
         expect(source).toContain('fileName.title = snapshot.name');
         expect(css).toContain('.cloud-backup-settings-modal__privacy');
         expect(css).toContain('.cloud-backup-manager-name');
@@ -523,7 +525,7 @@ describe('BookmarksPanel', () => {
         expect(refreshedFeedbackActiveTab?.textContent).not.toContain('Email remains available for private feedback');
         expect(refreshedFeedbackActiveTab?.querySelector('.support-contact-card')).toBeTruthy();
         expect(refreshedFeedbackActiveTab?.querySelector('.about-website-card')).toBeTruthy();
-        expect(feedbackEmailCta?.href).toBe('mailto:zhaoliangbin42@gmail.com?subject=AI-MarkDone%20Safari%20Feedback');
+        expect(feedbackEmailCta?.href).toBe('mailto:zhaoliangbin42@gmail.com?subject=AI-MarkDone%20Feedback');
         expect(feedbackWebsiteCta?.href).toBe('https://zhaoliangbin42.github.io/ai-markdone/en/');
         expect(feedbackWebsiteCta?.target).toBe('_blank');
         expect(feedbackWebsiteCta?.rel).toContain('noopener');
@@ -557,7 +559,7 @@ describe('BookmarksPanel', () => {
         vi.mocked(bookmarksClient.getChangelogNotice).mockResolvedValueOnce({
             ok: true,
             data: {
-                pendingVersion: '6.1.0',
+                pendingVersion: releaseVersion,
                 lastShownVersion: null,
                 reason: 'update',
                 previousVersion: '6.0.0',
@@ -612,14 +614,14 @@ describe('BookmarksPanel', () => {
         const shadow = host.shadowRoot!;
         const modal = shadow.querySelector<HTMLElement>('.mock-modal');
 
-        expect(modal?.querySelector('.mock-modal__title-copy strong')?.textContent).toBe("What's new in AI-MarkDone 6.1.0");
-        expect(modal?.textContent).toContain('Feature overview');
+        expect(modal?.querySelector('.mock-modal__title-copy strong')?.textContent).toBe(`What's new in AI-MarkDone ${releaseVersion}`);
+        expect(modal?.textContent).toContain('Unfinished text saves as a recoverable draft');
 
         const okButton = Array.from(modal?.querySelectorAll<HTMLButtonElement>('.mock-modal__button') ?? []).find((button) => button.textContent === 'OK');
         okButton?.click();
         await flushUi();
 
-        expect(bookmarksClient.ackChangelogNotice).toHaveBeenCalledWith('6.1.0');
+        expect(bookmarksClient.ackChangelogNotice).toHaveBeenCalledWith(releaseVersion);
     });
 
     it('acks the notice and routes to the changelog tab from the modal secondary action', async () => {
@@ -627,7 +629,7 @@ describe('BookmarksPanel', () => {
         vi.mocked(bookmarksClient.getChangelogNotice).mockResolvedValueOnce({
             ok: true,
             data: {
-                pendingVersion: '6.1.0',
+                pendingVersion: releaseVersion,
                 lastShownVersion: null,
                 reason: 'update',
                 previousVersion: '6.0.0',
@@ -686,7 +688,7 @@ describe('BookmarksPanel', () => {
         viewAllButton?.click();
         await flushUi();
 
-        expect(bookmarksClient.ackChangelogNotice).toHaveBeenCalledWith('6.1.0');
+        expect(bookmarksClient.ackChangelogNotice).toHaveBeenCalledWith(releaseVersion);
         expect(shadow.querySelector<HTMLElement>('.changelog-panel')?.dataset.active).toBe('1');
         expect(shadow.querySelector('.aimd-panel-title')?.textContent).toBe('Changelog');
     });
@@ -697,7 +699,7 @@ describe('BookmarksPanel', () => {
             .mockResolvedValueOnce({
                 ok: true,
                 data: {
-                pendingVersion: '6.1.0',
+                pendingVersion: releaseVersion,
                     lastShownVersion: null,
                     reason: 'update',
                     previousVersion: '6.0.0',
@@ -707,7 +709,7 @@ describe('BookmarksPanel', () => {
                 ok: true,
                 data: {
                     pendingVersion: null,
-                    lastShownVersion: '6.1.0',
+                    lastShownVersion: releaseVersion,
                     reason: null,
                     previousVersion: '4.4.6',
                 },

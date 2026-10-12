@@ -1,5 +1,6 @@
 import type { SiteAdapter } from '../adapters/base';
 import { ChatGPTPageIndex } from './ChatGPTPageIndex';
+import { resolveChatGPTActiveSurface } from './chatgptActiveSurface';
 
 export type ChatGPTDomRoundRef = {
     id: string;
@@ -109,15 +110,8 @@ function readMessageId(...elements: Array<HTMLElement | null | undefined>): stri
     return null;
 }
 
-function getDiscoveryRoot(adapter: SiteAdapter): ParentNode {
-    const observerRoot = adapter.getObserverContainer();
-    const scopedMain = observerRoot?.matches?.('main')
-        ? observerRoot
-        : observerRoot?.querySelector?.('main');
-    if (scopedMain instanceof HTMLElement) return scopedMain;
-    const main = document.querySelector('main');
-    if (main instanceof HTMLElement) return main;
-    return observerRoot ?? document;
+function getDiscoveryRoot(adapter: SiteAdapter): ParentNode | null {
+    return resolveChatGPTActiveSurface(adapter.getObserverContainer())?.contentRoot ?? null;
 }
 
 function listRoleNodes(root: ParentNode): HTMLElement[] {
@@ -146,6 +140,7 @@ function listLegacyTurnContainers(root: ParentNode): HTMLElement[] {
 
 export function collectChatGPTDomTurnSlots(adapter: SiteAdapter): HTMLElement[] {
     const root = getDiscoveryRoot(adapter);
+    if (!root) return [];
     const containers = listLegacyTurnContainers(root);
     const groups = new Map<HTMLElement, HTMLElement[]>();
     for (const container of containers) {
@@ -736,6 +731,7 @@ function hasUncoveredAssistantSurface(
 
 function discoverChatGPTDomRoundRefs(adapter: SiteAdapter): ChatGPTDomRoundRef[] {
     const root = getDiscoveryRoot(adapter);
+    if (!root) return [];
     const available = (round: ChatGPTDomRoundRef) => adapter.isMessageContentAvailable?.(round.assistantMessageEl) !== false;
     const turnWrapperRounds = collectTurnWrapperRoundRefs(adapter, root).filter(available);
     if (!hasUncoveredAssistantSurface(adapter, root, turnWrapperRounds)) return turnWrapperRounds;

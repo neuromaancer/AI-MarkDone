@@ -25,6 +25,12 @@
 
 ### Refactor And Closeout Records
 
+- [6.2.0 review and release readiness](reviews/2026-10-12-6.2.0-release-readiness.md)
+  - consolidated branch scope, feedback disposition, copy and pending release acceptance
+
+- [Unified surface visual upgrade](plans/2026-10-08-unified-surface-visual-upgrade.md)
+  - remaining surface coverage, styling ownership and verification evidence
+
 These documents record bounded refactor execution and closeout evidence. They do not replace the long-lived architecture authority above:
 
 - `docs/refactor/UI_SYSTEM_REFACTOR_PLAN.md`

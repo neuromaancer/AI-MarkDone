@@ -52,7 +52,6 @@ export function getReferenceTokenCss(theme: Theme): string {
   --aimd-ref-shadow-xs: ${isDark ? '0 1px 2px rgba(0,0,0,0.55)' : '0 1px 2px rgba(0,0,0,0.12)'};
   --aimd-ref-shadow-sm: ${isDark ? '0 6px 16px rgba(0,0,0,0.52)' : '0 4px 12px rgba(0,0,0,0.12)'};
   --aimd-ref-shadow-lg: ${isDark ? '0 14px 34px rgba(0,0,0,0.68)' : '0 22px 56px rgba(148,163,184,0.24)'};
-  --aimd-ref-shadow-xl: ${isDark ? '0 18px 60px rgba(0,0,0,0.66)' : '0 28px 80px rgba(148,163,184,0.28)'};
   --aimd-ref-shadow-focus: ${isDark ? '0 0 0 2px rgba(26,115,232,0.38)' : '0 0 0 2px rgba(59,130,246,0.20)'};
 
   --aimd-ref-type-size-075: 12px;

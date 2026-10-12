@@ -502,21 +502,21 @@ export class SaveMessagesDialog {
     <div class="message-grid">
       ${this.turns.map((turn, index) => {
           const active = this.state.selected.has(index) ? '1' : '0';
-          return `<button class="message-chip" data-action="toggle-turn" data-index="${index}" data-active="${active}" aria-pressed="${active === '1'}" ${disabled} data-tooltip="${escapeHtml(turn.user)}" data-tooltip-title="${index + 1}" data-tooltip-variant="preview">${index + 1}</button>`;
+          return `<button class="message-chip aimd-material-choice" data-action="toggle-turn" data-index="${index}" data-active="${active}" aria-pressed="${active === '1'}" ${disabled} data-tooltip="${escapeHtml(turn.user)}" data-tooltip-title="${index + 1}" data-tooltip-variant="preview">${index + 1}</button>`;
       }).join('')}
     </div>
     <div class="section-label">${escapeHtml(formatLabel)}</div>
-    <div class="segmented format-options" role="group" aria-label="${escapeHtml(formatLabel)}">
-      <button data-action="set-format" data-format="markdown" data-active="${this.state.format === 'markdown' ? '1' : '0'}" aria-pressed="${this.state.format === 'markdown'}" ${disabled} aria-label="${escapeHtml(markdownLabel)}">${iconMarkup(fileCodeIcon)}<span>${escapeHtml(markdownLabel)}</span></button>
-      <button data-action="set-format" data-format="markdown-zip" data-active="${this.state.format === 'markdown-zip' ? '1' : '0'}" aria-pressed="${this.state.format === 'markdown-zip'}" ${disabled} aria-label="${escapeHtml(zipLabel)}">${iconMarkup(fileCodeIcon)}<span>${escapeHtml(zipLabel)}</span></button>
-      <button data-action="set-format" data-format="pdf" data-active="${this.state.format === 'pdf' ? '1' : '0'}" aria-pressed="${this.state.format === 'pdf'}" ${disabled} aria-label="${escapeHtml(pdfLabel)}">${iconMarkup(fileTextIcon)}<span>${escapeHtml(pdfLabel)}</span></button>
-      <button data-action="set-format" data-format="png" data-active="${this.state.format === 'png' ? '1' : '0'}" aria-pressed="${this.state.format === 'png'}" ${disabled} aria-label="${escapeHtml(pngLabel)}">${iconMarkup(imageIcon)}<span>${escapeHtml(pngLabel)}</span></button>
+    <div class="segmented format-options aimd-material-segmented" role="group" aria-label="${escapeHtml(formatLabel)}">
+      <button class="aimd-material-choice" data-action="set-format" data-format="markdown" data-active="${this.state.format === 'markdown' ? '1' : '0'}" aria-pressed="${this.state.format === 'markdown'}" ${disabled} aria-label="${escapeHtml(markdownLabel)}">${iconMarkup(fileCodeIcon)}<span>${escapeHtml(markdownLabel)}</span></button>
+      <button class="aimd-material-choice" data-action="set-format" data-format="markdown-zip" data-active="${this.state.format === 'markdown-zip' ? '1' : '0'}" aria-pressed="${this.state.format === 'markdown-zip'}" ${disabled} aria-label="${escapeHtml(zipLabel)}">${iconMarkup(fileCodeIcon)}<span>${escapeHtml(zipLabel)}</span></button>
+      <button class="aimd-material-choice" data-action="set-format" data-format="pdf" data-active="${this.state.format === 'pdf' ? '1' : '0'}" aria-pressed="${this.state.format === 'pdf'}" ${disabled} aria-label="${escapeHtml(pdfLabel)}">${iconMarkup(fileTextIcon)}<span>${escapeHtml(pdfLabel)}</span></button>
+      <button class="aimd-material-choice" data-action="set-format" data-format="png" data-active="${this.state.format === 'png' ? '1' : '0'}" aria-pressed="${this.state.format === 'png'}" ${disabled} aria-label="${escapeHtml(pngLabel)}">${iconMarkup(imageIcon)}<span>${escapeHtml(pngLabel)}</span></button>
     </div>
     ${showVisuals ? `<div class="rich-content-options" data-role="rich-content-options">
       <div class="section-label">${escapeHtml(this.getLabel('messageExportRichLabel', 'Charts and rich content'))}</div>
-      <div class="segmented" role="group" aria-label="${escapeHtml(this.getLabel('messageExportRichLabel', 'Charts and rich content'))}">
-        <button data-action="set-visuals" data-visuals="include" data-active="${this.state.visuals === 'include' ? '1' : '0'}" aria-pressed="${this.state.visuals === 'include'}" ${disabled}>${escapeHtml(this.getLabel('messageExportRichInclude', 'Include images'))}</button>
-        <button data-action="set-visuals" data-visuals="placeholder" data-active="${this.state.visuals === 'placeholder' ? '1' : '0'}" aria-pressed="${this.state.visuals === 'placeholder'}" ${disabled}>${escapeHtml(this.getLabel('messageExportRichPlaceholder', 'Use text placeholders'))}</button>
+      <div class="segmented aimd-material-segmented" role="group" aria-label="${escapeHtml(this.getLabel('messageExportRichLabel', 'Charts and rich content'))}">
+        <button class="aimd-material-choice" data-action="set-visuals" data-visuals="include" data-active="${this.state.visuals === 'include' ? '1' : '0'}" aria-pressed="${this.state.visuals === 'include'}" ${disabled}>${escapeHtml(this.getLabel('messageExportRichInclude', 'Include images'))}</button>
+        <button class="aimd-material-choice" data-action="set-visuals" data-visuals="placeholder" data-active="${this.state.visuals === 'placeholder' ? '1' : '0'}" aria-pressed="${this.state.visuals === 'placeholder'}" ${disabled}>${escapeHtml(this.getLabel('messageExportRichPlaceholder', 'Use text placeholders'))}</button>
       </div>
     </div>` : ''}
     ${this.state.resultText ? `<div class="export-result workflow-dialog__status" data-role="export-result" role="status" aria-live="polite">${escapeHtml(this.state.resultText)}</div>` : ''}

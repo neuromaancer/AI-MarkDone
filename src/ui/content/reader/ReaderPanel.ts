@@ -282,6 +282,16 @@ export class ReaderPanel {
     }
 
     async focusAnnotation(annotationId: string, assistantMessageId?: string | null): Promise<boolean> {
+        const documentKey = readerAnnotationDocumentKeyOrNull(this.annotationDocument);
+        let highlightedRecord: ReaderCommentRecord | undefined;
+        if (annotationId.startsWith('highlight:')) {
+            await this.highlights.reload();
+            if (readerAnnotationDocumentKeyOrNull(this.annotationDocument) !== documentKey) return false;
+            const highlight = this.highlights.list().find(record => `highlight:${record.id}` === annotationId);
+            if (!highlight || (assistantMessageId && highlight.target.assistantMessageId !== assistantMessageId)) return false;
+            highlightedRecord = highlightAnchor(highlight);
+            assistantMessageId = highlight.target.assistantMessageId;
+        }
         const itemIndex = this.workflow.items.findIndex((item) => (
             (Boolean(assistantMessageId) && item.meta?.assistantMessageId === assistantMessageId)
             || item.id === this.persistentComments.get(item.id)?.find((record) => record.id === annotationId)?.itemId
@@ -292,9 +302,18 @@ export class ReaderPanel {
             this.workflow.jump(itemIndex);
             await this.renderCurrentContent({ restoreScrollPosition: false });
         }
+        if (readerAnnotationDocumentKeyOrNull(this.annotationDocument) !== documentKey) return false;
         this.cancelPendingReaderScrollRestore();
-        const record = this.getCurrentComments('created').find((candidate) => candidate.id === annotationId);
+        const record = highlightedRecord ?? this.getCurrentComments('created').find((candidate) => candidate.id === annotationId);
         if (!record) return false;
+        const root = this.getMarkdownRoot();
+        const resolved = root ? resolveReaderCommentAnchor(root, record) : null;
+        if (!resolved || (!resolved.range && resolved.units.length === 0)) return false;
+        if (highlightedRecord) {
+            if (resolved.unionRect) this.scrollCommentRectIntoView(resolved.unionRect);
+            this.syncCommentUi();
+            return true;
+        }
         const panel = this.overlaySession?.surfaceRoot.querySelector<HTMLElement>('.panel-window--reader');
         if (!panel) return false;
         this.openExistingComment(record, panel.getBoundingClientRect(), { scrollIntoView: true });

@@ -1,5 +1,60 @@
 # Architecture Current State (As-Is)
 
+> **Verified mark identity through loading and history growth (2026-10-12)**
+>
+> Toolbar bookmark confirmation re-reads the unique assistant ID and requires
+> the captured prompt/body and document/route to remain current. If obtained
+> history prepends, the selected turn's canonical ordinal is refreshed before
+> status interpretation and writing. Ordinal changes alone are not content loss;
+> missing/ambiguous identities, changed text and route changes still fail closed.
+>
+> Annotation/highlight anchoring checks captured prefix/suffix even when a DOM
+> path or text offset still spells the same quote. A stale positional shortcut
+> cannot select a different repeated paragraph. Library highlights reuse the
+> existing `highlight:<id>` anchor namespace and annotation navigation transport.
+> Background reads the stored mark's assistant ID and asks the host to load it
+> through `?message=<id>`. Content reuses the existing navigation coordinator's
+> bounded source/materialization wait before Reader focus; no discovery observer,
+> polling or conversation request is added. Page annotation/highlight reveal
+> centers the proven range geometry in the current scroll root and preserves
+> negative `column-reverse` coordinates. Failed location is reported, not treated
+> as a successful approximate match. Installed acceptance is tracked separately
+> in the 6.2.0 review record.
+
+> **Retained ChatGPT page recovery (2026-10-12)**
+>
+> ChatGPT can retain multiple connected `main` trees while switching pages.
+> `resolveChatGPTActiveSurface` is the single stateless resolver for discovery,
+> adapter containers, current-message/streaming scope and conversation scrolling.
+> When app-shell activity markers exist, only a unique
+> `data-app-shell-active-page="true"` owner with one owned `main` is accepted.
+> Missing, multiple or nested marked owners fail closed rather than reading a cached page.
+> Without markers, the existing scoped legacy container/single-main fallback
+> remains supported. Activity markers establish current DOM ownership, never
+> semantic conversation or message identity.
+>
+> The existing document-level PageIndex observer observes this activity attribute
+> as a structure fact. It invalidates mounted refs and publishes the current
+> surface, including transitions through an empty or unavailable page. Runtime
+> route fences, the tab-local Repository, delayed action-row admission and the
+> shared Surface remain the sole lifecycle chain. Returning to a cached page
+> works through attribute changes alone; no consumer observer, polling, fixed
+> readiness deadline or active network request is introduced. See
+> [the investigation record](../plans/2026-10-12-chatgpt-retained-page-recovery.md).
+
+> **Unified surface materials (2026-10-08)**
+>
+> Prompt, formula preview/hover, export, Send, Reader subwindows, backup/import
+> review and shared feedback chrome compose `getSurfaceMaterialCss()` after their
+> feature layout. It consumes existing public tokens and owns no runtime state.
+> Panel/modal geometry, focus, dismissal and resource lifetime keep their existing
+> owners. ReaderSettingsDialogShell shares one template layout across Reader and
+> Settings. The unsupported popup's CSS is generated from the same page tokens
+> and material module during target preparation; its external script respects
+> explicit saved theme and validates custom hexadecimal accents. Superseded
+> shadow aliases and duplicate template/material recipes were removed.
+> See ADR-0033 and the visual-upgrade plan for exact verification boundaries.
+
 > **Rich content and pool lifecycle implementation (2026-10-08)**
 >
 > Current-message and pool capture share `compileRenderedBody`; thin compiler
@@ -131,8 +186,7 @@
 > The bridge only observes the website-owned GET response and keeps bounded
 > in-memory source evidence. The extension issues no conversation GET or POST,
 > reads no Cookie/Storage/Token/Authorization data, and never observes POST or
-> SSE generation traffic. Chrome and Firefox restore this bridge; Safari keeps
-> the DOM-only boundary.
+> SSE generation traffic. Chrome and Firefox share this bridge boundary.
 >
 > `pending-surface` is mounted host geometry, not accumulated content. A
 > non-streaming message with an official action row can mount its toolbar and
@@ -300,7 +354,7 @@
   - 当前消息 Toolbar、word count、whole-message Copy、Reader fallback 与单消息 Export fallback 在用户动作时读取对应已挂载 DOM，不等待 Repository。跨消息 Reader、Save Messages、Directory 和后续目录能力仍消费 `ConversationContentSourceV1` 有序池；书签提交继续要求 canonical identity 与已证明 position。公式点击复制及 PNG/SVG/MathML 直接使用公式 DOM 与 parser Adapter。
   - `src/contracts/semanticContent.ts` + `src/services/semantic-content/SemanticContent.ts` 是 provider-neutral Semantic Content Module：输入 canonical Markdown、revision、coverage 与 provenance，输出 AI-MarkDone 自有不可变节点、UTF-16 半开 source spans、plain text、Reader units/outline 与 canonical/fragment projections。unified/remark 只属于实现；DOM、Range、browser global、platform id、host selector、clipboard 与 UI 不进入该 Module。
   - `ContentSurfaceAdapter` 只在拖选阶段定位同一非流式 assistant message 的原生 Range。复制或注释动作发生时，`PageMarkdownSelectionResolver` 优先使用可用的 canonical `SurfaceProjection`；若池尚未收录、token 已变化或缓存正文不可用，则从仍连接的 owning message DOM 构建当前 Markdown。跨消息、detached 或 streaming selection 仍 fail closed；拖选期间不编译 Markdown。
-  - Chrome MV3 / Firefox MV2 Manifest 在 ChatGPT 页面以 document_start 注入 bridge bootstrap，并通过 web-accessible resource 加载 bridge；Safari 不注入该 bridge。Bridge 只包装宿主 `fetch` 的观察路径，按 GET URL 中的 conversation ID 捕获 SPA route 更新前的宿主预取，供后续匹配 route 消费；迟到 source 与 DOM 增量持续补充同一个池，无固定截止时间。读取成功 same-origin JSON GET 的受限 clone，不读取 Cookie、Token、Storage 或认证 header，不观察 POST/SSE，也不构造任何 conversation 请求。消息时间单独从宿主已加载的当前会话内存缓存按 assistant ID 只读提取；缓存不可识别时不显示时间，不主动触发请求或打开宿主菜单。
+  - Chrome MV3 / Firefox MV2 Manifest 在 ChatGPT 页面以 document_start 注入 bridge bootstrap，并通过 web-accessible resource 加载 bridge；Bridge 只包装宿主 `fetch` 的观察路径，按 GET URL 中的 conversation ID 捕获 SPA route 更新前的宿主预取，供后续匹配 route 消费；迟到 source 与 DOM 增量持续补充同一个池，无固定截止时间。读取成功 same-origin JSON GET 的受限 clone，不读取 Cookie、Token、Storage 或认证 header，不观察 POST/SSE，也不构造任何 conversation 请求。消息时间单独从宿主已加载的当前会话内存缓存按 assistant ID 只读提取；缓存不可识别时不显示时间，不主动触发请求或打开宿主菜单。
   - `ChatGPTPageIndex` 是唯一 Page Monitor observer，监听消息结构、identity、官方 action/stop 生命周期和 assistant 内容变化；扩展自有 mutation 被忽略。Host Monitor 在既有结构/identity 事件中立即读取槽位身份，正文扫描仍复用页面级短防抖；批次编译前读取现有 scroll root 提供粗略位置提示，不新增 listener、observer 或自动滚动。官方 action row 只作为就绪触发，不作为正文来源。
   - Deep Research 等特殊消息只有在其当前挂载 DOM 能提供非空 assistant 正文和官方完成锚点时才进入池；不再从网络 payload 或内部 widget state 提取未渲染正文。
   - `ChatGPTConversationSurface` 仍以 `assistantMessageId` 连接池和当前挂载窗口。已加载后虚拟化卸载的消息保留在池；assistant-only DOM 也可直接建立正文 turn，user prompt 缺失时保存空字符串。
@@ -537,8 +591,9 @@ flowchart TD
 ### Consumer consistency fixes (2026-09)
 
 - Directory preview and expanded labels use the same text resolver. When the round signature changes, the preview action toolbar is rebuilt alongside its text; an unchanged ordinal cannot retain an old message action.
-- Message bookmark writes revalidate document/route, exact message ID and position, prompt and body after asynchronous work. An unrelated content-token update is accepted only if those values still match; missing canonical content, changed selected content, and route changes still fail closed. Discovery, partial-history admission, and storage schemas are unchanged.
+- Message bookmark writes revalidate document/route, unique exact message ID, prompt and body after asynchronous work. The current canonical ordinal may change when older history is admitted and is re-read before status interpretation and writing. An unrelated content-token update is accepted only when the selected content still matches; missing/ambiguous canonical identity, changed selected content and route changes fail closed. Discovery, partial-history admission and storage schemas are unchanged.
 - Page annotations and all conversation Reader entrypoints share the annotation document projection, including the DOM-local Reader fallback. Subscription and late-read rules, persistence opt-in, and view-local anchor state follow ADR-0006. Page “Insert and delete” follows ADR-0023.
+- Passage anchors validate captured context before accepting old DOM paths or text offsets. Quote fallback keeps selected text literal, ignores rendering-only whitespace in surrounding context across page/Reader projections, and requires a unique match. Missing/ambiguous anchors remain unanchored. Page passage reveal uses relative scrolling so negative column-reverse scroll positions are preserved; stored ordinals do not override exact assistant identity.
 
 ### 高亮与资料库投影（2026-09-12）
 

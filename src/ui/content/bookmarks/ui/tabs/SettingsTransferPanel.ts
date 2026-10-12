@@ -4,6 +4,7 @@ import { AppearanceScope } from '../../../../../style/appearanceScope';
 import { createAppearanceSnapshot, type AppearanceSnapshot } from '../../../../../style/appearance';
 import { ensureStyle } from '../../../../../style/shadow';
 import { t } from '../../../components/i18n';
+import { getSurfaceMaterialCss } from '../../../components/styles/surfaceMaterialCss';
 export type SettingsTransferActions = {
     exportSettings: () => Promise<SettingsFile>;
     previewImport: (fileText: string) => Promise<SettingsImportPreview>;
@@ -34,6 +35,8 @@ export class SettingsTransferPanel {
         const hint = document.createElement('p');
         hint.textContent = t('settingsTransferHint');
         this.toolbar.className = 'toolbar';
+        this.details.className = 'settings-transfer__details';
+        this.notice.className = 'settings-transfer__notice';
         this.toolbar.append(this.button('settingsExport', () => this.showExportNotice()), this.button('settingsImport', () => this.input.click()), this.button('settingsRestore', () => void this.recover()));
         this.input.type = 'file';
         this.input.accept = '.json,application/json';
@@ -65,6 +68,11 @@ export class SettingsTransferPanel {
         b.type = 'button';
         b.textContent = t(key);
         b.dataset.action = key;
+        b.className = 'aimd-material-button';
+        if (key === 'settingsExportConfirm' || key === 'settingsImportConfirm')
+            b.classList.add('aimd-material-button--primary');
+        else if (key === 'btnCancel')
+            b.classList.add('aimd-material-button--quiet');
         b.addEventListener('click', onClick);
         return b;
     }
@@ -89,7 +97,10 @@ export class SettingsTransferPanel {
         this.notice.textContent = '';
         const p = document.createElement('p');
         p.textContent = t('settingsExportNotice');
-        this.details.append(p, this.button('settingsExportConfirm', () => void this.exportFile()), this.button('btnCancel', () => this.cancel()));
+        const actions = document.createElement('div');
+        actions.className = 'settings-transfer__actions';
+        actions.append(this.button('settingsExportConfirm', () => void this.exportFile()), this.button('btnCancel', () => this.cancel()));
+        this.details.append(p, actions);
     }
     private cancel(): void {
         if (this.pending || this.readOnly)
@@ -197,9 +208,11 @@ export class SettingsTransferPanel {
         const labels: Record<string, string> = { platforms: 'settingsCategoryAdvanced', behavior: 'settingsButtonsGroupMessage', reader: 'settingsCategoryReading', content: 'settingsContentCleanupTitle', formula: 'settingsButtonsGroupFormula', export: 'settingsCategoryExport', chatgptDirectory: 'settingsButtonsGroupDirectory', chatgptBehavior: 'settingsCategoryControls', appearance: 'settingsCategoryAppearance', bookmarks: 'settingsDefaultBookmarkSort', language: 'settingsLanguageLabel' };
         for (const category of categories) {
             const block = document.createElement('section');
+            block.className = 'settings-transfer__category aimd-material-card';
             const label = document.createElement('label');
             const check = document.createElement('input');
             check.type = 'checkbox';
+            check.className = 'aimd-material-check';
             check.checked = true;
             check.dataset.category = category;
             check.addEventListener('change', () => {
@@ -221,7 +234,10 @@ export class SettingsTransferPanel {
             this.details.append(block);
         }
         const apply = this.button('settingsImportConfirm', () => void this.apply(text, preview.fingerprint, [...selected]));
-        this.details.append(apply, this.button('btnCancel', () => this.cancel()));
+        const actions = document.createElement('div');
+        actions.className = 'settings-transfer__actions';
+        actions.append(apply, this.button('btnCancel', () => this.cancel()));
+        this.details.append(actions);
     }
     private format(value: unknown, path: string): string {
         if (typeof value === 'boolean')
@@ -256,7 +272,59 @@ export class SettingsTransferPanel {
         }
     }
 }
-const CSS = `:host{display:block;box-sizing:border-box;font-family:var(--aimd-font-family-sans);color:var(--aimd-text-primary);} h3{font-size:var(--aimd-text-base);margin:0 0 var(--aimd-space-2);} p{font-size:var(--aimd-text-sm);color:var(--aimd-text-secondary);line-height:var(--aimd-leading-normal);margin:0 0 var(--aimd-space-4);} .toolbar{display:flex;gap:var(--aimd-space-3);flex-wrap:wrap;} button{font:inherit;font-size:var(--aimd-text-sm);color:var(--aimd-text-primary);background:var(--aimd-workspace-card);border:1px solid var(--aimd-workspace-border);border-radius:var(--aimd-radius-lg);padding:var(--aimd-space-2) var(--aimd-space-3);cursor:pointer;} button:hover{background:var(--aimd-surface-hover);} button:disabled{opacity:var(--aimd-opacity-disabled);cursor:default;} section{margin:var(--aimd-space-4) 0 0;padding:var(--aimd-space-4);background:var(--aimd-workspace-surface);border-radius:var(--aimd-radius-lg);} label{display:flex;align-items:center;gap:var(--aimd-space-2);font-size:var(--aimd-text-sm);} ul{font-size:var(--aimd-text-xs);line-height:var(--aimd-leading-normal);padding-inline-start:var(--aimd-space-5);overflow-wrap:anywhere;max-height:calc(var(--aimd-size-control-icon-toolbar)*6);overflow:auto;} p:empty{display:none;}`;
+const CSS = `
+:host {
+    display: block;
+    min-width: 0;
+    box-sizing: border-box;
+    font-family: var(--aimd-font-family-sans);
+    color: var(--aimd-text-primary);
+}
+*, *::before, *::after { box-sizing: border-box; }
+h3 { font-size: var(--aimd-text-base); margin: 0 0 var(--aimd-space-2); }
+p {
+    font-size: var(--aimd-text-sm);
+    color: var(--aimd-text-secondary);
+    line-height: var(--aimd-leading-normal);
+    margin: 0 0 var(--aimd-space-4);
+}
+.toolbar, .settings-transfer__actions {
+    display: flex;
+    gap: var(--aimd-space-2);
+    flex-wrap: wrap;
+}
+button {
+    font: inherit;
+    font-size: var(--aimd-text-sm);
+    padding: var(--aimd-space-2) var(--aimd-space-3);
+    cursor: pointer;
+}
+.settings-transfer__details:not(:empty) {
+    display: grid;
+    gap: var(--aimd-space-3);
+    margin-top: var(--aimd-space-4);
+}
+.settings-transfer__details p { margin: 0; }
+.settings-transfer__category { min-width: 0; padding: var(--aimd-space-4); }
+label {
+    display: flex;
+    align-items: center;
+    gap: var(--aimd-space-2);
+    font-size: var(--aimd-text-sm);
+    font-weight: var(--aimd-font-medium);
+}
+ul {
+    font-size: var(--aimd-text-xs);
+    line-height: var(--aimd-leading-normal);
+    padding-inline-start: var(--aimd-space-5);
+    overflow-wrap: anywhere;
+    max-height: calc(var(--aimd-size-control-icon-toolbar) * 6);
+    overflow: auto;
+}
+.settings-transfer__notice { margin-top: var(--aimd-space-3); }
+p:empty { display: none; }
+${getSurfaceMaterialCss()}
+`;
 const PREFERENCE_LABELS: Record<string, string> = {
     "platforms.chatgpt": "settingsPreferencePlatformsChatgpt",
     "behavior.showMessageToolbar": "settingsPreferenceBehaviorShowMessageToolbar",

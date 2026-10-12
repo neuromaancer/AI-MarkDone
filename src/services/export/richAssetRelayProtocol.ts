@@ -60,7 +60,7 @@ export function isRichAssetRelayRef(value: unknown, extensionBaseUrl: string): v
     if (!record(value)) return false;
     const objectUrl = value.objectUrl;
     if (!isRichAssetRelayMetadata(value) || typeof objectUrl !== 'string'
-        || !/^(?:chrome|moz|safari-web)-extension:\/\/[^/]+\/$/.test(extensionBaseUrl)) return false;
+        || !/^(?:chrome|moz)-extension:\/\/[^/]+\/$/.test(extensionBaseUrl)) return false;
     const prefix = `blob:${extensionBaseUrl}`;
     return objectUrl.startsWith(prefix) && /^[A-Za-z0-9-]{1,128}$/.test(objectUrl.slice(prefix.length));
 }
@@ -87,7 +87,7 @@ export function isRichAssetRelayReply(value: unknown, extensionBaseUrl: string):
 export function richAssetRelayOrigin(url: string): string | null {
     try {
         const parsed = new URL(url);
-        return ['chrome-extension:', 'moz-extension:', 'safari-web-extension:'].includes(parsed.protocol)
+        return ['chrome-extension:', 'moz-extension:'].includes(parsed.protocol)
             && parsed.host && !parsed.username && !parsed.password ? `${parsed.protocol}//${parsed.host}` : null;
     } catch { return null; }
 }

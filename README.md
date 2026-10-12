@@ -8,7 +8,7 @@
     <a href="./LICENSE">
       <img src="https://img.shields.io/github/license/zhaoliangbin42/AI-MarkDone?label=License" alt="License">
     </a>
-    <img src="https://img.shields.io/badge/Version-6.1.0-10A37F" alt="Version 6.1.0">
+    <img src="https://img.shields.io/badge/Version-6.2.0-10A37F" alt="Version 6.2.0">
     <br>
     <img src="https://img.shields.io/badge/Browsers-Chrome%20%7C%20Firefox-10A37F" alt="Browsers">
     <img src="https://img.shields.io/badge/Primary%20Platform-ChatGPT-10A37F" alt="Primary Platform">
@@ -24,7 +24,7 @@
 
 AI-MarkDone is an open-source browser extension for ChatGPT. Find replies with the message directory, read long answers in Reader, organize highlights, annotations and bookmarks, then copy or export the content to your notes.
 
-Version 6.1.0 brings customizable toolbars and refreshed Settings. Pin the buttons you use often, explore less obvious features in Feature overview, and preview or export formulas as you type.
+Version 6.2.0 adds a movable annotation editor with local draft recovery, preserves ChatGPT code and supported rich blocks, and unifies smaller windows with the workspace appearance. Conversation switching and message PDF export are more reliable.
 
 ## Interface
 
@@ -88,14 +88,14 @@ Chrome (MV3) and Firefox (MV2) are supported. The main features are for ChatGPT;
 Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/ai-markdone/bmdhdihdbhjbkfaaainidcjbgidkbeoh) and receive updates through the store.
 
 For manual installation:
-1. Download AI-MarkDone-v6.1.0-chrome.zip from [GitHub Releases](https://github.com/zhaoliangbin42/AI-MarkDone/releases) and extract it.
+1. Download AI-MarkDone-v6.2.0-chrome.zip from [GitHub Releases](https://github.com/zhaoliangbin42/AI-MarkDone/releases) and extract it.
 2. Open chrome://extensions/ and enable Developer mode.
 3. Choose Load unpacked and select the extracted folder containing manifest.json.
 4. Refresh ChatGPT.
 
 ### Firefox
 
-The Firefox package is AI-MarkDone-v6.1.0-firefox.zip. For development, extract it, open about:debugging#/runtime/this-firefox, choose Load Temporary Add-on, and select manifest.json.
+The Firefox package is AI-MarkDone-v6.2.0-firefox.zip. For development, extract it, open about:debugging#/runtime/this-firefox, choose Load Temporary Add-on, and select manifest.json.
 
 ## 💻 Development & Contribution
 
@@ -122,12 +122,12 @@ npm run build
 
 ## 📅 Changelog (Latest)
 
-### 6.1.0
-- Strengthened the message directory as older replies load.
-- Added toolbar pins and categorized, searchable Settings with button previews.
-- Added Feature overview, more accent colors and custom colors.
-- Formula previews follow the text cursor and export PNG/SVG directly.
-- Added content and floating-button options, and fixed reading-position restoration after sending.
+### 6.2.0
+- Write annotations in a movable window without losing text when clicking outside; recover local drafts.
+- Preserve code fences and supported diagrams/cards; export an offline Markdown ZIP with image attachments.
+- Choose rich-block images or placeholders in PDF/PNG and avoid host print-page collisions.
+- Restore the directory and reply controls across cached conversation switches.
+- Use a consistent appearance across Prompt, export, Send, Reader settings, backup controls and the popup.
 
 [Full Changelog](./CHANGELOG.md)
 [Release Notes](./RELEASE_NOTES.md)

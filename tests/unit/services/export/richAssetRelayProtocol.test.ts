@@ -20,6 +20,7 @@ describe('rich asset relay protocol', () => {
         expect(richAssetRelayOrigin(base)).toBe('chrome-extension://extension-id');
         expect(richAssetRelayOrigin('moz-extension://extension-uuid/rich-asset-relay.html')).toBe('moz-extension://extension-uuid');
         expect(richAssetRelayOrigin('https://evil.example/relay')).toBeNull();
+        expect(richAssetRelayOrigin('safari-web-extension://retired/relay')).toBeNull();
         expect(isAllowedRichAssetRelayParent('https://chatgpt.com', base)).toBe(true);
         expect(isAllowedRichAssetRelayParent('https://chat.openai.com', base)).toBe(true);
         expect(isAllowedRichAssetRelayParent('chrome-extension://extension-id', base)).toBe(true);
@@ -48,6 +49,8 @@ describe('rich asset relay protocol', () => {
         expect(isRichAssetRelayRef({ ...ref, objectUrl: 'blob:chrome-extension://extension-id.evil/id-1' }, base)).toBe(false);
         expect(isRichAssetRelayRef({ ...ref, objectUrl: 'https://example.com/image.png' }, base)).toBe(false);
         expect(isRichAssetRelayRef({ ...ref, objectUrl: `blob:${base}id-1?extra=1` }, base)).toBe(false);
+        expect(isRichAssetRelayRef({ ...ref, objectUrl: 'blob:moz-extension://extension-id/id-1' }, 'moz-extension://extension-id/')).toBe(true);
+        expect(isRichAssetRelayRef({ ...ref, objectUrl: 'blob:safari-web-extension://retired/id-1' }, 'safari-web-extension://retired/')).toBe(false);
     });
 
     it('projects session metadata through a whitelist so additive source fields cannot carry binary payloads', () => {

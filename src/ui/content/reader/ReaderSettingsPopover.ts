@@ -216,12 +216,12 @@ export class ReaderSettingsPopover {
     private createOpenModeRow(settings: AppSettings['reader']): HTMLElement {
         const row = this.createBaseRow(t('readerDefaultOpenModeLabel'), t('readerDefaultOpenModeDesc'));
         const control = document.createElement('div');
-        control.className = 'reader-settings-segmented';
+        control.className = 'reader-settings-segmented aimd-material-segmented';
         const modes: Array<AppSettings['reader']['defaultOpenMode']> = ['fullscreen', 'panel'];
         for (const mode of modes) {
             const button = document.createElement('button');
             button.type = 'button';
-            button.className = 'reader-settings-segmented__button';
+            button.className = 'reader-settings-segmented__button aimd-material-choice';
             button.dataset.active = settings.defaultOpenMode === mode ? '1' : '0';
             button.textContent = mode === 'fullscreen' ? t('readerOpenModeFullscreen') : t('readerOpenModePanel');
             button.addEventListener('click', () => this.applyPatch({ defaultOpenMode: mode }));
@@ -234,12 +234,12 @@ export class ReaderSettingsPopover {
     private createCommentSortModeRow(settings: AppSettings['reader']): HTMLElement {
         const row = this.createBaseRow(t('readerCommentSortModeLabel'), t('readerCommentSortModeDesc'));
         const control = document.createElement('div');
-        control.className = 'reader-settings-segmented';
+        control.className = 'reader-settings-segmented aimd-material-segmented';
         const modes: Array<ReaderCommentExportSettings['sortMode']> = ['created', 'position'];
         for (const mode of modes) {
             const button = document.createElement('button');
             button.type = 'button';
-            button.className = 'reader-settings-segmented__button';
+            button.className = 'reader-settings-segmented__button aimd-material-choice';
             button.dataset.active = settings.commentExport.sortMode === mode ? '1' : '0';
             button.textContent = mode === 'position' ? t('readerCommentSortPosition') : t('readerCommentSortCreated');
             button.addEventListener('click', () => this.updateCommentExport({ ...settings.commentExport, sortMode: mode }));
@@ -252,10 +252,10 @@ export class ReaderSettingsPopover {
     private createFontSizeRow(settings: AppSettings['reader']): HTMLElement {
         const row = this.createBaseRow(t('readerBodyFontSizeLabel'), t('readerBodyFontSizeDesc'));
         const control = document.createElement('div');
-        control.className = 'reader-settings-stepper';
+        control.className = 'reader-settings-stepper aimd-material-segmented';
         const decrease = document.createElement('button');
         decrease.type = 'button';
-        decrease.className = 'icon-btn';
+        decrease.className = 'icon-btn aimd-material-button aimd-material-button--quiet';
         decrease.dataset.action = 'reader-settings-font-decrease';
         decrease.appendChild(createIcon(minusIcon));
         const value = document.createElement('span');
@@ -264,7 +264,7 @@ export class ReaderSettingsPopover {
         value.textContent = `${settings.bodyFontSizePx ?? DEFAULT_READER_BODY_FONT_SIZE_PX}px`;
         const increase = document.createElement('button');
         increase.type = 'button';
-        increase.className = 'icon-btn';
+        increase.className = 'icon-btn aimd-material-button aimd-material-button--quiet';
         increase.dataset.action = 'reader-settings-font-increase';
         increase.appendChild(createIcon(plusIcon));
         decrease.addEventListener('click', () => this.updateBodyFontSize(-READER_BODY_FONT_SIZE_STEP_PX));
@@ -327,7 +327,7 @@ export class ReaderSettingsPopover {
         const row = this.createBaseRow(labelText, desc);
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = 'secondary-btn secondary-btn--compact';
+        button.className = 'secondary-btn secondary-btn--compact aimd-material-button';
         if (action) button.dataset.action = action;
         button.textContent = actionLabel;
         button.addEventListener('click', () => onClick(button));

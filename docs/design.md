@@ -85,7 +85,7 @@ The named Surface profiles are:
 | `anchored` | Contextual popover, preview, suggestion list, or hover action | Own anchor measurement, flip/clamp, visual-viewport collision, outside-click/Escape policy, and anchor-loss fallback |
 | `inline` | Compact controls integrated into a host layout | Preserve host geometry and interaction; no global focus trap or page scroll ownership |
 
-Extension documents such as the unsupported-page popup are documented exceptions. They use the same public visual tokens but own their document lifecycle instead of a Surface session.
+Extension documents such as the unsupported-page popup are documented exceptions. They use the same generated public tokens and shared materials but own their document lifecycle instead of a Surface session.
 
 ### 3.1 Complete Surface Catalog
 
@@ -116,7 +116,7 @@ The catalog is normative for visual and interaction ownership. Appearance means 
 | Send popover; Reader or detached Reader send action | Sending family; anchored ShadowRoot | Shared snapshot | Live refresh required | Draft focus, pending send blocks duplicates, focus returns | Text area and body share one declared scroll strategy; actions remain reachable under virtual keyboard/short viewport | `mocks/components/workflow-dialogs` |
 | Shared notices, confirm/prompt dialogs, changelog notice, and import review; workflow-owned trigger | Overlay family; shared ShadowRoot; `modal` | Shared snapshot | Live refresh required | Modal focus containment/return, Escape policy, backdrop, scroll lock, reduced motion | Centered with viewport gutters; body becomes the sole scroll owner; no dialog may exceed the visual viewport | `mocks/components/overlay-host` |
 | Tooltip and toast feedback; control hover/focus or operation result | Feedback family; page feedback layer or owning ShadowRoot preview | Shared snapshot | Live refresh required | Tooltip follows hover/focus and is non-interactive unless declared; toast never captures focus | Clamp to viewport; tooltip must not be clipped by host controls; toast must not block page interaction | `mocks/components/host-integrated-controls` (family coverage) |
-| Unsupported-page popup; extension toolbar icon on an unsupported page | Popup document; extension document exception | Minimal public-token fallback | Locale at document load | Normal document focus; no overlay lifecycle | Remains usable at `320px`; content wraps without horizontal overflow | `mocks/components/unsupported-popup` |
+| Unsupported-page popup; extension toolbar icon on an unsupported page | Popup document; extension document exception | Build-generated page tokens and shared material CSS | Locale and saved appearance at document load | Normal document focus; no overlay lifecycle | Remains usable at `320px`; content wraps without horizontal overflow | `mocks/components/unsupported-popup` |
 
 Hidden export-renderer and formula-renderer documents are rendering infrastructure, not product Surfaces. Their visual output contracts belong to export testing and must not be changed as part of UI chrome convergence.
 
@@ -511,6 +511,31 @@ Global requirements:
 - Breakpoints are owned by a Surface family and documented in the catalog. A component may use local container/geometry conditions inside that family contract but may not introduce an unrelated product breakpoint.
 
 ## 9. Pure CSS Contract
+
+### Shared surface materials (2026-10-08)
+
+`src/ui/content/components/styles/surfaceMaterialCss.ts` is the appearance owner
+for neutral surface/chrome/card/field, primary/quiet/danger buttons, segmented
+choices and native checkbox accent. Its `aimd-material-*` classes consume existing
+public tokens. Existing panel/modal/workspace aliases converge through this same
+entry; new features must not copy those recipes or create another token layer.
+Compose feature geometry first and this material entry last. The material module
+must not acquire geometry, scrolling, settings, content, focus or dismissal state.
+
+Selected choices consume existing `aria-selected`, `aria-checked`, `aria-pressed`
+or established data states. Focus remains visible, disabled actions retain native
+semantics, and reduced motion disables optional material transitions. Owner-specific
+geometry remains explicit at narrow widths and short heights. Shared modal padding
+provides the gutter once; modal width must not subtract that gutter a second time.
+Modal families supply only `--_modal-content-max-width` and
+`--_modal-content-max-height` caps; the shared shell alone computes viewport
+constraints. This applies to page and Reader annotation managers and legacy lists.
+
+Reader template layout is component-owned in `readerSettingsDialog.css`, shared
+by Settings and Reader through ReaderSettingsDialogShell. Backup review bodies
+reuse ModalHost, and fixture preview routes must never apply or delete backups.
+The popup stylesheet is generated at build time from the page-token/material
+sources; its HTML owns only document layout. See [ADR-0033](adr/ADR-0033-unified-surface-materials.md).
 
 AI-MarkDone shipped UI uses custom CSS plus `--aimd-*` tokens. External style frameworks, generated utility themes, and framework-prefixed utility classes are not part of the active runtime styling system.
 

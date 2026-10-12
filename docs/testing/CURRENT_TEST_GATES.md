@@ -2,6 +2,22 @@
 
 This document defines the **current executable test and verification gates** for day-to-day development. Use this file for what we must run now, not for future-state testing architecture.
 
+### Shared surface material upgrade (2026-10-08)
+
+The same material owner must be exercised through Prompt manager/editor,
+SaveMessages/Send, Reader Settings/template/picker/copy preview, backup settings/
+snapshot/merge review, settings transfer and the static popup fixture. Keep the
+existing token graph, style inventory, Reader architecture and real overlay trigger
+tests. Popup packaging must emit its stylesheet from canonical page tokens and
+materials. `uiModalGeometryOwnership` is part of smoke and acceptance and prevents
+families from repeating shared viewport-gutter calculations. Unsafe popup accent
+strings remain rejected. Reader and global Settings must
+open the same component-owned template layout. Backup fixtures are preview-only.
+Verify actual CSS viewport dimensions when browser zoom changes the capture size;
+320/390 widths, short height, dark/Chinese, keyboard cancellation and reduced motion
+cannot be inferred from screenshots at one desktop size. See the dated upgrade
+plan for executed checks and installed-browser limits.
+
 For long-term testing direction, see `docs/testing/TESTING_BLUEPRINT.md`.
 For full manual regression, see `docs/testing/E2E_REGRESSION_GUIDE.md`.
 For ChatGPT runtime performance work and historical bundle measurements, see `docs/testing/PERFORMANCE_GATES.md`.
@@ -51,6 +67,23 @@ fall back to a stored position, even with a complete snapshot.
 
 ## 2. Minimum Automated Gates
 
+### ChatGPT retained-page switching
+
+Keep the real Runtime/Adapter/Directory/MessageToolbar composition regression in
+`chatgpt-directory-feedback.test.ts` alongside the lifecycle and PageIndex suites.
+Fixtures must retain old `main` elements as connected siblings and switch only
+the host activity attribute, including an empty new page, delayed body/action
+rows, A→B→A restoration and single toolbar ownership. Route input must also be
+tested with the original History method saved before Runtime initialization,
+so the content script's own wrapper cannot mask host-world navigation gaps.
+Zero/multiple active owners and nested marked owners must expose no cached-page refs; legacy single-main
+fixtures, streaming isolation and scroll-root ownership remain covered.
+Installed-browser acceptance must repeat sidebar switches after loading the
+current build; JSDOM does not prove host app-shell behavior.
+Navigation fixtures using fake adapters must dispose their shared PageIndex as
+well as their Surface. Surface disposal does not own the Runtime/adapter index;
+leaving it alive makes later large-page cases observe every prior fixture.
+
 ### ChatGPT rich content and asset lifetime
 
 Run the shared compiler/sidecar/projection, current-message Copy/Copy PNG,
@@ -84,6 +117,24 @@ Default minimum gate:
 This is the repository-wide required proof for repo-tracked code changes unless the user explicitly waives it.
 
 `docs/FEATURES.md` 定义的是能力真相与 release-level acceptance；本文件定义的是当前实际要运行的命令门禁。若两者表述有差异，以本文件作为日常 gate 选择权威。
+
+### Version preparation
+
+Align the package version, lockfile, static/built manifests, release notes,
+README references and both in-app changelogs. Latest-release notice fixtures must
+follow the package version and still assert current release content, one-time
+acknowledgment and shared Reader/Library dismissal. Keep older-version migration
+and unsupported-import fixtures independent; they are historical inputs.
+
+Before marking bookmark/passage feedback fixed, exercise the real toolbar save
+button while older history prepends: the same assistant/text must save at the
+new ordinal, while changed selected text must remain rejected. Anchoring tests
+must shift DOM paths and text offsets onto another identical quote and recover
+only through the captured context. Library highlight source clicks, background
+target URL/intent, delayed content focus and Reader highlight reveal are tested
+through their actual triggers. Page-manager reveal must move the selected range
+and retain valid negative reverse-layout scroll positions. These explicit
+navigation waits reuse the existing coordinator and must add no passive polling.
 
 ### Contract, Runtime, Or Boundary Changes
 
@@ -415,7 +466,7 @@ The active production contract is ADR-0024:
   facts but current-message actions read the corresponding mounted DOM.
 - The production path has no active conversation request, Settings retry,
   React-private-state access or synthetic scroll. Chrome/Firefox use only the
-  bounded 5.3 document-start GET seed bridge; Safari remains DOM-only.
+  bounded 5.3 document-start GET seed bridge for both supported browsers.
 - Chrome MV3 and Firefox MV2 manifests contain the bridge resource without any
   added permission. Extension conversation GET/POST remains zero.
 
@@ -468,3 +519,23 @@ internals, permanent polling and synthetic discovery scroll.
 
 - After reloading the development extension, an independent Chrome ChatGPT conversation verified official Send and Cmd+Enter while reading the first reply. The website used its actual column-reverse scroll container. Two further 40-paragraph replies preserved the original content through generation and completion: button-send drift was 2px and Cmd+Enter drift was 0px. Native wheel input during a subsequent reply immediately released the restore session while generation was still active and moved the viewport with the user.
 - This live check covers Chrome official button and keyboard sending. Reader before-send, normal layouts, and replaced or hidden anchors retain their local-fixture and unit coverage; installed Firefox acceptance remains separate.
+
+
+### 6.2.0 consolidated checkpoint (2026-10-12)
+
+- Core: 327 files / 2713 tests passed with one worker. Release verification:
+  smoke 54, acceptance 471, Chrome MV3 / Firefox MV2 production builds and entry /
+  single-pool boundary checks passed. Release-notice/copy/relay closeout: 77 passed.
+- Safari is permanently retired. The target registry accepts Chrome/Firefox only;
+  the retirement guard rejects obsolete build/packaging files and UI compile flags.
+  Removed Safari-only suites explain the reduced suite count; supported-browser
+  contracts remain covered, including unknown-runtime and relay-origin rejection.
+- Installed Chrome: Library highlight original-page navigation selected reply 2/4
+  and revealed its exact paragraph-37 highlight after reload. Actual Save Messages
+  PDF produced four nonempty pages with all 60 selected paragraphs and no other
+  reply; extracted text and all four rendered pages were inspected. Toolbar save
+  succeeded; history-prepend/changed-body save-dialog races have failing-first
+  real-trigger regressions.
+- Native Firefox print/UI and a fresh complete visual matrix remain distinct,
+  unrun acceptance boundaries. Do not convert local build/fixture evidence into
+  those claims. See the [release review](../reviews/2026-10-12-6.2.0-release-readiness.md).

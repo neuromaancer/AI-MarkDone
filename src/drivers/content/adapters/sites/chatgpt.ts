@@ -13,6 +13,7 @@ import { isChatGPTPageUrl } from '../../../../contracts/chatgptHosts';
 import { normalizeChatGPTRichBlocks } from '../../chatgpt/chatgptRichContent';
 import type { RichBlockV1 } from '../../../../contracts/richContent';
 import { hasConsistentChatGPTMessageContentIdentity } from '../../chatgpt/chatgptMessageContentIdentity';
+import { resolveChatGPTActiveSurface } from '../../chatgpt/chatgptActiveSurface';
 
 const DEEP_RESEARCH_SCREENSHOT_ROOT_SELECTOR = '[data-conversation-screenshot-content]';
 const DEEP_RESEARCH_IFRAME_SELECTOR = `${DEEP_RESEARCH_SCREENSHOT_ROOT_SELECTOR} iframe[title="internal://deep-research"]`;
@@ -46,7 +47,7 @@ export class ChatGPTAdapter extends SiteAdapter {
     }
 
     private hasActiveGenerationControl(): boolean {
-        return document.querySelector(ACTIVE_GENERATION_CONTROL_SELECTOR) instanceof HTMLElement;
+        return resolveChatGPTActiveSurface()?.pageRoot.querySelector(ACTIVE_GENERATION_CONTROL_SELECTOR) instanceof HTMLElement;
     }
 
     private findOfficialActionAnchor(assistantMessageElement: HTMLElement): HTMLElement | null {
@@ -244,7 +245,8 @@ export class ChatGPTAdapter extends SiteAdapter {
         // are translated UI copy and are not content-lifecycle evidence.
         if (!this.hasActiveGenerationControl()) return false;
 
-        const messages = document.querySelectorAll(this.getMessageSelector());
+        const messages = resolveChatGPTActiveSurface()?.contentRoot.querySelectorAll(this.getMessageSelector());
+        if (!messages) return false;
         if (messages.length === 0) return false;
         const lastMessage = messages[messages.length - 1];
         return lastMessage === element;
@@ -285,18 +287,20 @@ export class ChatGPTAdapter extends SiteAdapter {
     }
 
     getObserverContainer(): HTMLElement | null {
-        const main = document.querySelector('main');
-        if (main instanceof HTMLElement) return main.parentElement ?? main;
+        const root = resolveChatGPTActiveSurface()?.contentRoot;
+        if (!root) return null;
+        return root.matches('main') ? root.parentElement ?? root : root;
+    }
 
-        const appRoot = document.querySelector('#__next');
-        return appRoot instanceof HTMLElement ? appRoot : document.body;
+    getLastMessageElement(): HTMLElement | null {
+        const messages = resolveChatGPTActiveSurface()?.contentRoot.querySelectorAll<HTMLElement>(this.getMessageSelector());
+        return messages?.length ? messages[messages.length - 1]! : null;
     }
 
     getConversationScrollRoot(): HTMLElement | null {
-        const seed =
-            this.getLastMessageElement()
-            || this.getObserverContainer()
-            || document.querySelector('main');
+        const surface = resolveChatGPTActiveSurface();
+        if (!surface) return null;
+        const seed = this.getLastMessageElement() || surface.contentRoot;
 
         let cursor: HTMLElement | null = seed instanceof HTMLElement ? seed : null;
         while (cursor) {
@@ -306,8 +310,7 @@ export class ChatGPTAdapter extends SiteAdapter {
             if (scrollable) return cursor;
             cursor = cursor.parentElement;
         }
-        const main = document.querySelector('main');
-        if (main instanceof HTMLElement) return main;
+        if (surface.contentRoot.matches('main')) return surface.contentRoot;
         return document.scrollingElement instanceof HTMLElement ? document.scrollingElement : null;
     }
 

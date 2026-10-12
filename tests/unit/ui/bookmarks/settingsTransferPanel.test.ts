@@ -33,6 +33,8 @@ describe('Settings transfer confirmation flow', () => {
         f.click('settingsExport');
         expect(f.actions.exportSettings).not.toHaveBeenCalled();
         expect(f.shadow.querySelector('[data-action="settingsExportConfirm"]')).toBeTruthy();
+        expect(f.shadow.querySelector('[data-action="settingsExportConfirm"]')?.classList.contains('aimd-material-button--primary')).toBe(true);
+        expect(f.shadow.querySelector('.settings-transfer__actions')).toBeTruthy();
         f.click('btnCancel');
         expect(f.actions.exportSettings).not.toHaveBeenCalled();
         expect(f.shadow.querySelector('[data-action="settingsExportConfirm"]')).toBeNull();
@@ -43,7 +45,9 @@ describe('Settings transfer confirmation flow', () => {
         await vi.waitFor(() => expect(f.shadow.querySelector('[data-action="settingsImportConfirm"]')).toBeTruthy());
         expect(f.actions.applyImport).not.toHaveBeenCalled();
         expect(f.shadow.textContent).not.toContain('behavior.showWordCount');
+        expect(f.shadow.querySelector('.settings-transfer__category')?.classList.contains('aimd-material-card')).toBe(true);
         const category = f.shadow.querySelector<HTMLInputElement>('[data-category="behavior"]')!;
+        expect(category.classList.contains('aimd-material-check')).toBe(true);
         category.click();
         f.click('settingsImportConfirm');
         await vi.waitFor(() => expect(f.actions.onApplied).toHaveBeenCalledOnce());

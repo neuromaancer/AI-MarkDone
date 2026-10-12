@@ -47,6 +47,75 @@ describe('ChatGPTPageIndex', () => {
         document.documentElement.innerHTML = '<head></head><body></body>';
     });
 
+    it('discovers only the active app-shell main while a retained inactive main stays connected', () => {
+        const oldMain = document.querySelector('main')!;
+        const active = document.createElement('div');
+        active.setAttribute('data-app-shell-active-page', 'true');
+        active.innerHTML = `<main>${oldMain.innerHTML.replaceAll('assistant-1', 'assistant-current')}</main>`;
+        const inactive = document.createElement('div');
+        inactive.setAttribute('data-app-shell-active-page', 'false');
+        inactive.style.setProperty('display', 'none', 'important');
+        oldMain.replaceWith(inactive);
+        inactive.append(oldMain);
+        document.body.append(active);
+
+        expect(oldMain.isConnected).toBe(true);
+        expect(collectChatGPTDomRoundRefs(adapter).map(round => round.id)).toEqual(['assistant-current']);
+        expect(adapter.getObserverContainer()).toBe(active);
+    });
+
+    it('rebases and invalidates cached rounds when active app-shell owners only toggle attributes', async () => {
+        const oldMain = document.querySelector('main')!;
+        const firstOwner = document.createElement('div');
+        firstOwner.setAttribute('data-app-shell-active-page', 'true');
+        oldMain.replaceWith(firstOwner);
+        firstOwner.append(oldMain);
+        const nextOwner = document.createElement('div');
+        nextOwner.setAttribute('data-app-shell-active-page', 'false');
+        nextOwner.innerHTML = `<main>${oldMain.innerHTML.replaceAll('assistant-1', 'assistant-next')}</main>`;
+        document.body.append(nextOwner);
+        const index = getChatGPTPageIndex(adapter);
+        expect(index.getSnapshot().map(round => round.id)).toEqual(['assistant-1']);
+        const batches: Array<{ surfaceRebased: boolean; surfaceEpoch: number; kinds: readonly string[] }> = [];
+        const unsubscribe = index.subscribeObservations(batch => batches.push(batch));
+        firstOwner.setAttribute('data-app-shell-active-page', 'false');
+        nextOwner.setAttribute('data-app-shell-active-page', 'true');
+        await deliverMutations();
+
+        expect(batches).toHaveLength(1);
+        expect(batches[0]).toMatchObject({ surfaceRebased: true, kinds: ['structure'] });
+        expect(index.getSnapshot().map(round => round.id)).toEqual(['assistant-next']);
+        const epoch = batches[0]!.surfaceEpoch;
+        nextOwner.setAttribute('data-app-shell-active-page', 'false');
+        await deliverMutations();
+        expect(index.getSnapshot()).toEqual([]);
+        expect(batches.at(-1)!.surfaceEpoch).toBeGreaterThan(epoch);
+        firstOwner.setAttribute('data-app-shell-active-page', 'true');
+        await deliverMutations();
+        expect(index.getSnapshot().map(round => round.id)).toEqual(['assistant-1']);
+        unsubscribe();
+    });
+
+    it.each([['false', 'false'], ['true', 'true']])('fails closed for non-unique active app-shell ownership (%s, %s)', (first, second) => {
+        const html = document.querySelector('main')!.outerHTML;
+        document.body.innerHTML = `<div data-app-shell-active-page="${first}">${html}</div><div data-app-shell-active-page="${second}">${html}</div>`;
+        expect(collectChatGPTDomRoundRefs(adapter)).toEqual([]);
+        expect(adapter.getObserverContainer()).toBeNull();
+        expect(adapter.getConversationScrollRoot()).toBeNull();
+    });
+
+    it('fails closed when a marked inactive page is nested inside the active main', () => {
+        const main = document.querySelector('main')!;
+        const owner = document.createElement('div');
+        owner.setAttribute('data-app-shell-active-page', 'true');
+        main.replaceWith(owner);
+        owner.append(main);
+        main.insertAdjacentHTML('beforeend', `<div data-app-shell-active-page="false">${main.innerHTML.replaceAll('assistant-1', 'assistant-retained')}</div>`);
+
+        expect(collectChatGPTDomRoundRefs(adapter)).toEqual([]);
+        expect(adapter.getObserverContainer()).toBeNull();
+    });
+
     it('discovers current search-unit turns and mounts beside their assistant action controls', async () => {
         const main = document.querySelector('main')!;
         main.innerHTML = `

@@ -1,5 +1,22 @@
 # Changelog
 
+# 6.2.0
+2026-10-12
+
+Hello, friends! Version 6.2.0 improves annotations, Markdown copying and exports. ChatGPT has changed again and now keeps old pages around when you switch conversations, so this update also revisits content detection and the recovery of the directory and reply toolbar.
+
+Several smaller windows still looked different from the management panel. They now share its appearance, with clearer labels and better layouts in narrow windows.
+
+1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Unfinished text saves as a recoverable draft at the same passage; drafts remain separate from saved annotations. Thanks to email user @qds19100.
+2. Keep supported diagrams and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG; unavailable content retains an explanation.
+3. Preserve code fences, language identifiers, indentation, blank lines and inline code when copying Markdown, and keep following paragraphs outside code blocks. Thanks for the email feedback.
+4. Fix bookmark saves incorrectly reporting unavailable content when older messages load and reply numbers change while the save dialog is open.
+5. Fix annotation and highlight jumps selecting the wrong passage. Opening a mark from the Library now locates its reply and then its original text. Thanks to Xiaohongshu user @三分钟热度.
+6. Fix blank message PDF exports caused by ChatGPT preparing its own print page, and improve print layout for wide tables, code and formulas. Thanks to QQ user @成长！.
+7. Restore the directory and reply controls after conversation switches and delayed loading, and strengthen regenerated-reply identity. Enable the directory on fresh installations while preserving existing settings.
+8. Unify Prompt, export, Send, Reader settings and annotation subwindows, backup controls and the popup. Improve wrapping and button visibility in narrow windows, and refine Chinese and English guidance.
+9. Support Chrome and Firefox only. Remove Safari-specific builds, packaging and interface restrictions.
+
 # 6.1.0
 2026-10-02
 

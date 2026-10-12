@@ -3,7 +3,7 @@ set -euo pipefail
 
 target="${1:-}"
 if [[ -z "$target" ]]; then
-  echo "Usage: $0 <chrome|firefox|safari>"
+  echo "Usage: $0 <chrome|firefox>"
   exit 1
 fi
 
@@ -11,8 +11,6 @@ if [[ "$target" == "chrome" ]]; then
   dist_dir="dist-chrome"
 elif [[ "$target" == "firefox" ]]; then
   dist_dir="dist-firefox"
-elif [[ "$target" == "safari" ]]; then
-  dist_dir="dist-safari"
 else
   echo "Unknown target: $target"
   exit 1

@@ -2,6 +2,9 @@
 
 本目录保存高影响、难逆转、值得追溯的工程决策。
 
+统一 Surface 材质与样式所有权见 [ADR-0033](ADR-0033-unified-surface-materials.md)，
+实施与视觉验证记录见[升级计划](../plans/2026-10-08-unified-surface-visual-upgrade.md)。
+
 ## When To Write An ADR
 
 新增或更新 ADR 的典型场景：

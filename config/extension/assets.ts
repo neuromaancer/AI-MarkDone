@@ -1,6 +1,3 @@
-import { extensionIconFiles } from './surface';
-import type { ExtensionTarget } from './targets';
-
 const sharedNonIconWebAccessibleResources = [
     '_locales/*/messages.json',
     'vendor/katex/*.css',
@@ -17,12 +14,6 @@ const defaultWebAccessibleResources = [
     'icons/*.svg',
     ...sharedNonIconWebAccessibleResources,
     'page-bridges/chatgpt-conversation-bridge.js',
-] as const;
-
-const safariWebAccessibleResources = [
-    ...extensionIconFiles.map((file) => `icons/${file}`),
-    'icons/aimd-content-architecture-5.2.0.svg',
-    ...sharedNonIconWebAccessibleResources,
 ] as const;
 
 export const extensionAssets = {
@@ -45,11 +36,4 @@ export const extensionAssets = {
         '128': 'icons/icon128_gray.png',
     },
     webAccessibleResources: defaultWebAccessibleResources,
-    safariWebAccessibleResources,
 } as const;
-
-export function getWebAccessibleResourcesForTarget(target: ExtensionTarget): readonly string[] {
-    return target === 'safari'
-        ? extensionAssets.safariWebAccessibleResources
-        : extensionAssets.webAccessibleResources;
-}

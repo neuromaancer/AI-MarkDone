@@ -16,6 +16,7 @@ import {
     xIcon,
 } from '../../../assets/icons';
 import { getPanelChromeCss } from '../components/styles/panelChromeCss';
+import { getSurfaceMaterialCss } from '../components/styles/surfaceMaterialCss';
 import { getHighlightSwatchesCss } from '../components/HighlightSwatches';
 import { getMarkdownThemeCss } from '../../../services/renderer/markdownTheme';
 import type { ReaderItem } from '../../../services/reader/types';
@@ -241,7 +242,7 @@ export function getReaderPanelHtml(params: {
 export function getReaderPanelCss(): string {
     // --aimd-font-family-sans and the scoped layout remain in the CSS sources.
     return getHighlightSwatchesCss() + readerBaseCss + getPanelChromeCss() + readerLayoutCss
-        + getMarkdownThemeCss('.reader-markdown') + getMarkdownThemeCss('.reader-sticky-block__content') + readerContentCss;
+        + getMarkdownThemeCss('.reader-markdown') + getMarkdownThemeCss('.reader-sticky-block__content') + readerContentCss + getSurfaceMaterialCss();
 }
 
 export function ensureShadowStylesheetLink(shadow: ShadowRoot, href: string, styleId: string): HTMLLinkElement {

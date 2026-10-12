@@ -70,7 +70,7 @@ async function buildPngWorker(target: ExtensionTarget): Promise<void> {
 async function main(): Promise<void> {
     const target = process.argv[2] ?? '';
     if (!isExtensionTarget(target)) {
-        throw new Error('Usage: tsx scripts/build-export-renderer.ts <chrome|firefox|safari>');
+        throw new Error('Usage: tsx scripts/build-export-renderer.ts <chrome|firefox>');
     }
     await buildRendererHost(target);
     await buildPngWorker(target);

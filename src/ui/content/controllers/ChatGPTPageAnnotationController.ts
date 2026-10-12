@@ -955,13 +955,25 @@ export class ChatGPTPageAnnotationController {
         const range = cached?.range;
         const union = cached?.layout?.unionRect;
         if (!cached?.root.isConnected || !range || !union) return false;
-        const top = cached.root.getBoundingClientRect().top + union.top;
-        if (top >= 0 && top + union.height <= window.innerHeight) return false;
-        const source = range.startContainer instanceof Element
-            ? range.startContainer
-            : range.startContainer.parentElement;
-        if (!source) return false;
-        source.scrollIntoView({ block: 'center', inline: 'nearest' });
+        return this.revealSourceRect(cached.root, union);
+    }
+
+    private revealSourceRect(root: HTMLElement, rect: ReaderCommentRect): boolean {
+        const scrollRoot = this.adapter.getConversationScrollRoot?.() ?? null;
+        const viewport = scrollRoot?.getBoundingClientRect();
+        const viewportTop = viewport?.top ?? 0;
+        const viewportHeight = viewport?.height || window.innerHeight;
+        const top = root.getBoundingClientRect().top + rect.top;
+        if (top >= viewportTop && top + rect.height <= viewportTop + viewportHeight) return false;
+        const delta = top + Math.min(rect.height, viewportHeight) / 2 - viewportTop - viewportHeight / 2;
+        // Relative movement works for both ordinary and column-reverse roots;
+        // clamping a negative scrollTop would jump to the end of the thread.
+        if (scrollRoot) {
+            if (typeof scrollRoot.scrollBy === 'function') scrollRoot.scrollBy({ top: delta, behavior: 'auto' });
+            else scrollRoot.scrollTop += delta;
+        } else {
+            window.scrollBy({ top: delta, behavior: 'auto' });
+        }
         return true;
     }
 
@@ -1083,7 +1095,8 @@ export class ChatGPTPageAnnotationController {
     private async locateAndEdit(record: ReaderCommentRecord): Promise<void> {
         if (this.navigation && record.target?.assistantMessageId) {
             const result = await this.navigation.navigate({
-                position: record.target.position ?? 0,
+                // Stored ordinals are display hints; history can prepend.
+                position: 0,
                 roundId: record.target.roundId ?? null,
                 userMessageId: record.target.userMessageId ?? null,
                 assistantMessageId: record.target.assistantMessageId,
@@ -1100,6 +1113,7 @@ export class ChatGPTPageAnnotationController {
             showToast({ text: this.getLabel('pageAnnotationSourceUnavailable', 'The source reply is not available on this page.'), tone: 'error' });
             return;
         }
+        this.revealSourceRect(root, resolved.unionRect);
         const rootRect = root.getBoundingClientRect();
         const rect = new DOMRect(
             rootRect.left + resolved.unionRect.left,

@@ -736,6 +736,85 @@ describe('ChatGPT DOM content discovery lifecycle', () => {
         }
     });
 
+    it('discovers the delayed active main while the previous page shell stays connected', async () => {
+        const hostPushState = history.pushState.bind(history);
+        document.body.innerHTML = `<div data-app-shell-active-page="true"><main>${roundHtml(1, 'Answer A')}</main></div>`;
+        const pageA = document.querySelector<HTMLElement>('[data-app-shell-active-page]')!;
+        const harness = createRuntime('retained-conversation-a');
+
+        try {
+            harness.runtime.init();
+            await settle();
+            expect(harness.runtime.source.read().snapshot?.turns.map(turn => turn.assistantMarkdown)).toEqual(['Answer A']);
+
+            pageA.dataset.appShellActivePage = 'false';
+            const pageB = document.createElement('div');
+            pageB.dataset.appShellActivePage = 'true';
+            pageB.innerHTML = '<main></main>';
+            document.body.append(pageB);
+            // The host changes history in its own world, bypassing the isolated content hook.
+            hostPushState({}, '', '/c/retained-conversation-b');
+            await settle();
+            expect.soft(pageA.isConnected).toBe(true);
+            expect.soft(harness.runtime.surface.readFrame().obtainedTurns).toHaveLength(0);
+            expect.soft(harness.runtime.surface.readFrame().pendingSurfaces).toHaveLength(0);
+
+            await settle(900);
+            pageB.querySelector('main')!.innerHTML = roundHtml(2, 'Answer B');
+            await settle();
+
+            const frame = harness.runtime.surface.readFrame();
+            expect.soft(harness.runtime.source.read().document?.conversationId).toBe('retained-conversation-b');
+            expect.soft(frame.obtainedTurns.map(entry => entry.turn.assistantMarkdown)).toEqual(['Answer B']);
+            expect.soft(frame.pendingSurfaces.map(entry => entry.target.assistantMessageId)).not.toContain('assistant-1');
+            expect.soft(frame.obtainedTurns[0]?.materialization?.messageElement.closest('[data-app-shell-active-page]')).toBe(pageB);
+            expect(harness.runtime.source.read().snapshot?.turns.map(turn => turn.assistantMarkdown) ?? []).toEqual(['Answer B']);
+        } finally {
+            harness.dispose();
+        }
+    });
+
+    it('restores retained A and B surfaces when only their active-page markers change', async () => {
+        const hostPushState = history.pushState.bind(history);
+        document.body.innerHTML = `
+            <div data-app-shell-active-page="true"><main>${roundHtml(1, 'Answer A')}</main></div>
+            <div data-app-shell-active-page="false"><main>${roundHtml(2, 'Answer B')}</main></div>
+        `;
+        const [pageA, pageB] = Array.from(document.querySelectorAll<HTMLElement>('[data-app-shell-active-page]'));
+        const retainedMains = Array.from(document.querySelectorAll('main'));
+        const harness = createRuntime('marker-conversation-a');
+
+        try {
+            harness.runtime.init();
+            await settle();
+            expect(harness.runtime.source.read().snapshot?.turns.map(turn => turn.assistantMarkdown)).toEqual(['Answer A']);
+
+            pageA.dataset.appShellActivePage = 'false';
+            pageB.dataset.appShellActivePage = 'true';
+            hostPushState({}, '', '/c/marker-conversation-b');
+            await settle();
+            const frameB = harness.runtime.surface.readFrame();
+            expect.soft(harness.runtime.source.read().document?.conversationId).toBe('marker-conversation-b');
+            expect.soft(frameB.obtainedTurns.map(entry => entry.turn.assistantMarkdown)).toEqual(['Answer B']);
+            expect.soft(frameB.pendingSurfaces.map(entry => entry.target.assistantMessageId)).not.toContain('assistant-1');
+            expect.soft(frameB.obtainedTurns[0]?.materialization?.messageElement.closest('[data-app-shell-active-page]')).toBe(pageB);
+
+            pageB.dataset.appShellActivePage = 'false';
+            pageA.dataset.appShellActivePage = 'true';
+            hostPushState({}, '', '/c/marker-conversation-a');
+            await settle();
+            const frameA = harness.runtime.surface.readFrame();
+            expect.soft(frameA.document?.conversationId).toBe('marker-conversation-a');
+            expect.soft(frameA.obtainedTurns.map(entry => entry.turn.assistantMarkdown)).toEqual(['Answer A']);
+            expect.soft(frameA.pendingSurfaces.map(entry => entry.target.assistantMessageId)).not.toContain('assistant-2');
+            expect.soft(frameA.obtainedTurns[0]?.materialization?.messageElement.closest('[data-app-shell-active-page]')).toBe(pageA);
+            expect(Array.from(document.querySelectorAll('main'))).toEqual(retainedMains);
+            expect(pageA.isConnected && pageB.isConnected).toBe(true);
+        } finally {
+            harness.dispose();
+        }
+    });
+
     it('coalesces pageshow, resume and visible wake signals into one DOM rescan', async () => {
         document.querySelector('main')!.innerHTML = roundHtml(1, 'Wake answer');
         const harness = createRuntime('wake-conversation');

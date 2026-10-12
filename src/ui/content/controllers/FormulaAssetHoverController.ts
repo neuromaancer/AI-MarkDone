@@ -12,7 +12,6 @@ import {
 } from '../../../core/settings/formula';
 import { normalizeFormulaSourceFormat } from '../../../core/math/formulaSourceFormat';
 import { createAppearanceSnapshot, type AppearanceSnapshot } from '../../../style/appearance';
-import { targetSurfacePolicy } from '../../../config/targetSurface';
 import { createFormulaAssetActionItems } from '../components/formulaAssetActionItems';
 import type { MarkdownParserAdapter } from '../../../drivers/content/adapters/parser/MarkdownParserAdapter';
 
@@ -173,7 +172,7 @@ export class FormulaAssetHoverController {
 
     private hasEnabledAssetAction(): boolean {
         const actions = this.formulaSettings.assetActions;
-        const hasBinaryCopyAction = targetSurfacePolicy.binaryClipboardCopyActions && (actions.copyPng || actions.copySvg);
+        const hasBinaryCopyAction = (actions.copyPng || actions.copySvg);
         return hasBinaryCopyAction || actions.copyMathml || actions.savePng || actions.saveSvg;
     }
 

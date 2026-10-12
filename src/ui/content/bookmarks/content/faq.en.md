@@ -74,6 +74,8 @@ Choose a folder on the left, or search. Lists show 20 items per page. Use the ro
 
 Open Export below a reply or in a directory preview, select messages, and choose a format. Markdown remains editable. PDF opens the browser’s print dialog, where you can choose Save as PDF. PNG saves long images, with a ZIP when multiple image files are needed. During image generation, you can view progress or cancel.
 
+Choose an offline Markdown ZIP to keep supported diagrams or cards with image attachments. PDF and PNG can use static images or text placeholders. Unavailable images retain readable descriptions; offline files do not preserve interactive controls.
+
 ## Can I hide buttons or change the theme?
 
 Use Settings → Buttons to configure page, reply, formula, selection, and directory buttons, and keep common page or reply actions visible. Theme, font size, and accent color are under Appearance & layout. Follow the page or use light or dark mode, and choose a preset or custom accent color. Search finds controls across all eight categories.

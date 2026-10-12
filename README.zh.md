@@ -8,7 +8,7 @@
     <a href="./LICENSE">
       <img src="https://img.shields.io/github/license/zhaoliangbin42/AI-MarkDone?label=License" alt="License">
     </a>
-    <img src="https://img.shields.io/badge/Version-6.1.0-10A37F" alt="Version 6.1.0">
+    <img src="https://img.shields.io/badge/Version-6.2.0-10A37F" alt="Version 6.2.0">
     <br>
     <img src="https://img.shields.io/badge/Browsers-Chrome%20%7C%20Firefox-10A37F" alt="Browsers">
     <img src="https://img.shields.io/badge/Primary%20Platform-ChatGPT-10A37F" alt="Primary Platform">
@@ -24,7 +24,7 @@
 
 AI-MarkDone 是一个面向 ChatGPT 的开源浏览器扩展。用消息目录定位回复，在阅读器里看长文，用高亮、注释和书签整理内容，再复制或导出到笔记工具。
 
-6.1.0 重新整理了工具栏和设置：常用按钮可以固定显示，功能全览帮你找到用途和入口。写公式时，还可以在输入框里预览并导出图片。
+6.2.0 完善了注释、复制与导出：注释窗口可拖动并恢复本地草稿，代码与支持的图块保留更完整，常用子窗口也统一了样式。同时修复了会话切换后的目录、工具栏恢复及消息 PDF 空白问题。
 
 ## 界面展示
 
@@ -51,6 +51,7 @@ AI-MarkDone 是一个面向 ChatGPT 的开源浏览器扩展。用消息目录�
 - 部分代码选区只复制所选片段；公式按完整公式复制。
 - 悬停消息复制按钮，上方可复制 PNG，下方可将提问和回复一起复制。
 - 选择一条或多条回复，保存为 Markdown、PNG，或通过浏览器打印窗口保存为 PDF；多张 PNG 可打包为 ZIP。
+- 支持的图表和卡片可随 Markdown 保存为离线 ZIP；PDF／PNG 可选静态图片或文字占位。
 - 按分享场景设置图片宽度和清晰度，整理 Deep Research 内容后用于笔记或分享。
 
 ### 输入与公式
@@ -87,14 +88,14 @@ AI-MarkDone 是一个面向 ChatGPT 的开源浏览器扩展。用消息目录�
 从 [Chrome Web Store](https://chromewebstore.google.com/detail/ai-markdone/bmdhdihdbhjbkfaaainidcjbgidkbeoh) 安装，后续通过商店更新。
 
 手动安装：
-1. 从 [GitHub Releases](https://github.com/zhaoliangbin42/AI-MarkDone/releases) 下载 AI-MarkDone-v6.1.0-chrome.zip 并解压。
+1. 从 [GitHub Releases](https://github.com/zhaoliangbin42/AI-MarkDone/releases) 下载 AI-MarkDone-v6.2.0-chrome.zip 并解压。
 2. 打开 chrome://extensions/，开启开发者模式。
 3. 点击“加载已解压的扩展程序”，选择包含 manifest.json 的解压目录。
 4. 刷新 ChatGPT 页面。
 
 ### Firefox
 
-Firefox 包为 AI-MarkDone-v6.1.0-firefox.zip。开发调试时，解压后打开 about:debugging#/runtime/this-firefox，点击“临时载入附加组件”，选择 manifest.json。
+Firefox 包为 AI-MarkDone-v6.2.0-firefox.zip。开发调试时，解压后打开 about:debugging#/runtime/this-firefox，点击“临时载入附加组件”，选择 manifest.json。
 
 ## 💻 开发与贡献
 
@@ -121,12 +122,12 @@ npm run build
 
 ## 📅 最新更新
 
-### 6.1.0
-- 加固消息目录，浏览旧消息时继续补全目录。
-- 常用工具栏按钮可固定显示，设置提供分类、搜索与按钮预览。
-- 新增功能全览、更多主题色和自定义颜色。
-- 公式预览跟随输入光标，可直接导出 PNG／SVG 等格式。
-- 增加内容呈现选项和悬浮按钮开关，修复发送后的阅读位置恢复。
+### 6.2.0
+- 注释窗口可拖动，点击框外不关闭，并支持恢复本地草稿。
+- 保留代码围栏和支持的图表、卡片，可导出带图片附件的离线 Markdown ZIP。
+- PDF／PNG 可选择图块图片或文字占位，避免官网打印页面干扰 PDF。
+- 切换缓存会话后，目录和回复工具栏自动恢复。
+- 统一提示词、导出、发送、阅读器设置、备份和插件弹出页的样式。
 
 [完整更新日志](./CHANGELOG.md)
 [版本说明](./RELEASE_NOTES.md)

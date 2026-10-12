@@ -10,6 +10,8 @@ import {
 } from '../../drivers/shared/clients/clientResult';
 import { PROTOCOL_VERSION, createRequestId, isExtRequest, type ExtRequest, type ExtResponse } from '../../contracts/protocol';
 import { logger } from '../../core/logger';
+import { createConversationDocumentKeyV1 } from '../../contracts/conversationContent';
+import { showToast } from '../../utils/toast';
 import { ensurePageTokens } from '../../style/pageTokens';
 import { MessageToolbarOrchestrator } from '../../ui/content/controllers/MessageToolbarOrchestrator';
 import { BookmarksPanelController } from '../../ui/content/bookmarks/BookmarksPanelController';
@@ -964,6 +966,19 @@ if (adapter) {
                     sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: false, type: msg.type, error: { code: 'SOURCE_UNAVAILABLE', message: 'ChatGPT Reader is unavailable' } });
                     return;
                 }
+                if (msg.payload.assistantMessageId && conversationNavigation) {
+                    const located = await conversationNavigation.navigate({
+                        documentKey: createConversationDocumentKeyV1('chatgpt', msg.payload.document.conversationId),
+                        position: 0,
+                        assistantMessageId: msg.payload.assistantMessageId,
+                        source: 'reader',
+                    }, { timeoutMs: 15000, align: 'start' });
+                    if (!located.ok) {
+                        showToast({ text: t('pageAnnotationSourceUnavailable'), tone: 'error' });
+                        sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: false, type: msg.type, error: { code: 'SOURCE_UNAVAILABLE', message: 'The marked reply could not be located' } });
+                        return;
+                    }
+                }
                 const result = await collectFreshReaderContent(adapter, null, {
                     conversationContentSource,
                     conversationMaterialization,
@@ -990,12 +1005,13 @@ if (adapter) {
                     sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: false, type: msg.type, error: { code: 'SOURCE_UNAVAILABLE', message: 'Conversation changed before annotation focus' } });
                     return;
                 }
-                const focused = await readerPanel.focusAnnotation(msg.payload.annotationId, undefined);
+                const focused = await readerPanel.focusAnnotation(msg.payload.annotationId, msg.payload.assistantMessageId);
                 if (!sourceRevisionIsCurrent()) {
                     readerPanel.hide();
                     sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: false, type: msg.type, error: { code: 'SOURCE_UNAVAILABLE', message: 'Conversation changed during annotation focus' } });
                     return;
                 }
+                if (!focused) showToast({ text: t('pageAnnotationSourceUnavailable'), tone: 'error' });
                 sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: focused, type: msg.type, ...(focused ? { data: { focused: true } } : { error: { code: 'NOT_FOUND', message: 'Annotation was not found in this conversation' } }) });
             })().catch((error) => {
                 sendResponse?.({ v: PROTOCOL_VERSION, id: msg.id, ok: false, type: msg.type, error: { code: 'INTERNAL_ERROR', message: error instanceof Error ? error.message : 'Could not focus annotation' } });

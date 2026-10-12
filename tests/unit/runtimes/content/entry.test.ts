@@ -2055,6 +2055,29 @@ describe('content runtime entry', () => {
         }));
     });
 
+    it('waits through the shared navigation before collecting a late annotation reply', async () => {
+        adapterPlatformId = 'chatgpt';
+        let finishNavigation!: (value: { ok: true }) => void;
+        conversationNavigationNavigate.mockImplementationOnce(() => new Promise(resolve => { finishNavigation = resolve; }));
+        collectFreshReaderContent.mockResolvedValueOnce({
+            items: [{ id: 'reader-item-1', userPrompt: 'Prompt', content: 'Answer' }], startIndex: 0,
+            annotationDocument: { platform: 'chatgpt', conversationId: 'mock' },
+            sourceRevision: { routeEpoch: 1, revision: 2, conversationId: 'mock' },
+        });
+        vi.resetModules();
+        await import('@/runtimes/content/entry');
+        const sendResponse = vi.fn();
+        (runtimeMessageListener as any)!({ v: 1, id: 'late-mark', type: 'annotations:focus', payload: {
+            document: { platform: 'chatgpt', conversationId: 'mock' }, annotationId: 'annotation-1', assistantMessageId: 'assistant-1',
+        } }, undefined, sendResponse);
+        await vi.waitFor(() => expect(conversationNavigationNavigate).toHaveBeenCalled());
+        expect(collectFreshReaderContent).not.toHaveBeenCalled();
+        expect(readerPanelShow).not.toHaveBeenCalled();
+        finishNavigation({ ok: true });
+        await vi.waitFor(() => expect(sendResponse).toHaveBeenCalled());
+        expect(readerPanelFocusAnnotation).toHaveBeenCalledWith('annotation-1', 'assistant-1');
+    });
+
     it('closes the in-page Reader instead of focusing a stale annotation after the source changes', async () => {
         adapterPlatformId = 'chatgpt';
         collectFreshReaderContent.mockResolvedValueOnce({

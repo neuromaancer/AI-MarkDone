@@ -28,10 +28,6 @@ import { logger } from '../../../core/logger';
 import { eventWithinTransientRoot } from '../components/transientUi';
 import { SurfaceFocusLifecycle } from '../components/surfaceFocusLifecycle';
 import { showChangelogNoticeIfNeeded } from '../changelog/ChangelogNoticePresenter';
-import {
-    TARGET_SURFACE_SOCIAL_FOLLOW_CARD_ENABLED,
-    TARGET_SURFACE_SPONSOR_TAB_ENABLED,
-} from '../../../config/targetSurface';
 import { GOOGLE_DRIVE_WEB_AUTH_CLIENT_ID } from '../../../../config/extension/cloudBackup';
 import {
     BookmarksPanelTabWorkflow,
@@ -176,9 +172,7 @@ export class BookmarksPanel {
     ) {
         this.controller = controller;
         this.readerPanel = readerPanel;
-        this.tabWorkflow = new BookmarksPanelTabWorkflow({
-            sponsorEnabled: TARGET_SURFACE_SPONSOR_TAB_ENABLED,
-        });
+        this.tabWorkflow = new BookmarksPanelTabWorkflow({ sponsorEnabled: true });
         this.cloudBackupWorkflow = new BookmarksCloudBackupWorkflow({
             getModalHost: () => this.modalHost,
             onRestoreApplied: () => this.controller.refreshAll(),
@@ -649,7 +643,7 @@ export class BookmarksPanel {
             && this.mappamoryView
             && this.faqView
             && this.feedbackView
-            && (!TARGET_SURFACE_SPONSOR_TAB_ENABLED || this.sponsorView)
+            && this.sponsorView
         ) return;
 
         if (!this.bookmarksView) {
@@ -729,7 +723,6 @@ export class BookmarksPanel {
                 this.aboutView = new AboutTabView({
                     actions: {
                         getAssetUrl: (assetPath) => browser.runtime.getURL(assetPath),
-                        showSocialFollowCard: TARGET_SURFACE_SOCIAL_FOLLOW_CARD_ENABLED,
                     },
                 });
             } catch (error) {
@@ -768,7 +761,7 @@ export class BookmarksPanel {
             }
         }
 
-        if (TARGET_SURFACE_SPONSOR_TAB_ENABLED && !this.sponsorView) {
+        if (!this.sponsorView) {
             try {
                 this.sponsorView = new SponsorTabView({
                     actions: {
@@ -789,7 +782,6 @@ export class BookmarksPanel {
                 this.feedbackView = new FeedbackTabView({
                     actions: {
                         getAssetUrl: (assetPath) => browser.runtime.getURL(assetPath),
-                        showCommunityCards: TARGET_SURFACE_SOCIAL_FOLLOW_CARD_ENABLED,
                     },
                 });
             } catch (error) {
@@ -853,7 +845,7 @@ export class BookmarksPanel {
         const target = event.target as HTMLElement | null;
         if (target?.closest('.aimd-settings')) return;
         if (target?.closest('.bookmarks-tab-content')) return;
-        if (TARGET_SURFACE_SPONSOR_TAB_ENABLED && this.tabWorkflow.getActiveTab() === 'sponsor' && (target?.closest('.aimd-sponsor') || target?.closest('.sponsor-panel'))) {
+        if (this.tabWorkflow.getActiveTab() === 'sponsor' && (target?.closest('.aimd-sponsor') || target?.closest('.sponsor-panel'))) {
             this.emitSponsorBurst(event as MouseEvent);
             return;
         }

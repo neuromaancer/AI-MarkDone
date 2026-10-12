@@ -5,7 +5,6 @@ import type { FormulaRenderOptions, FormulaSvgAsset } from '../../../../../servi
 import { searchLatexSnippets } from '../../../../../core/math/latexSnippets';
 import { createPageSelectionToolbar, getPageSelectionToolbarCss } from '../../../pageAnnotations/PageAnnotationOverlay';
 import { getAnnotationActionButtonCss } from '../../../pageAnnotations/annotationActionButtonCss';
-import { targetSurfacePolicy } from '../../../../../config/targetSurface';
 import { DEFAULT_SETTINGS, PAGE_CONTROL_ACTIONS, MESSAGE_CONTROL_ACTIONS, type AppSettings, type SettingsCategory, type PageControlAction } from '../../../../../core/settings/types';
 import { readPreferencePath, mergePortableSettings } from '../../../../../core/settings/portableSettings';
 import { MessageToolbar, type MessageToolbarAction } from '../../../MessageToolbar';
@@ -250,7 +249,7 @@ export class ButtonsSettingsView {
             toggle.setAttribute('role', 'switch');
             toggle.setAttribute('aria-label', t(row.label));
             toggle.setAttribute('aria-checked', String(this.enabled(row)));
-            toggle.disabled = this.readOnly || this.pending || !parentEnabled || (!targetSurfacePolicy.binaryClipboardCopyActions && (row.path === 'behavior.showCopyPng' || /formula\..*\.copy(Png|Svg)$/.test(row.path)));
+            toggle.disabled = this.readOnly || this.pending || !parentEnabled;
             toggle.append(document.createElement('span'));
             toggle.addEventListener('click', () => void this.write(row.path, !this.enabled(row)));
             el.append(toggle);
@@ -304,7 +303,7 @@ export class ButtonsSettingsView {
                         const action: MessageToolbarAction = { id, label: t(messageLabels[i]), icon: messageIcons[i], onClick: async () => undefined };
                         if (id === 'copy_markdown') {
                             action.hoverActions = [];
-                            if (this.settings.behavior.showCopyPng && targetSurfacePolicy.binaryClipboardCopyActions)
+                            if (this.settings.behavior.showCopyPng)
                                 action.hoverActions.push({ id: 'copy_png', label: t('btnCopyAsPng'), icon: imageIcon, progress: false, onClick: async () => undefined });
                             if (this.settings.behavior.messageControls.copy_prompt_reply)
                                 action.hoverActions.push({ id: 'copy_prompt_reply', label: t('btnCopyPromptReply'), icon: promptReplyIcon, placement: 'bottom', progress: false, onClick: async () => undefined });

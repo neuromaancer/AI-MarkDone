@@ -222,8 +222,8 @@ partition behavior must pass actual Chrome/Firefox installation acceptance.
 - `reader.persistAnnotations` 只 gate `annotations:create`：关闭时新建注释留在当前页面 runtime；`annotations:list` 仍读取并展示已有 durable 记录，已有记录的 `annotations:update` / `annotations:remove` 也不受该偏好影响
 - `annotations:list` 不建立持久化全局索引；省略 document 时由 background 扫描 annotation key 前缀，UI 在内存中完成搜索、会话分组与时间线排序
 - create/update/remove 每次只读写一个会话 bundle；update 携带 `expectedRevision`，版本不一致返回 `CONFLICT`，不做自动合并
-- `annotations:navigate` 只接受 ChatGPT exact-host document，background 创建一个新 ChatGPT tab 并把一次性 `{ tabId, conversationId, annotationId }` intent 放入 `storage.session`；新页面通过 `content:ready` 校验当前 conversationId 后收到 `annotations:focus`
-- `annotations:focus` 只在当前页面 conversationId 与 intent 一致时打开 Reader 并聚焦精确 annotation；验证失败不做近似跳转
+- `annotations:navigate` 只接受 ChatGPT exact-host document。`annotationId` 保留原注释 ID；资料库高亮复用已有 `highlight:<id>` anchor namespace，不改变存储 ID 或新增高亮私有导航通道。background 只读对应存储记录，解析真实 assistant ID，创建带 `?message=<id>` 的源对话 tab，并把一次性 `{ document, annotationId, assistantMessageId? }` intent 放入 `storage.session`。网页自身加载目标回复，扩展不构造 conversation GET。无法取得目标 ID 的旧调用保留原会话打开兼容行为。
+- 新页面通过 `content:ready` 校验当前 conversationId 后收到 `annotations:focus`。可选 `assistantMessageId` 必须为非空字符串；提供时先复用同一 ConversationNavigationCoordinator 的有界 source/materialization 等待，再打开 Reader 并聚焦精确注释或高亮。Reader 在高亮加载、切页和定位前后保留 document/assistant 校验；验证失败显示无法定位反馈，不把近似位置当作成功。
 - annotation payload 只传可序列化的 document、target、quote、selectors、comment、timestamps 和 revision，不传 DOM、Range 或页面运行时对象
 - Draft requests use canonical document/message/selection identity and a separate local recovery bundle. Write/remove require an expected revision; the background storage queue is authoritative. Draft recovery does not gate on `reader.persistAnnotations` and does not create a saved annotation. Synthetic page targets use runtime memory instead of these durable requests. Unsupported/corrupt stored versions reject writes, and quota/conflict failures preserve the editor input. This family is separate from `readerSession:draft`, which bridges the ChatGPT composer.
 

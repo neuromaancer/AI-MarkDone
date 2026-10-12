@@ -79,7 +79,6 @@ import {
     createAppearanceSnapshot,
     type AppearanceSnapshot,
 } from '../../../style/appearance';
-import { targetSurfacePolicy } from '../../../config/targetSurface';
 
 type ToolbarRecord = {
     messageKey: string;
@@ -481,12 +480,15 @@ export class MessageToolbarOrchestrator {
     private async runBookmarkToggle(params: BookmarkToggleParams): Promise<BookmarkToggleResult> {
         if (!this.bookmarksController) return { ok: false, message: t('contentNotFound') };
         let sourceRevision = params.sourceRevision ?? this.captureCurrentSourceRevision();
-        if (this.adapter.getPlatformId() === 'chatgpt') {
+        const revalidateInput = (): boolean => {
+            if (this.adapter.getPlatformId() !== 'chatgpt') return this.isSourceRevisionCurrent(sourceRevision);
             const canonical = this.resolveCanonicalBookmarkInput(params, sourceRevision);
-            if (!canonical) return { ok: false, message: t('bookmarkUnavailable') };
+            if (!canonical) return false;
             params = canonical.params;
             sourceRevision = canonical.sourceRevision;
-        }
+            return true;
+        };
+        if (!revalidateInput()) return { ok: false, message: t('bookmarkUnavailable') };
         if (!params.position) return { ok: false, message: t('positionNotAvailable') };
         if (!this.isSourceRevisionCurrent(sourceRevision)) {
             return { ok: false, message: t('bookmarkUnavailable') };
@@ -497,6 +499,7 @@ export class MessageToolbarOrchestrator {
 
         const status = await this.bookmarksController.readPositionBookmarkStatus(params.url, params.position);
         if (!status.ok) return { ok: false, message: status.message };
+        if (!revalidateInput()) return { ok: false, message: t('bookmarkUnavailable') };
         const resolvedBookmarkPositions = this.resolveCanonicalBookmarkPositions(params.url);
         const alreadySaved = this.isBookmarkActive(params.url, params.position, resolvedBookmarkPositions)
             || (
@@ -523,7 +526,7 @@ export class MessageToolbarOrchestrator {
                 mode: 'create',
             });
             if (!dialogRes.ok) return { ok: false, cancelled: true };
-            if (!this.isBookmarkInputCurrent(params, sourceRevision)) {
+            if (!revalidateInput()) {
                 return { ok: false, message: t('bookmarkUnavailable') };
             }
             if (this.getBookmarkPageUrl() !== params.url) {
@@ -551,7 +554,7 @@ export class MessageToolbarOrchestrator {
             };
         }
 
-        if (!this.isBookmarkInputCurrent(params, sourceRevision)) {
+        if (!revalidateInput()) {
             return { ok: false, message: t('bookmarkUnavailable') };
         }
         if (this.getBookmarkPageUrl() !== params.url) {
@@ -592,15 +595,17 @@ export class MessageToolbarOrchestrator {
             || sourceRevision.conversationId !== currentRevision.conversationId
             || sourceRevision.routeEpoch !== currentRevision.routeEpoch) return null;
 
-        const position = Number(params.position);
+        const requestedPosition = Number(params.position);
         const messageId = params.messageId?.trim() || '';
-        if (!Number.isInteger(position) || position <= 0 || !messageId) return null;
+        if (!Number.isInteger(requestedPosition) || requestedPosition <= 0 || !messageId) return null;
 
-        const turn = snapshot.turns.find((candidate) => (
-            candidate.ordinal === position
-            && candidate.identity.assistantMessageId === messageId
-        ));
-        if (!turn) return null;
+        // Obtained history can prepend while a save dialog is open. The exact
+        // assistant and unchanged text own the selection; its ordinal may move.
+        const matches = snapshot.turns.filter(candidate => candidate.identity.assistantMessageId === messageId);
+        if (matches.length !== 1) return null;
+        const turn = matches[0]!;
+        const position = turn.ordinal;
+        if (!Number.isInteger(position) || position <= 0) return null;
 
         const userPrompt = turn.userText.trim();
         const markdown = turn.assistantMarkdown.trim();
@@ -618,14 +623,6 @@ export class MessageToolbarOrchestrator {
             },
             sourceRevision: currentRevision,
         };
-    }
-
-    private isBookmarkInputCurrent(params: BookmarkToggleParams, revision: ReaderContentSourceRevision | undefined): boolean {
-        // Unrelated turns may advance the pool while the save dialog is open.
-        // Recheck the exact message and body instead of rejecting the whole revision.
-        return this.adapter.getPlatformId() === 'chatgpt'
-            ? this.resolveCanonicalBookmarkInput(params, revision) !== null
-            : this.isSourceRevisionCurrent(revision);
     }
 
     private isBookmarkableReaderItem(item: ReaderItem): boolean {
@@ -1228,7 +1225,7 @@ export class MessageToolbarOrchestrator {
                 return ok ? { ok: true, message: t('btnCopied') } : { ok: false, message: t('clipboardWriteFailed') };
             },
         };
-        if (this.behavior.showCopyPng && targetSurfacePolicy.binaryClipboardCopyActions && this.copyMessagePng) {
+        if (this.behavior.showCopyPng && this.copyMessagePng) {
             copyMarkdownAction.hoverAction = {
                 id: 'copy_png',
                 label: t('btnCopyAsPng'),

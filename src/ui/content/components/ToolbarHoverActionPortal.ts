@@ -9,6 +9,7 @@ import type { UserThemeOverrides } from '../../../style/tokens';
 import { ensureStyle } from '../../../style/shadow';
 import { TooltipDelegate } from '../../../utils/tooltip';
 import { createIcon } from './Icon';
+import { getSurfaceMaterialCss } from './styles/surfaceMaterialCss';
 
 const VIEWPORT_GUTTER_PX = 8;
 
@@ -89,13 +90,13 @@ export class ToolbarHoverActionPortal {
         this.bridge.addEventListener('pointerleave', () => this.onPointerLeave?.());
 
         this.actionsRoot = document.createElement('div');
-        this.actionsRoot.className = 'toolbar-hover-actions';
+        this.actionsRoot.className = 'toolbar-hover-actions aimd-material-surface';
         this.actionsRoot.dataset.role = 'toolbar-hover-actions';
         this.actionsRoot.dataset.placement = 'top';
         this.actionsRoot.addEventListener('pointerenter', () => this.onPointerEnter?.());
         this.actionsRoot.addEventListener('pointerleave', () => this.onPointerLeave?.());
         this.bottomActionsRoot = document.createElement('div');
-        this.bottomActionsRoot.className = 'toolbar-hover-actions toolbar-hover-actions--bottom';
+        this.bottomActionsRoot.className = 'toolbar-hover-actions toolbar-hover-actions--bottom aimd-material-surface';
         this.bottomActionsRoot.dataset.role = 'toolbar-hover-actions';
         this.bottomActionsRoot.dataset.placement = 'bottom';
         this.bottomBridge = this.bridge.cloneNode() as HTMLElement;
@@ -264,6 +265,7 @@ export class ToolbarHoverActionPortal {
                     : 'toolbar-hover-action toolbar-hover-action--icon'
                 : 'toolbar-hover-action toolbar-hover-action--text';
             button.dataset.role = 'toolbar-hover-action';
+            button.classList.add('aimd-material-button', 'aimd-material-button--quiet');
             button.dataset.action = action.id;
             button.dataset.tooltip = action.tooltip || action.label;
             button.setAttribute('aria-label', action.label);
@@ -355,7 +357,10 @@ export class ToolbarHoverActionPortal {
   align-items: center;
   justify-content: center;
   gap: var(--aimd-space-2);
+  padding: var(--aimd-space-1);
   max-width: min(92vw, var(--_toolbar-hover-max-width));
+  max-height: calc(100vh - var(--aimd-space-4));
+  overflow: auto;
   flex-wrap: wrap;
   transform: translateY(calc(-100% - var(--aimd-space-2)));
   pointer-events: auto;
@@ -392,16 +397,11 @@ export class ToolbarHoverActionPortal {
   justify-content: center;
   gap: 0;
   padding: 0;
-  border-radius: var(--aimd-radius-lg);
-  border: 1px solid color-mix(in srgb, var(--aimd-border-strong) 72%, transparent);
-  background: color-mix(in srgb, var(--aimd-bg-surface) 99%, var(--aimd-bg-primary));
-  color: var(--aimd-text-primary);
-  box-shadow: var(--aimd-shadow-lg);
   font-family: var(--aimd-font-family-sans);
   font-size: var(--aimd-text-sm);
   font-weight: var(--aimd-font-medium);
-  line-height: 1;
-  white-space: nowrap;
+  line-height: var(--aimd-leading-normal);
+  white-space: normal;
   cursor: pointer;
   transition: border-color var(--aimd-duration-fast) var(--aimd-ease-in-out),
               color var(--aimd-duration-fast) var(--aimd-ease-in-out);
@@ -413,11 +413,15 @@ export class ToolbarHoverActionPortal {
 }
 
 .toolbar-hover-action--text {
+  max-width: 100%;
+  min-width: 0;
   min-height: var(--aimd-size-control-icon-toolbar);
   padding: 0 var(--aimd-space-3);
 }
 
 .toolbar-hover-action--icon-text {
+  max-width: 100%;
+  min-width: 0;
   min-height: var(--aimd-size-control-icon-toolbar);
   gap: var(--aimd-space-2);
   padding: 0 var(--aimd-space-3);
@@ -425,6 +429,8 @@ export class ToolbarHoverActionPortal {
 
 .toolbar-hover-action__label {
   display: inline-block;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .toolbar-hover-bridge {
@@ -447,26 +453,13 @@ export class ToolbarHoverActionPortal {
   transform: translate(-50%, calc(-1 * var(--aimd-space-2)));
 }
 
-.toolbar-hover-action:hover {
-  border-color: color-mix(in srgb, var(--aimd-border-strong) 72%, var(--aimd-interactive-primary) 20%);
-}
-
-.toolbar-hover-action:disabled {
-  opacity: 0.62;
-  cursor: wait;
-}
-
-.toolbar-hover-action:focus-visible {
-  outline: 2px solid var(--aimd-focus-ring);
-  outline-offset: 2px;
-}
-
 .toolbar-hover-action .aimd-icon,
 .toolbar-hover-action .aimd-icon svg {
   width: var(--aimd-size-control-glyph-panel);
   height: var(--aimd-size-control-glyph-panel);
   display: block;
 }
+${getSurfaceMaterialCss()}
 `;
     }
 }

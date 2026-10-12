@@ -298,7 +298,10 @@ export type ReaderAnnotationRemovePayload = {
 
 export type ReaderAnnotationNavigatePayload = {
     document: ReaderAnnotationDocument;
+    /** Shared anchor IDs use `highlight:<id>` for stored highlights. */
     annotationId: string;
+    /** Background resolves this from the stored mark; older callers may omit it. */
+    assistantMessageId?: string;
 };
 
 export type ReaderAnnotationFocusPayload = ReaderAnnotationNavigatePayload;
@@ -624,7 +627,9 @@ export function isExtRequest(value: unknown): value is ExtRequest {
                     || (typeof annotationPayload.expectedRevision === 'number' && Number.isInteger(annotationPayload.expectedRevision) && annotationPayload.expectedRevision > 0));
         }
         if (type === 'annotations:navigate' || type === 'annotations:focus') {
-            return typeof annotationPayload.annotationId === 'string' && annotationPayload.annotationId.trim().length > 0;
+            return typeof annotationPayload.annotationId === 'string' && annotationPayload.annotationId.trim().length > 0
+                && (annotationPayload.assistantMessageId === undefined
+                    || (typeof annotationPayload.assistantMessageId === 'string' && annotationPayload.assistantMessageId.trim().length > 0));
         }
         if (!isReaderAnnotationRecord(annotationPayload.annotation)) return false;
         if (type === 'annotations:update') {

@@ -113,9 +113,7 @@ export function getSystemTokenCss(theme: Theme, overrides: UserThemeOverrides = 
   --aimd-sys-shadow-xs: var(--aimd-ref-shadow-xs);
   --aimd-sys-shadow-sm: var(--aimd-ref-shadow-sm);
   --aimd-sys-shadow-lg: var(--aimd-ref-shadow-lg);
-  --aimd-sys-shadow-xl: var(--aimd-ref-shadow-xl);
   --aimd-sys-shadow-focus: var(--aimd-ref-shadow-focus);
-  --aimd-sys-shadow-field-inset: inset 0 1px 0 color-mix(in srgb, var(--aimd-sys-color-surface) 72%, transparent);
   --aimd-sys-shadow-panel: var(--aimd-ref-shadow-500);
   --aimd-sys-shadow-interactive-halo: 0 0 0 3px color-mix(in srgb, var(--aimd-sys-color-accent) 10%, transparent);
   --aimd-sys-shadow-bookmark-marker: 0 0 0 2px var(--aimd-sys-color-bookmark-marker-glow);

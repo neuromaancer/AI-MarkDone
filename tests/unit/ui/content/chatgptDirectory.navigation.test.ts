@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SiteAdapter, type ConversationGroupRef, type ThemeDetector } from '@/drivers/content/adapters/base';
 import { ChatGPTAdapter } from '@/drivers/content/adapters/sites/chatgpt';
-import { invalidateChatGPTDomRoundSnapshot } from '@/drivers/content/chatgpt/domConversationDiscovery';
+import { disposeChatGPTPageIndex, invalidateChatGPTDomRoundSnapshot } from '@/drivers/content/chatgpt/domConversationDiscovery';
 import { ChatGPTConversationSurface } from '@/drivers/content/chatgpt/ChatGPTConversationSurface';
 import { createConversationContentSource } from '../../../helpers/chatgptContentFixtures';
 
@@ -133,6 +133,7 @@ function buildMaterializedRoundDom(): HTMLElement {
 const surfacesByAdapter = new WeakMap<SiteAdapter, ChatGPTConversationSurface>();
 const sourcesByAdapter = new WeakMap<SiteAdapter, ReturnType<typeof createConversationContentSource>>();
 const ownedSurfaces = new Set<ChatGPTConversationSurface>();
+const ownedAdapters = new Set<SiteAdapter>();
 
 function setCanonicalSnapshot(
     adapter: SiteAdapter,
@@ -147,6 +148,7 @@ function setCanonicalSnapshot(
     surfacesByAdapter.set(adapter, surface);
     sourcesByAdapter.set(adapter, source);
     ownedSurfaces.add(surface);
+    ownedAdapters.add(adapter);
     return surface;
 }
 
@@ -500,6 +502,9 @@ describe('ChatGPT directory navigation', () => {
 
     afterEach(() => {
         ownedSurfaces.forEach((surface) => surface.dispose());
+        // Fake adapters do not own ChatGPT's real adapter disposal boundary.
+        ownedAdapters.forEach((adapter) => disposeChatGPTPageIndex(adapter));
+        ownedAdapters.clear();
         ownedSurfaces.clear();
         vi.runOnlyPendingTimers();
         vi.useRealTimers();

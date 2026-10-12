@@ -101,6 +101,65 @@ describe('ChatGPT directory feedback through production composition', () => {
     });
     afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 
+    it('restores Directory and message controls after a retained-page switch and delayed native actions', async () => {
+        const navigateHost = history.pushState.bind(history);
+        document.body.innerHTML = `<div data-app-shell-active-page="true" id="page-a"><main>${roundHtml(1)}</main></div>
+            <div data-app-shell-active-page="false" id="page-b"><main></main></div>`;
+        const pageA = document.getElementById('page-a')!;
+        const pageB = document.getElementById('page-b')!;
+        const mainB = pageB.querySelector('main')!;
+        const fixture = createFixture();
+        const orchestrator = new MessageToolbarOrchestrator(fixture.adapter, {
+            readerPanel: new ReaderPanel(),
+            conversationContentSource: fixture.runtime.source,
+            conversationMaterialization: fixture.runtime.materialization,
+            conversationSurface: fixture.runtime.surface,
+        });
+        orchestrator.setBehaviorFlags({ showWordCount: false, showSaveMessages: false });
+        const directoryLabels = () => Array.from(document.getElementById('aimd-chatgpt-directory-rail')!
+            .shadowRoot!.querySelectorAll('.rail__item')).map(item => item.getAttribute('aria-label'));
+        const toolbarCount = (root: ParentNode) => root.querySelectorAll('[data-aimd-role="message-toolbar"]').length;
+        try {
+            fixture.init();
+            orchestrator.init();
+            await settle();
+            expect(directoryLabels()).toEqual(['#1 Question 1']);
+            expect(toolbarCount(pageA)).toBe(1);
+
+            // Host navigation runs outside the content script's isolated History wrapper.
+            navigateHost({}, '', '/c/22222222-2222-2222-2222-222222222222');
+            pageA.setAttribute('data-app-shell-active-page', 'false');
+            pageB.setAttribute('data-app-shell-active-page', 'true');
+            await settle();
+            expect(pageA.isConnected).toBe(true);
+            expect(directoryLabels()).toEqual([]);
+            expect(toolbarCount(pageA)).toBe(0);
+
+            mainB.innerHTML = roundHtml(2);
+            const row = mainB.querySelector('.z-0')!;
+            row.remove();
+            await settle(5000);
+            expect(toolbarCount(pageB)).toBe(0);
+            mainB.querySelector('[data-turn="assistant"]')!.appendChild(row);
+            await settle();
+            expect(directoryLabels()).toEqual(['#1 Question 2']);
+            expect(toolbarCount(pageB)).toBe(1);
+            expect(fixture.runtime.source.read().snapshot?.turns.map(turn => turn.identity.assistantMessageId))
+                .toEqual(['assistant-2']);
+
+            // Cached pages resume via the activity attribute alone, without remounting messages.
+            navigateHost({}, '', `/c/${CONVERSATION_ID}`);
+            pageB.setAttribute('data-app-shell-active-page', 'false');
+            pageA.setAttribute('data-app-shell-active-page', 'true');
+            await settle();
+            expect(directoryLabels()).toEqual(['#1 Question 1']);
+            expect(toolbarCount(pageA)).toBe(1);
+            expect(toolbarCount(pageB)).toBe(0);
+            await settle();
+            expect(toolbarCount(document)).toBe(1);
+        } finally { orchestrator.dispose(); fixture.dispose(); }
+    });
+
     it('shows an assistant-only visual response in Directory as soon as its completed body is captured', async () => {
         const main = document.querySelector('main')!;
         main.innerHTML = roundHtml(1);

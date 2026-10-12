@@ -68,6 +68,7 @@ describe('FormulaComposerAssistantPopover', () => {
             selectedIndex: 0,
         });
         expect(popover.host.shadowRoot?.querySelector('[data-role="formula-preview-status"]')).not.toBeNull();
+        expect(popover.host.shadowRoot?.querySelector('[data-role="formula-preview-status"]')?.getAttribute('role')).toBe('status');
         expect(document.activeElement).toBe(input);
 
         popover.show({

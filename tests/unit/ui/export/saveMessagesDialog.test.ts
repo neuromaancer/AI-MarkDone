@@ -100,6 +100,9 @@ describe('SaveMessagesDialog', () => {
         await dialog.open({ getPlatformId: () => 'chatgpt' } as any, 'light');
         const shadow = document.getElementById('aimd-save-messages-dialog-host')!.shadowRoot!;
         expect(shadow.querySelector('[data-format="markdown-zip"]')).toBeTruthy();
+        expect(shadow.querySelector('[data-index="0"]')?.classList.contains('aimd-material-choice')).toBe(true);
+        expect(shadow.querySelector('[data-format="markdown-zip"]')?.classList.contains('aimd-material-choice')).toBe(true);
+        expect(shadow.querySelector('.format-options')?.classList.contains('aimd-material-segmented')).toBe(true);
         expect(shadow.querySelector('[data-role="rich-content-options"]')).toBeNull();
         pointerClick(shadow.querySelector<HTMLElement>('[data-format="pdf"]')!);
         expect(shadow.querySelector('[data-visuals="include"]')?.getAttribute('aria-pressed')).toBe('true');
@@ -769,14 +772,14 @@ describe('SaveMessagesDialog', () => {
         expect(secondPanel.dataset.motionState).not.toBe('closing');
     });
 
-    it('uses stronger semantic hover rules for chips and segmented buttons', async () => {
+    it('uses shared selection materials after dialog layout rules', async () => {
         const { getSaveMessagesDialogCss } = await import('@/ui/content/export/saveMessagesDialogCss');
+        const { getSurfaceMaterialCss } = await import('@/ui/content/components/styles/surfaceMaterialCss');
         const css = getSaveMessagesDialogCss();
 
-        expect(css).not.toContain('background: color-mix(in srgb, var(--aimd-bg-secondary) 76%, transparent);');
-        expect(css).toContain('.message-chip:hover');
-        expect(css).toContain('var(--aimd-button-secondary-hover)');
-        expect(css).toContain('.segmented button:hover');
+        expect(css.trimEnd().endsWith(getSurfaceMaterialCss().trimEnd())).toBe(true);
+        expect(css).not.toContain('.message-chip[data-active="1"]:hover');
+        expect(css).not.toContain('.segmented button[data-active="1"]:hover');
     });
 
     it('uses the modal Surface profile with one scrollable dialog body', async () => {
