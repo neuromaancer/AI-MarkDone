@@ -539,3 +539,34 @@ internals, permanent polling and synthetic discovery scroll.
 - Native Firefox print/UI and a fresh complete visual matrix remain distinct,
   unrun acceptance boundaries. Do not convert local build/fixture evidence into
   those claims. See the [release review](../reviews/2026-10-12-6.2.0-release-readiness.md).
+
+
+### Chrome visual follow-up and Firefox waiver (2026-10-12)
+
+- The user narrowed release acceptance to Chrome and explicitly waived Firefox
+  UI/native PDF tests. Stop those runs; keep Firefox build parity and label its
+  incomplete acceptance accurately. This is a per-release waiver, not a change
+  to the supported browser targets.
+- Chrome full visual: 492 cases across 12 fixtures plus explicit Library 41 and
+  Settings 41, all passed. Screenshot review found a dark fixture background
+  problem; its 41 cases were rerun after correction. Inspect screenshots alongside
+  geometry/console checks; passing layout bounds cannot prove text contrast.
+- The meaningful-page probe must traverse open ShadowRoots and count rendered
+  text. Exclude stylesheet/script/hidden/aria-hidden content and text without
+  boxes; preserve the minimum-content and Vite-overlay failures. Test nested
+  roots, truly blank/hidden content and ordinary visible controls.
+- Fixture locale changes must update all displayed surfaces, including labels
+  resolved at construction. Theme variants must also update their containing
+  page through canonical tokens. Dispose replaced fixture components; derive
+  generated settings-file versions from package.json.
+- Actual Chrome 200% zoom passed on the installed management panel at 886x586 CSS
+  pixels with no horizontal overflow and a reachable Close button. This is
+  separate from the 320x568 zoom-equivalent automated reflow cases. Restore native
+  zoom and confirm the target tab title/URL before sending native input.
+- Core 329 files / 2717 tests; post-theme-repair focused 23; smoke 54; acceptance
+  471; both builds/entry/content boundaries passed. The earlier genuine Chrome
+  PDF was revalidated; no fresh Firefox print or universal rich-content claim.
+- Release ZIP checks must compare every entry with current dist bytes, validate
+  static/built manifests and declared resources, and record SHA-256 sums. Current
+  6.2.0 Chrome/Firefox archives each contain 111 files. Preparation remains separate
+  from merging, tagging, pushing and publication.
