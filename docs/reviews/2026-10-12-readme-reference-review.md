@@ -34,9 +34,9 @@ placed in the product README.
 - Header with the product logo, concise description, Chrome/Firefox install
   buttons, website/docs/release/issue/language links, MIT and actual repository
   star badges.
-- Internal navigation and a browser install table with dynamic store-version
-  badges. The branch's 6.2.0 preparation status remains distinct from published
-  store/release versions.
+- Internal navigation and a browser install table. Version numbers, preparation
+  status and release summaries are confined to a dedicated changelog section
+  after the final user review; installation/version badges were removed.
 - A full-width Reader screenshot and eight linked feature groups. Settings
   screenshots are collapsible; every feature name links to the actual manual
   page in the corresponding language.
@@ -50,8 +50,8 @@ placed in the product README.
 
 ## Screenshot provenance
 
-Added four screenshots under `imgs/readme/`, copied without image modification
-from the accepted Chrome production-component visual runs:
+The initial four screenshots under `imgs/readme/` were copied from the accepted
+Chrome production-component visual runs:
 
 - `reader.en.png` and `reader.zh.png`: `full-chromium-2026-10-12T08-57-59-833Z`,
   Reader panel, desktop 1440px, light, English/Chinese, normal motion.
@@ -60,6 +60,22 @@ from the accepted Chrome production-component visual runs:
 
 Captions identify demonstration content. No private live conversation data or
 invented UI is used. Existing historical screenshot files are retained.
+
+At final prepublication review on 2026-10-12 all four were recaptured from the
+current production-component fixtures. Reader uses a research-style sample
+reply, localized in Chinese/English, showing headings, an actual KaTeX mean
+formula and a table in the first viewport. A temporary Vite transform replaced
+only the fixture's test data; no tracked mock or runtime implementation changed.
+The original production toolbar trigger and ReaderPanel path remain in use.
+Settings uses the unmodified current primary-view fixture; its new images are
+byte-identical to the existing assets.
+
+All four captures use 1440x900, light theme and reduced motion. Each had one
+visible dialog, no page/console errors, zero horizontal overflow and in-viewport
+bounds. Reader formula rendering was asserted. The resulting images were
+visually reviewed; temporary servers and isolated browsers were closed. Capture
+script, JSON and hashes are retained in the task's local artifact directory.
+
 
 ## Verification and boundaries
 
@@ -71,3 +87,12 @@ links/images: 10 per README. Documentation governance/content checks passed
 2 files / 10 tests. Markdown diff whitespace checks passed. No production build
 was rerun for this documentation/assets-only pass. No main merge, tag, push or publication is authorized
 or performed by this README pass.
+
+
+## Final version-placement check
+
+The user required version information to live in one stable changelog module.
+Both READMEs now use a fixed Changelog/更新日志 heading, with 6.2.0 and its status
+inside it. Installation and feature prose contain no concrete release number or
+preparation statement, and the install table has no version-badge column.
+The writing authority records this rule for future updates.

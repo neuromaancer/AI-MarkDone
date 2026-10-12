@@ -15,16 +15,16 @@
 
 AI-MarkDone 是一个免费、开源的 ChatGPT 浏览器扩展，用来阅读长回复、复制公式与代码、标记重点，以及保存和导出有用的内容。常用按钮可以按自己的习惯隐藏或固定。
 
-[安装](#安装) · [功能亮点](#功能亮点) · [快速开始](#快速开始) · [常见问题](#常见问题) · [开发与贡献](#开发与贡献) · [支持项目](#支持项目)
+[安装](#安装) · [功能亮点](#功能亮点) · [快速开始](#快速开始) · [常见问题](#常见问题) · [更新日志](#更新日志) · [开发与贡献](#开发与贡献) · [支持项目](#支持项目)
 
 ## 安装
 
-| 浏览器 | 下载 | 商店版本 |
-| --- | --- | --- |
-| Chrome | [Chrome Web Store][chrome-store] | [![Chrome 商店版本](https://img.shields.io/chrome-web-store/v/bmdhdihdbhjbkfaaainidcjbgidkbeoh?label=version)][chrome-store] |
-| Firefox | [Firefox Add-ons][firefox-store] | [![Firefox 商店版本](https://img.shields.io/amo/v/ai-markdone?label=version)][firefox-store] |
+| 浏览器 | 下载 |
+| --- | --- |
+| Chrome | [Chrome Web Store][chrome-store] |
+| Firefox | [Firefox Add-ons][firefox-store] |
 
-安装后刷新 ChatGPT 页面即可使用。当前分支正在准备 **6.2.0**，商店和 [GitHub Releases][releases] 的实际版本以对应页面为准。支持 Chrome 和 Firefox，Safari 不再适配。
+安装后刷新 ChatGPT 页面即可使用。支持 Chrome 和 Firefox，Safari 不再适配。
 
 ## 功能亮点
 
@@ -93,7 +93,11 @@ PDF 通过浏览器打印窗口保存。PNG 尽量将所选回复合成一张长
 
 </details>
 
-## 6.2.0
+## 更新日志
+
+### 6.2.0
+
+当前分支正在准备此版本，商店和 [GitHub Releases][releases] 的实际版本以对应页面为准。
 
 - 注释窗口可拖动、最小化和恢复草稿，点击框外不再关闭。
 - 支持的图表、卡片可保存为离线 Markdown ZIP，PDF／PNG 可选图片或文字占位。

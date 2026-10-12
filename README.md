@@ -15,16 +15,16 @@
 
 AI-MarkDone is a free, open-source browser extension for ChatGPT. Read long replies, copy formulas and code, mark important passages, and save or export useful content. Hide or pin controls to suit the way you work.
 
-[Install](#install) · [Highlights](#highlights) · [Getting started](#getting-started) · [FAQ](#faq) · [Development](#development) · [Support](#support)
+[Install](#install) · [Highlights](#highlights) · [Getting started](#getting-started) · [FAQ](#faq) · [Changelog](#changelog) · [Development](#development) · [Support](#support)
 
 ## Install
 
-| Browser | Download | Store version |
-| --- | --- | --- |
-| Chrome | [Chrome Web Store][chrome-store] | [![Chrome store version](https://img.shields.io/chrome-web-store/v/bmdhdihdbhjbkfaaainidcjbgidkbeoh?label=version)][chrome-store] |
-| Firefox | [Firefox Add-ons][firefox-store] | [![Firefox store version](https://img.shields.io/amo/v/ai-markdone?label=version)][firefox-store] |
+| Browser | Download |
+| --- | --- |
+| Chrome | [Chrome Web Store][chrome-store] |
+| Firefox | [Firefox Add-ons][firefox-store] |
 
-Refresh ChatGPT after installation. This branch is preparing **6.2.0**; check the stores and [GitHub Releases][releases] for the versions available to install. Chrome and Firefox are supported. Safari support has ended.
+Refresh ChatGPT after installation. Chrome and Firefox are supported. Safari support has ended.
 
 ## Highlights
 
@@ -93,7 +93,11 @@ The directory adds replies as the website loads them; unavailable history may no
 
 </details>
 
-## 6.2.0
+## Changelog
+
+### 6.2.0
+
+This release is being prepared on the current branch. Check the stores and [GitHub Releases][releases] for published versions.
 
 - Move or minimize the annotation window, recover drafts and keep it open when clicking outside.
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.
