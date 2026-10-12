@@ -3,19 +3,19 @@
 # 6.2.0
 2026-10-12
 
-Hello, friends! Version 6.2.0 improves annotations, Markdown copying and exports. ChatGPT has changed again and now keeps old pages around when you switch conversations, so this update also revisits content detection and the recovery of the directory and reply toolbar.
+Hello, friends! Version 6.2.0 focuses on the things we use often: writing annotations, copying content and exporting replies. ChatGPT has changed quite a bit recently. This update fixes the causes we reproduced behind missing directories and reply controls after conversation switches, failed bookmark saves, misplaced annotations and blank PDFs.
 
-Several smaller windows still looked different from the management panel. They now share its appearance, with clearer labels and better layouts in narrow windows.
+Some smaller windows still looked different from the management panel, so I have brought them together too. As the extension grows, I want its everyday tools to feel consistent and easier to use.
 
-1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Unfinished text saves as a recoverable draft at the same passage; drafts remain separate from saved annotations. Thanks to email user @qds19100.
-2. Keep supported diagrams and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG; unavailable content retains an explanation.
-3. Preserve code fences, language identifiers, indentation, blank lines and inline code when copying Markdown, and keep following paragraphs outside code blocks. Thanks for the email feedback.
-4. Fix bookmark saves incorrectly reporting unavailable content when older messages load and reply numbers change while the save dialog is open.
-5. Fix annotation and highlight jumps selecting the wrong passage. Opening a mark from the Library now locates its reply and then its original text. Thanks to Xiaohongshu user @三分钟热度.
-6. Fix blank message PDF exports caused by ChatGPT preparing its own print page, and improve print layout for wide tables, code and formulas. Thanks to QQ user @成长！.
-7. Restore the directory and reply controls after conversation switches and delayed loading, and strengthen regenerated-reply identity. Enable the directory on fresh installations while preserving existing settings.
-8. Unify Prompt, export, Send, Reader settings and annotation subwindows, backup controls and the popup. Improve wrapping and button visibility in narrow windows, and refine Chinese and English guidance.
-9. Support Chrome and Firefox only. Remove Safari-specific builds, packaging and interface restrictions.
+1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Unfinished text saves as a draft so you can continue at the same passage; drafts stay separate from saved annotations. Thanks to email user @qds19100.
+2. Save supported charts and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG. Unavailable content keeps an explanation.
+3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks for the email feedback.
+4. Fix bookmark saves reporting missing content when older messages load and reply numbers change while the save dialog is open.
+5. Fix annotation and highlight jumps to the wrong passage. Opening a mark from Library now finds its reply, then the marked text. Thanks to Xiaohongshu user @三分钟热度.
+6. Fix an identified printing conflict that caused blank message PDFs, and improve wide tables, long code and formula layout. Thanks to QQ user @成长！
+7. Restore the directory and reply controls after conversation switches, including delayed content/buttons and regenerated replies. New installations show the directory by default; existing settings are preserved.
+8. Unify the appearance of Prompt, export, Send, Reader settings, annotation, backup and popup windows. Improve text wrapping and button visibility in narrow windows, and tidy Chinese and English guidance.
+9. Continue with Chrome and Firefox only. Safari is no longer supported.
 
 # 6.1.0
 2026-10-02

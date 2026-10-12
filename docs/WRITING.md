@@ -28,6 +28,14 @@ Routine labels, field hints, status text and recoverable errors can be edited au
 
 Historical release records, user-authored prompts, custom templates and stored content are outside a writing polish pass. Update current explanations without rewriting their historical facts or user data.
 
+## README and release copy
+
+- `README.md` remains the English GitHub entry; `README.zh.md` is the independent Chinese version, as confirmed on 2026-10-12. Keep their scope, entrypoints, saving rules and installation guidance aligned without forcing a literal translation.
+- Introduce the author's practical reasons briefly, then explain first use and common tasks. Put developer commands below the user guidance; use Feature overview and the manual for the full function catalog.
+- Distinguish a version being prepared on a branch from a version available in a store or GitHub Release. Installation instructions must work for published artifacts; temporary Firefox loading belongs to development guidance.
+- Keep `CHANGELOG.md` in concise English Added/Changed/Fixed sections. The bilingual release notes and in-app changelogs may use the author's conversational opening and practical numbered updates. Preserve feedback credits and previous release records.
+- Versioned store-copy drafts live under `release/`. Names and short descriptions follow the locale catalog; long descriptions follow current feature and saving contracts, rather than stale public listings. Where stores have different installed versions, prepare the appropriate cumulative update summary.
+
 ## Verification
 
 Check locale key parity, interpolation parity, hardcoded visible fallback copy, and the relevant user trigger. Verify representative Chinese and English screens, narrow widths, long content, keyboard labels and 200% reflow. A locale JSON check alone does not prove that the rendered text fits.

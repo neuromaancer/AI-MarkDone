@@ -10,34 +10,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.2.0] - 2026-10-12
 
 ### Added
-- Recover unfinished annotation drafts in this browser, with separate controls to keep or discard them.
-- Save supported ChatGPT diagrams, charts and cards in an offline Markdown bundle with image attachments and an export manifest.
-- Choose static images or readable placeholders for rich content in PDF and PNG exports.
+- Recover unfinished annotation drafts in this browser, separately from saved annotations, with controls to keep or discard them.
+- Save supported ChatGPT diagrams, charts and cards in an offline Markdown ZIP with image attachments and explanations for unavailable content.
+- Choose static images or text placeholders for rich blocks in PDF and PNG exports.
 
 ### Changed
-- Support Chrome and Firefox only; remove Safari-specific builds, packaging and interface restrictions.
-- Unify Prompt, export, sending, Reader settings and annotation-copy windows, backup review, formula actions and the extension popup with the shared workspace appearance.
-- Show the message directory by default on new installations while preserving every existing user's setting.
-- Read alongside a movable annotation window, with minimize and expand controls that keep writing in place. Clicking outside no longer closes the editor. Thanks to email user @qds19100.
-- Refined Chinese and English labels, help, errors, and first-use guidance with clearer actions and saving details.
+- Write annotations in a movable window with minimize, expand and explicit close controls. Clicking outside no longer closes it. Thanks to email user @qds19100.
+- Bring Prompt, export, Send, Reader settings, annotation tools, backup review and the popup into the shared workspace appearance, with clearer Chinese and English guidance.
+- Show the message directory by default on new installations while preserving existing settings.
+- Continue support for Chrome and Firefox; end Safari adaptation and distribution.
 
 ### Fixed
-- Save toolbar bookmarks when older messages load and reply numbers change while the save dialog is open, while still rejecting changed or unavailable content.
-- Locate the correct annotation or highlight passage after reply loading or layout changes, including marks opened from the Library. Thanks to Xiaohongshu user @三分钟热度.
-- Restore the message directory and reply controls when switching between cached ChatGPT conversations, including replies and native controls that load later.
-- Keep popup theme and custom accent consistent with saved appearance, label compact Prompt actions, and avoid double viewport gutters in narrow dialogs.
-- Keep long Prompt choices readable and prevent Send controls from being clipped in narrow Reader windows.
-- Keep regenerated replies bound to the correct message, prevent stale history from restoring replaced content, and detect delayed message controls.
-- Keep visual-only replies available in the message directory and preserve chart data when copying Markdown.
-- Release cancelled Reader image jobs and retain print images until their print context closes.
-- Keep numeric metric cards out of article headings, and clean up image resources after repeated page visits or runtime shutdown.
-- Fixed blank PDF message exports when ChatGPT prepares its own print view. Thanks to QQ user @成长！.
-- Keep selected messages in the same order without duplicates across Markdown, PDF, and PNG exports.
-- Preserve code fences, language, indentation, blank lines, and inline code when copying and rendering Markdown.
-- Preserve fenced blocks and inline code in ChatGPT's updated code display, without including language headers or Run controls as reply text.
+- Save toolbar bookmarks when older messages load and reply numbers change while the save dialog is open.
+- Locate the correct annotation or highlight passage after content or layout changes, including marks opened from Library. Thanks to Xiaohongshu user @三分钟热度.
+- Restore the directory and reply controls after conversation switches and delayed loading, and keep regenerated replies attached to their current content.
+- Preserve code fences, language identifiers, indentation, blank lines and inline code in ChatGPT's updated code display; keep following paragraphs outside code blocks and exclude Run controls from copied text.
+- Fix blank message PDFs caused by a conflict with ChatGPT's print view. Thanks to QQ user @成长！
+- Improve PDF layout for wide tables, long code and formulas, and wait briefly for images before printing.
+- Keep selected messages in source order without duplicates across Markdown, PDF and PNG exports.
+- Include visual-only replies in the directory, preserve available chart data in Markdown, and keep numeric metric cards out of the heading outline.
 - Keep Reader and exports readable when preserved source is empty, and refresh Reader when source links change.
-- Wrap wide code and tables in PDF exports, fit wide formulas, and wait briefly for images before printing.
-- Show a useful message when a Directory jump cannot locate its reply.
+- Apply saved theme and accent choices to the popup, label compact Prompt actions, and keep long choices and Send controls usable in narrow windows.
+- Stop cancelled image preparation, retain images while printing, and release temporary image resources when their views close.
+- Explain when a directory jump cannot locate its reply instead of failing silently.
 
 ## [6.1.0] - 2026-10-02
 

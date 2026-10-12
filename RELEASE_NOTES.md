@@ -4,35 +4,35 @@
 
 ### 中文发布文案
 
-朋友们好！这次带来 6.2.0，重点把注释、内容复制和导出的体验再完善一下。最近 ChatGPT 网页又有不少变化，切换对话时还会保留旧页面，所以这次也重新检查了内容识别和目录、工具栏的恢复逻辑。
+朋友们好！这次带来 6.2.0，主要想把写注释、复制内容和导出这些常用操作做得更顺手。最近 ChatGPT 网页改动比较多，切换对话后目录和工具栏不出现、保存书签失败，以及注释定位和 PDF 空白的问题，这次都针对已经复现的原因做了修复。
 
-另外，之前部分窗口的样式还没有跟上管理面板，这次也一起整理了。希望常用功能看起来更统一，写注释、复制代码和保存内容时也更顺手。
+另外，之前还有一些小窗口的样式没有跟上管理面板，我也一起整理了一遍。功能越来越多，希望它们看起来更统一，用起来也少一点折腾。
 
-1. 注释框改为页面内可拖动的小窗口，支持最小化、展开和主动关闭；点击框外不会关闭，未写完的内容会自动保存为草稿，并可在同一位置恢复。草稿与正式保存的注释分开管理（感谢邮箱用户 @qds19100）。
-2. 支持的图表和卡片可随 Markdown 保存为带图片附件的离线 ZIP；PDF 和 PNG 可选择保留静态图片或显示文字占位，无法保留的内容也会有说明。
-3. 修复复制 Markdown 时代码围栏、语言标记、缩进、空行和行内代码丢失，以及代码与后文粘连的问题（感谢邮件反馈）。
-4. 修复保存书签期间加载较早消息、回复序号变化后误报内容不可用的问题。
-5. 修复注释和高亮跳转到错误段落的问题；从资料库打开原页时，会先定位对应回复，再定位标记的原文（感谢小红书用户 @三分钟热度）。
-6. 修复 ChatGPT 打印页面干扰消息 PDF 导出而产生空白的问题，并改善宽表格、长代码和公式的打印排版（感谢 QQ 用户 @成长！）。
-7. 修复切换会话后目录和回复下方工具栏不出现的问题，继续处理延迟加载的正文和操作栏，并加固重新生成回复时的内容识别。新安装默认显示目录，已有用户的设置继续保留。
-8. 统一提示词、导出、发送、阅读器设置和注释子窗口、备份及插件弹出页的视觉样式，改善窄窗口中的文字换行和按钮显示，并整理中英文提示。
-9. 后续只支持 Chrome 和 Firefox，删除 Safari 专用构建、打包和界面限制。
+1. 注释框现在是页面内可拖动的小窗口，支持最小化、展开和主动关闭。点击框外不会关掉，没写完的内容会自动保存为草稿，之后可以在原位置继续写。草稿和正式保存的注释分开管理（感谢邮箱用户 @qds19100）。
+2. 支持的图表和卡片，可以随 Markdown 一起保存成带图片附件的离线 ZIP。PDF 和 PNG 可以选择保留静态图片，或改用文字占位；无法保存的部分会留下说明。
+3. 修复复制 Markdown 时代码围栏、语言标记、缩进、空行和行内代码丢失，以及代码和后面的段落粘在一起的问题（感谢邮件反馈）。
+4. 修复保存书签期间加载旧消息、回复序号变化后，误报找不到内容的问题。
+5. 修复注释和高亮跳到错误段落的问题。从资料库打开原页时，也会先找到对应回复，再定位标记的原文（感谢小红书用户 @三分钟热度）。
+6. 修复了一个会导致消息 PDF 空白的打印冲突，并改善宽表格、长代码和公式的排版（感谢 QQ 用户 @成长！）。
+7. 修复切换会话后目录和回复工具栏不出现的问题，补上正文、按钮延迟加载和重新生成回复时的处理。新安装默认显示目录，已有用户的设置继续保留。
+8. 统一提示词、导出、发送、阅读器设置、注释、备份和插件弹出页等窗口的样式，改善窄窗口中的换行和按钮显示，也整理了中英文提示。
+9. 后续只支持 Chrome 和 Firefox，不再适配 Safari。
 
 ### English
 
-Hello, friends! Version 6.2.0 improves annotations, Markdown copying and exports. ChatGPT has changed again and now keeps old pages around when you switch conversations, so this update also revisits content detection and the recovery of the directory and reply toolbar.
+Hello, friends! Version 6.2.0 focuses on the things we use often: writing annotations, copying content and exporting replies. ChatGPT has changed quite a bit recently. This update fixes the causes we reproduced behind missing directories and reply controls after conversation switches, failed bookmark saves, misplaced annotations and blank PDFs.
 
-Several smaller windows still looked different from the management panel. They now share its appearance, with clearer labels and better layouts in narrow windows.
+Some smaller windows still looked different from the management panel, so I have brought them together too. As the extension grows, I want its everyday tools to feel consistent and easier to use.
 
-1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Unfinished text saves as a recoverable draft at the same passage; drafts remain separate from saved annotations. Thanks to email user @qds19100.
-2. Keep supported diagrams and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG; unavailable content retains an explanation.
-3. Preserve code fences, language identifiers, indentation, blank lines and inline code when copying Markdown, and keep following paragraphs outside code blocks. Thanks for the email feedback.
-4. Fix bookmark saves incorrectly reporting unavailable content when older messages load and reply numbers change while the save dialog is open.
-5. Fix annotation and highlight jumps selecting the wrong passage. Opening a mark from the Library now locates its reply and then its original text. Thanks to Xiaohongshu user @三分钟热度.
-6. Fix blank message PDF exports caused by ChatGPT preparing its own print page, and improve print layout for wide tables, code and formulas. Thanks to QQ user @成长！.
-7. Restore the directory and reply controls after conversation switches and delayed loading, and strengthen regenerated-reply identity. Enable the directory on fresh installations while preserving existing settings.
-8. Unify Prompt, export, Send, Reader settings and annotation subwindows, backup controls and the popup. Improve wrapping and button visibility in narrow windows, and refine Chinese and English guidance.
-9. Support Chrome and Firefox only. Remove Safari-specific builds, packaging and interface restrictions.
+1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Unfinished text saves as a draft so you can continue at the same passage; drafts stay separate from saved annotations. Thanks to email user @qds19100.
+2. Save supported charts and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG. Unavailable content keeps an explanation.
+3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks for the email feedback.
+4. Fix bookmark saves reporting missing content when older messages load and reply numbers change while the save dialog is open.
+5. Fix annotation and highlight jumps to the wrong passage. Opening a mark from Library now finds its reply, then the marked text. Thanks to Xiaohongshu user @三分钟热度.
+6. Fix an identified printing conflict that caused blank message PDFs, and improve wide tables, long code and formula layout. Thanks to QQ user @成长！
+7. Restore the directory and reply controls after conversation switches, including delayed content/buttons and regenerated replies. New installations show the directory by default; existing settings are preserved.
+8. Unify the appearance of Prompt, export, Send, Reader settings, annotation, backup and popup windows. Improve text wrapping and button visibility in narrow windows, and tidy Chinese and English guidance.
+9. Continue with Chrome and Firefox only. Safari is no longer supported.
 
 ## v6.1.0 (2026-10-02)
 
