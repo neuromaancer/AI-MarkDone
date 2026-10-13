@@ -141,3 +141,20 @@
 - 正式发布 firefox ZIP SHA-256：`0ad5554a557920bd58172d6aa9f9fcbbc695efb76fa404e2a698fb028a8fb5e0`。
 
 以上为待上传的最终包，取代上文准备阶段校验和。
+
+
+### 正式发布完成（2026-10-13）
+
+- 当前功能分支已快进合并 main 并推送。发布提交：`63a36de4e29af9853ba402a5933dfbaf55ba998f`。
+- Annotated 标签 `v6.2.0` 已推送；远端标签解引用与发布提交一致。公开发布后只补充本段文档记录，标签保持指向发布提交，不移动标签。
+- [GitHub Release 6.2.0](https://github.com/zhaoliangbin42/AI-MarkDone/releases/tag/v6.2.0) 已公开并设为 latest，非草稿、非预发布。Release ID：`411473594`；公开时间：`2026-10-13T08:53:52Z`（北京时间 2026-10-13 16:53:52）。
+- 双语更新说明与本轮审读稿一致，保留 @oxwo277 等反馈署名；Chrome ZIP、Firefox ZIP 与版本校验和已上传。
+- 官方 API 的附件名称、大小、SHA-256 与本地文件一致；再次通过匿名公开下载，对全部三个附件逐个重新计算 SHA-256，全部匹配。此记录是公开 Release 及附件验证，不仅是本地打包或标签推送结果。
+
+- [AI-MarkDone-v6.2.0-chrome.zip](https://github.com/zhaoliangbin42/AI-MarkDone/releases/download/v6.2.0/AI-MarkDone-v6.2.0-chrome.zip)：7083325 bytes，`sha256:fc9ceebb6fe77a9ead16bb64636404c7ff0184b44deed5c8d888406fb8e8e2bb`。
+
+- [AI-MarkDone-v6.2.0-firefox.zip](https://github.com/zhaoliangbin42/AI-MarkDone/releases/download/v6.2.0/AI-MarkDone-v6.2.0-firefox.zip)：7082925 bytes，`sha256:0ad5554a557920bd58172d6aa9f9fcbbc695efb76fa404e2a698fb028a8fb5e0`。
+
+- [AI-MarkDone-v6.2.0-SHA256SUMS.txt](https://github.com/zhaoliangbin42/AI-MarkDone/releases/download/v6.2.0/AI-MarkDone-v6.2.0-SHA256SUMS.txt)：193 bytes，`sha256:d4bd4f45956845a86d915319553f9427c0da066ef26607db964f87785a53fc63`。
+
+本次已完成 GitHub 正式发布；浏览器商店材料保持已准备状态，本次授权未执行商店上传。工作目录应保持干净，后续发版不得复用或覆盖此版本标签与附件。
