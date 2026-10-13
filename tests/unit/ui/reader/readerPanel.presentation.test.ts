@@ -108,7 +108,7 @@ describe('ReaderPanel presentation', () => {
             const modal = shadow.querySelector<HTMLElement>('.mock-modal');
 
             expect(modal?.querySelector('.mock-modal__title-copy strong')?.textContent).toBe(`What's new in AI-MarkDone ${releaseVersion}`);
-            expect(modal?.textContent).toContain('2026-10-12');
+            expect(modal?.textContent).toContain('2026-10-13');
             expect(modal?.textContent).toContain('movable in-page window');
             expect(modal?.textContent).toContain('code fences');
             expect(Array.from(modal?.querySelectorAll<HTMLButtonElement>('.mock-modal__button') ?? []).map((button) => button.textContent)).toEqual(['OK']);

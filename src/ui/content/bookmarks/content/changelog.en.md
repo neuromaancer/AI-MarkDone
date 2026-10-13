@@ -1,7 +1,7 @@
 # Changelog
 
 # 6.2.0
-2026-10-12
+2026-10-13
 
 Hello, friends! Version 6.2.0 focuses on the things we use often: writing annotations, copying content and exporting replies. ChatGPT has changed quite a bit recently. This update fixes the causes we reproduced behind missing directories and reply controls after conversation switches, failed bookmark saves, misplaced annotations and blank PDFs.
 

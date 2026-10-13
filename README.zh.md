@@ -97,7 +97,7 @@ PDF 通过浏览器打印窗口保存。PNG 尽量将所选回复合成一张长
 
 ### 6.2.0
 
-当前分支正在准备此版本，商店和 [GitHub Releases][releases] 的实际版本以对应页面为准。
+安装包和本次更新说明见 [GitHub Release](https://github.com/zhaoliangbin42/AI-MarkDone/releases/tag/v6.2.0)。商店更新进度以对应页面为准。
 
 - 注释窗口可拖动、最小化，点击框外不再关闭，点击“保存”才提交。
 - 支持的图表、卡片可保存为离线 Markdown ZIP，PDF／PNG 可选图片或文字占位。

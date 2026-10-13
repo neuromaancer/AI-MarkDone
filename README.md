@@ -97,7 +97,7 @@ The directory adds replies as the website loads them; unavailable history may no
 
 ### 6.2.0
 
-This release is being prepared on the current branch. Check the stores and [GitHub Releases][releases] for published versions.
+Download packages and read the release notes on [GitHub Release](https://github.com/zhaoliangbin42/AI-MarkDone/releases/tag/v6.2.0). Store availability may differ.
 
 - Move or minimize the annotation window and keep it open when clicking outside. Choose Save to submit your note.
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [6.2.0] - 2026-10-12
+## [6.2.0] - 2026-10-13
 
 ### Added
 - Save supported ChatGPT diagrams, charts and cards in an offline Markdown ZIP with image attachments and explanations for unavailable content.
