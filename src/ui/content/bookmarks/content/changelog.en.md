@@ -9,7 +9,7 @@ Some smaller windows still looked different from the management panel, so I have
 
 1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Text stays in the window while you write; only Save submits the annotation. Thanks to email user @qds19100.
 2. Save supported charts and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG. Unavailable content keeps an explanation.
-3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks for the email feedback.
+3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks to email user @oxwo277.
 4. Fix bookmark saves reporting missing content when older messages load and reply numbers change while the save dialog is open.
 5. Fix annotation and highlight jumps to the wrong passage. Opening a mark from Library now finds its reply, then the marked text. Thanks to Xiaohongshu user @三分钟热度.
 6. Fix an identified printing conflict that caused blank message PDFs, and improve wide tables, long code and formula layout. Thanks to QQ user @成长！

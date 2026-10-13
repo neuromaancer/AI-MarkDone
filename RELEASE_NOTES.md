@@ -10,7 +10,7 @@
 
 1. 注释框现在是页面内可拖动的小窗口，支持最小化、展开和主动关闭。点击框外不会关掉，输入时不会自动保存，点击“保存”才会提交注释（感谢邮箱用户 @qds19100）。
 2. 支持的图表和卡片，可以随 Markdown 一起保存成带图片附件的离线 ZIP。PDF 和 PNG 可以选择保留静态图片，或改用文字占位；无法保存的部分会留下说明。
-3. 修复复制 Markdown 时代码围栏、语言标记、缩进、空行和行内代码丢失，以及代码和后面的段落粘在一起的问题（感谢邮件反馈）。
+3. 修复复制 Markdown 时代码围栏、语言标记、缩进、空行和行内代码丢失，以及代码和后面的段落粘在一起的问题（感谢邮箱用户 @oxwo277）。
 4. 修复保存书签期间加载旧消息、回复序号变化后，误报找不到内容的问题。
 5. 修复注释和高亮跳到错误段落的问题。从资料库打开原页时，也会先找到对应回复，再定位标记的原文（感谢小红书用户 @三分钟热度）。
 6. 修复了一个会导致消息 PDF 空白的打印冲突，并改善宽表格、长代码和公式的排版（感谢 QQ 用户 @成长！）。
@@ -25,7 +25,7 @@ Some smaller windows still looked different from the management panel, so I have
 
 1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Text stays in the window while you write; only Save submits the annotation. Thanks to email user @qds19100.
 2. Save supported charts and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG. Unavailable content keeps an explanation.
-3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks for the email feedback.
+3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks to email user @oxwo277.
 4. Fix bookmark saves reporting missing content when older messages load and reply numbers change while the save dialog is open.
 5. Fix annotation and highlight jumps to the wrong passage. Opening a mark from Library now finds its reply, then the marked text. Thanks to Xiaohongshu user @三分钟热度.
 6. Fix an identified printing conflict that caused blank message PDFs, and improve wide tables, long code and formula layout. Thanks to QQ user @成长！

@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Save toolbar bookmarks when older messages load and reply numbers change while the save dialog is open.
 - Locate the correct annotation or highlight passage after content or layout changes, including marks opened from Library. Thanks to Xiaohongshu user @三分钟热度.
 - Restore the directory and reply controls after conversation switches and delayed loading, and keep regenerated replies attached to their current content.
-- Preserve code fences, language identifiers, indentation, blank lines and inline code in ChatGPT's updated code display; keep following paragraphs outside code blocks and exclude Run controls from copied text.
+- Preserve code fences, language identifiers, indentation, blank lines and inline code in ChatGPT's updated code display; keep following paragraphs outside code blocks and exclude Run controls from copied text. Thanks to email user @oxwo277.
 - Fix blank message PDFs caused by a conflict with ChatGPT's print view. Thanks to QQ user @成长！
 - Improve PDF layout for wide tables, long code and formulas, and wait briefly for images before printing.
 - Keep selected messages in source order without duplicates across Markdown, PDF and PNG exports.

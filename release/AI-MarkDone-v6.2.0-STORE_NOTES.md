@@ -85,7 +85,7 @@ Email: zhaoliangbin42@gmail.com
 - 支持的图表和卡片可保存为离线 Markdown ZIP，PDF／PNG 可选图片或文字占位。
 - 修复代码格式丢失、书签保存误报不可用，以及注释和高亮定位到错误段落的问题。
 - 修复已确认的 PDF 空白原因、切换会话后的目录和工具栏恢复，并统一常用窗口的样式。
-感谢 @qds19100、@三分钟热度、@成长！以及提供代码复制反馈的朋友。
+感谢 @qds19100、@oxwo277、@三分钟热度、@成长！的反馈。
 ```
 
 ```text
@@ -94,7 +94,7 @@ Email: zhaoliangbin42@gmail.com
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.
 - Fix lost code formatting, incorrect bookmark-save failures, and annotation/highlight jumps to the wrong passage.
 - Fix an identified cause of blank PDFs, restore the directory and controls after conversation switches, and unify smaller windows.
-Thanks to @qds19100, @三分钟热度, @成长！ and everyone who reported code-copying issues.
+Thanks to @qds19100, @oxwo277, @三分钟热度 and @成长！ for their feedback.
 ```
 
 ## Firefox 6.2.0 更新摘要
@@ -108,8 +108,8 @@ Thanks to @qds19100, @三分钟热度, @成长！ and everyone who reported code
 - 注释窗口可拖动、最小化，点击框外不关闭，点击“保存”才提交。
 - 支持的图表和卡片可保存为离线 Markdown ZIP，PDF／PNG 可选图片或文字占位。
 - 修复共享链路中的代码复制、书签保存、注释与高亮定位、会话切换及 PDF 打印冲突问题。
-- 统一常用窗口样式，后续只围绕 ChatGPT 开发，浏览器目标为 Chrome 和 Firefox。
-感谢 @qds19100、@三分钟热度、@成长！以及其他提供反馈的朋友。
+- 统一常用窗口样式。
+感谢 @qds19100、@oxwo277、@三分钟热度、@成长！及其他提供反馈的朋友。
 ```
 
 ```text
@@ -119,8 +119,8 @@ Updating from 6.0.0 to 6.2.0:
 - Move or minimize the annotation window and keep it open when clicking outside. Choose Save to submit your note.
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.
 - Fixed shared code-copying, bookmark-save, annotation/highlight navigation, conversation-switching and PDF print-conflict paths.
-- Unified smaller windows. Future development focuses on ChatGPT, with Chrome and Firefox browser targets.
-Thanks to @qds19100, @三分钟热度, @成长！ and everyone else who shared feedback.
+- Unified smaller windows.
+Thanks to @qds19100, @oxwo277, @三分钟热度, @成长！ and everyone else who shared feedback.
 ```
 
 ## 维护者提交信息
