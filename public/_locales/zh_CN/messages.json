@@ -5536,36 +5536,8 @@
         "description": "Annotation editor Restore"
     },
     "readerCommentDiscardDraft": {
-        "message": "放弃草稿",
+        "message": "放弃修改",
         "description": "Annotation editor DiscardDraft"
-    },
-    "readerCommentDraftSaving": {
-        "message": "正在保存草稿…",
-        "description": "Annotation editor DraftSaving"
-    },
-    "readerCommentDraftSaved": {
-        "message": "草稿已保存在此浏览器",
-        "description": "Annotation editor DraftSaved"
-    },
-    "readerCommentDraftSessionOnly": {
-        "message": "草稿仅保留在当前页面",
-        "description": "Annotation editor DraftSessionOnly"
-    },
-    "readerCommentDraftFailed": {
-        "message": "草稿尚未保存，请保持窗口打开并重试。",
-        "description": "Annotation editor DraftFailed"
-    },
-    "readerCommentDraftConflict": {
-        "message": "草稿已在另一个窗口中更改。当前输入仍在，请复制后再重新打开。",
-        "description": "Annotation editor DraftConflict"
-    },
-    "readerCommentDraftRestored": {
-        "message": "已恢复保存的草稿",
-        "description": "Annotation editor DraftRestored"
-    },
-    "readerCommentRetryDraft": {
-        "message": "重试保存草稿",
-        "description": "Annotation editor RetryDraft"
     },
     "readerCommentDrag": {
         "message": "移动注释窗口",
@@ -5575,16 +5547,8 @@
         "message": "正在保存注释…",
         "description": "Annotation editor Saving"
     },
-    "readerCommentCloseKeepDraft": {
-        "message": "关闭并保留草稿",
-        "description": "Annotation editor CloseKeepDraft"
-    },
-    "readerCommentDraftLimit": {
-        "message": "草稿过长或存储已满。当前输入仍在，请复制或保存为注释。",
-        "description": "Annotation editor DraftLimit"
-    },
     "readerCommentDiscardConfirm": {
-        "message": "放弃这份草稿？",
+        "message": "放弃这些未保存的修改？",
         "description": "Annotation editor DiscardConfirm"
     },
     "readerCommentDeleteConfirm": {

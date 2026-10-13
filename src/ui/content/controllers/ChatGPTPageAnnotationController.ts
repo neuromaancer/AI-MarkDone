@@ -24,7 +24,6 @@ import {
     type ReaderCommentResolvedAnchor,
     type ReaderCommentRect,
 } from '../../../services/reader/commentAnchoring';
-import { createAnnotationDraftIdentity } from '../../../contracts/annotationDrafts';
 import type { ReaderCommentRecord } from '../../../services/reader/commentSession';
 import { PageAnnotationStore } from '../../../services/reader/pageAnnotationStore';
 import {
@@ -563,8 +562,6 @@ export class ChatGPTPageAnnotationController {
             selectedSource: snapshot.canonicalMarkdown,
             anchorRect: this.selectionViewportRect(snapshot),
             mode: 'create',
-            draftIdentity: createAnnotationDraftIdentity(this.store.getDocument(), target?.assistantMessageId, { sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote, textPosition: record.selectors.textPosition }),
-            runtimeDraftKey: JSON.stringify([this.pageUrl(), record.itemId, record.sourceMarkdown, record.selectors.textQuote, record.selectors.textPosition]),
             labels: this.commentLabels(),
             onSave: (value) => {
                 if (!snapshot.root.isConnected && !documentKey) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
@@ -617,8 +614,6 @@ export class ChatGPTPageAnnotationController {
                 bottom: anchorRect.bottom,
             },
             mode: 'edit',
-            draftIdentity: createAnnotationDraftIdentity(this.store.getDocument(), record.target?.assistantMessageId ?? this.targetFromItemId(record)?.assistantMessageId, { annotationId: record.id, sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote }),
-            runtimeDraftKey: JSON.stringify([this.pageUrl(), record.itemId, record.id]),
             labels: this.commentLabels(),
             initialText: record.comment,
             onSave: async (value) => {

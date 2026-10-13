@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ReaderCommentPopover } from '@/ui/content/reader/ReaderCommentPopover';
 import { createAppearanceSnapshot } from '@/style/appearance';
 import { annotationDraftsClient } from '@/drivers/shared/clients/annotationDraftsClient';
-import type { AnnotationDraft, AnnotationDraftIdentity } from '@/contracts/annotationDrafts';
 
 function createHost(): { host: HTMLElement; shadow: ShadowRoot; container: HTMLElement } {
     const host = document.createElement('div');
@@ -29,78 +28,60 @@ function createHost(): { host: HTMLElement; shadow: ShadowRoot; container: HTMLE
 }
 
 describe('ReaderCommentPopover', () => {
-    it('locks input and Save while Close waits for recovery acknowledgement and unlocks on failure', async () => {
-        vi.spyOn(annotationDraftsClient, 'read').mockResolvedValue({ ok: true, data: { draft: null, revision: 0 } });
-        let rejectWrite: (value: Awaited<ReturnType<typeof annotationDraftsClient.write>>) => void = () => undefined;
-        vi.spyOn(annotationDraftsClient, 'write').mockImplementation(() => new Promise(resolve => { rejectWrite = resolve; }));
+    it('does not read or write recovery drafts while typing, blurring, or leaving the page', async () => {
+        vi.useFakeTimers();
+        const read = vi.spyOn(annotationDraftsClient, 'read').mockResolvedValue({ ok: true, data: { draft: null, revision: 0 } });
+        const write = vi.spyOn(annotationDraftsClient, 'write').mockResolvedValue({ ok: true, data: { revision: 1 } });
+        const remove = vi.spyOn(annotationDraftsClient, 'remove').mockResolvedValue({ ok: true, data: { revision: 0 } });
         const { shadow, container } = createHost(); const popover = new ReaderCommentPopover(); const onSave = vi.fn();
-        popover.open({ shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'create', selectedSource: 'Quote',
-            draftIdentity: { documentKey: 'chatgpt:conversation:close-pending', assistantMessageId: 'assistant', selectionKey: 'selection' },
-            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave });
-        await Promise.resolve(); await Promise.resolve();
+        const params = { shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'create' as const, selectedSource: 'Quote',
+            draftIdentity: { documentKey: 'chatgpt:conversation:manual-save', assistantMessageId: 'assistant', selectionKey: 'selection' },
+            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave };
+        popover.open(params);
         const input = shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!;
-        input.value = 'Wait until this is retained'; input.dispatchEvent(new Event('input', { bubbles: true }));
-        shadow.querySelector<HTMLButtonElement>('[data-action="close"]')!.click();
-        await vi.waitFor(() => expect(annotationDraftsClient.write).toHaveBeenCalledOnce());
-        expect(input.disabled).toBe(true);
-        const save = shadow.querySelector<HTMLButtonElement>('[data-action="save"]')!;
-        expect(save.disabled).toBe(true); save.click(); expect(onSave).not.toHaveBeenCalled();
-        rejectWrite({ ok: false, errorCode: 'QUOTA_EXCEEDED', message: 'Full', failure: { kind: 'protocol', code: 'QUOTA_EXCEEDED', message: 'Full' } });
-        await vi.waitFor(() => expect(input.disabled).toBe(false));
-        expect(popover.isOpen()).toBe(true); expect(input.value).toBe('Wait until this is retained'); expect(save.disabled).toBe(false);
+        input.value = '尚未保存的注释'; input.dispatchEvent(new Event('input', { bubbles: true }));
+        document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, composed: true }));
+        document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+        window.dispatchEvent(new Event('pagehide'));
+        await vi.advanceTimersByTimeAsync(1000);
+        expect(popover.isOpen()).toBe(true); expect(input.value).toBe('尚未保存的注释');
+        expect(read).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled(); expect(onSave).not.toHaveBeenCalled();
+        shadow.querySelector<HTMLButtonElement>('[data-action="save"]')!.click();
+        await vi.advanceTimersByTimeAsync(1000);
+        expect(onSave).toHaveBeenCalledExactlyOnceWith('尚未保存的注释');
+        expect(popover.isOpen()).toBe(false);
         popover.destroy();
+        expect(read).not.toHaveBeenCalled(); expect(write).not.toHaveBeenCalled(); expect(remove).not.toHaveBeenCalled();
+        vi.useRealTimers();
     });
-    it('does not hide a newer input version when only the older Close snapshot was acknowledged', async () => {
-        vi.spyOn(annotationDraftsClient, 'read').mockResolvedValue({ ok: true, data: { draft: null, revision: 0 } });
-        const acknowledge: Array<(value: Awaited<ReturnType<typeof annotationDraftsClient.write>>) => void> = [];
-        vi.spyOn(annotationDraftsClient, 'write').mockImplementation(() => new Promise(resolve => { acknowledge.push(resolve); }));
-        const { shadow, container } = createHost(); const popover = new ReaderCommentPopover();
-        popover.open({ shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'create', selectedSource: 'Quote',
-            draftIdentity: { documentKey: 'chatgpt:conversation:close-latest-version', assistantMessageId: 'assistant', selectionKey: 'selection' },
-            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave: vi.fn() });
-        await Promise.resolve(); await Promise.resolve();
+
+    it('discards unsaved edits on close and opens with only the supplied saved annotation', async () => {
+        const { shadow, container } = createHost(); const popover = new ReaderCommentPopover(); const onSave = vi.fn();
+        const params = { shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'edit' as const,
+            selectedSource: 'Quote', initialText: 'Previously saved',
+            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave };
+        popover.open(params);
         const input = shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!;
-        input.value = 'Version A'; input.dispatchEvent(new Event('input', { bubbles: true })); shadow.querySelector<HTMLButtonElement>('[data-action="close"]')!.click();
-        await vi.waitFor(() => expect(acknowledge).toHaveLength(1));
-        // Simulate a late input source despite the disabled native input.
-        input.value = 'Version B'; input.dispatchEvent(new Event('input', { bubbles: true }));
-        acknowledge[0]!({ ok: true, data: { revision: 1 } });
-        await vi.waitFor(() => expect(acknowledge).toHaveLength(2));
-        expect(popover.isOpen()).toBe(true);
-        acknowledge[1]!({ ok: false, errorCode: 'QUOTA_EXCEEDED', message: 'Full', failure: { kind: 'protocol', code: 'QUOTA_EXCEEDED', message: 'Full' } });
-        await vi.waitFor(() => expect(input.disabled).toBe(false));
-        expect(popover.isOpen()).toBe(true); expect(input.value).toBe('Version B'); popover.destroy();
-    });
-    it('restores an acknowledged local draft in a fresh editor instance', async () => {
-        let stored: AnnotationDraft | null = null;
-        const identity: AnnotationDraftIdentity = { documentKey: 'chatgpt:conversation:popover-reload', assistantMessageId: 'assistant', selectionKey: 'source/context/position' };
-        vi.spyOn(annotationDraftsClient, 'read').mockImplementation(async () => ({ ok: true, data: { draft: stored, revision: stored?.revision ?? 0 } }));
-        vi.spyOn(annotationDraftsClient, 'write').mockImplementation(async (_identity, text) => {
-            stored = { identity, text, revision: 1, updatedAt: Date.now() }; return { ok: true, data: { revision: 1 } };
-        });
-        const { shadow, container } = createHost();
-        const params = { shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'create' as const, selectedSource: 'Quote', draftIdentity: identity,
-            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave: vi.fn() };
-        const first = new ReaderCommentPopover(); first.open(params); await Promise.resolve();
-        const input = shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!;
-        input.value = 'Recover after refresh'; input.dispatchEvent(new Event('input', { bubbles: true }));
-        shadow.querySelector<HTMLButtonElement>('[data-action="close"]')!.click(); await vi.waitFor(() => expect(first.isOpen()).toBe(false)); first.destroy();
-        const next = new ReaderCommentPopover(); next.open(params);
-        await vi.waitFor(() => expect(shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!.value).toBe('Recover after refresh'));
-        expect(params.onSave).not.toHaveBeenCalled(); next.destroy();
-    });
-    it('keeps the complete input open if local draft saving fails', async () => {
-        vi.spyOn(annotationDraftsClient, 'read').mockResolvedValue({ ok: true, data: { draft: null, revision: 0 } });
-        vi.spyOn(annotationDraftsClient, 'write').mockResolvedValue({ ok: false, errorCode: 'QUOTA_EXCEEDED', message: 'Full', failure: { kind: 'protocol', code: 'QUOTA_EXCEEDED', message: 'Full' } });
-        const { shadow, container } = createHost(); const popover = new ReaderCommentPopover();
-        popover.open({ shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'create', selectedSource: 'Quote',
-            draftIdentity: { documentKey: 'chatgpt:conversation:quota-popover', assistantMessageId: 'assistant', selectionKey: 'selection' },
-            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave: vi.fn() });
-        await Promise.resolve(); const input = shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!;
-        const text = 'Never trim this '.repeat(2000); input.value = text; input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.value = 'Unsaved edit'; input.dispatchEvent(new Event('input', { bubbles: true }));
         shadow.querySelector<HTMLButtonElement>('[data-action="close"]')!.click();
-        await vi.waitFor(() => expect(shadow.querySelector<HTMLElement>('[data-role="draft-status"]')!.dataset.state).toBe('limit'));
-        expect(popover.isOpen()).toBe(true); expect(input.value).toBe(text); expect(shadow.querySelector<HTMLButtonElement>('[data-action="retry-draft"]')!.hidden).toBe(false); popover.destroy();
+        await vi.waitFor(() => expect(popover.isOpen()).toBe(false));
+        popover.open(params);
+        expect(shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!.value).toBe('Previously saved');
+        expect(onSave).not.toHaveBeenCalled(); popover.destroy();
+    });
+
+    it('keeps text on save failure and retries only after another explicit Save', async () => {
+        const { shadow, container } = createHost(); const popover = new ReaderCommentPopover();
+        const onSave = vi.fn().mockRejectedValueOnce(new Error('Unavailable')).mockResolvedValueOnce(undefined);
+        popover.open({ shadow, container, appearance: createAppearanceSnapshot('light'), mode: 'create', selectedSource: 'Quote',
+            anchorRect: { left: 180, top: 320, width: 120, height: 22, right: 300, bottom: 342 }, onSave });
+        const input = shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!;
+        input.value = 'My note'; input.dispatchEvent(new Event('input', { bubbles: true }));
+        const save = shadow.querySelector<HTMLButtonElement>('[data-action="save"]')!; save.click();
+        await vi.waitFor(() => expect(input.disabled).toBe(false));
+        expect(popover.isOpen()).toBe(true); expect(input.value).toBe('My note'); expect(onSave).toHaveBeenCalledOnce();
+        save.click(); await vi.waitFor(() => expect(popover.isOpen()).toBe(false));
+        expect(onSave).toHaveBeenCalledTimes(2); popover.destroy();
     });
     it('keeps one input mounted through minimize and expand and clamps below a scrolled container top', () => {
         const { shadow, container } = createHost();
@@ -133,6 +114,8 @@ describe('ReaderCommentPopover', () => {
         popover.destroy();
     });
     afterEach(() => {
+        vi.useRealTimers();
+        vi.restoreAllMocks();
         document.body.innerHTML = '';
     });
 
@@ -325,7 +308,7 @@ describe('ReaderCommentPopover', () => {
         expect(onDelete).toHaveBeenCalledTimes(2);
     });
 
-    it('allows outside reading and returns focus only after explicit close keeps the draft', async () => {
+    it('allows outside reading and returns focus only after explicit close discards unsaved input', async () => {
         const opener = document.createElement('button');
         document.body.appendChild(opener);
         opener.focus();

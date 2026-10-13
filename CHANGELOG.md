@@ -10,15 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [6.2.0] - 2026-10-12
 
 ### Added
-- Recover unfinished annotation drafts in this browser, separately from saved annotations, with controls to keep or discard them.
 - Save supported ChatGPT diagrams, charts and cards in an offline Markdown ZIP with image attachments and explanations for unavailable content.
 - Choose static images or text placeholders for rich blocks in PDF and PNG exports.
 
 ### Changed
-- Write annotations in a movable window with minimize, expand and explicit close controls. Clicking outside no longer closes it. Thanks to email user @qds19100.
+- Write annotations in a movable window with minimize, expand and explicit close controls. Clicking outside no longer closes it; annotations submit only when you choose Save. Thanks to email user @qds19100.
 - Bring Prompt, export, Send, Reader settings, annotation tools, backup review and the popup into the shared workspace appearance, with clearer Chinese and English guidance.
 - Show the message directory by default on new installations while preserving existing settings.
-- Continue support for Chrome and Firefox; end Safari adaptation and distribution.
 
 ### Fixed
 - Save toolbar bookmarks when older messages load and reply numbers change while the save dialog is open.

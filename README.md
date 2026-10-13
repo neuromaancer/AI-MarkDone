@@ -24,7 +24,7 @@ AI-MarkDone is a free, open-source browser extension for ChatGPT. Read long repl
 | Chrome | [Chrome Web Store][chrome-store] |
 | Firefox | [Firefox Add-ons][firefox-store] |
 
-Refresh ChatGPT after installation. Chrome and Firefox are supported. Safari support has ended.
+Refresh ChatGPT after installation. Chrome and Firefox are supported.
 
 ## Highlights
 
@@ -64,11 +64,11 @@ Selected Markdown: use `Cmd/Ctrl + Shift + C` on the ChatGPT page, or `Cmd/Ctrl 
 ## FAQ
 
 <details>
-<summary>Are annotations, highlights and drafts saved?</summary>
+<summary>Are annotations and highlights saved?</summary>
 
 - Bookmarks and highlights save in the current browser; message bookmarks may save excerpts according to your settings.
 - Save new annotations is off by default. While off, new annotations stay on the page; while on, new annotations survive refreshes. Previously saved annotations are unaffected.
-- Drafts with a verified conversation and passage can be recovered for 30 days after the last save; otherwise they remain on the current page. Drafts are separate from saved annotations.
+- Annotations submit only when you choose Save. Clicking outside keeps the window open; closing it or refreshing discards unsaved edits.
 - The Excerpt tray is temporary and clears on refresh.
 
 Library backups include saved bookmarks, highlights, annotations and their folders. Prompts, settings and drafts are excluded. Export preferences separately as a settings file. [Google Drive backup](https://zhaoliangbin42.github.io/ai-markdone/en/manual/google-drive-backup/) is manual, not automatic synchronization.
@@ -99,7 +99,7 @@ The directory adds replies as the website loads them; unavailable history may no
 
 This release is being prepared on the current branch. Check the stores and [GitHub Releases][releases] for published versions.
 
-- Move or minimize the annotation window, recover drafts and keep it open when clicking outside.
+- Move or minimize the annotation window and keep it open when clicking outside. Choose Save to submit your note.
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.
 - Fix code copying, bookmark saves, annotation/highlight navigation and an identified cause of blank PDFs.
 - Restore the directory and reply controls after conversation switches, and unify smaller windows.

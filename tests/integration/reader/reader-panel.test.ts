@@ -421,7 +421,7 @@ describe('ReaderPanel (MVP)', () => {
         await Promise.resolve();
         expect(shadow.querySelector<HTMLElement>('.reader-comment-popover__selection-value')?.textContent).toBe('answer');
         const closeAnnotation = shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="close"]')!;
-        expect(closeAnnotation.getAttribute('aria-label')).toBe('Close and keep draft');
+        expect(closeAnnotation.getAttribute('aria-label')).toBe('Close');
         closeAnnotation.click();
         await vi.waitFor(() => expect((panel as any).commentPopover.isOpen()).toBe(false));
 

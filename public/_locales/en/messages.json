@@ -5536,36 +5536,8 @@
         "description": "Annotation editor Restore"
     },
     "readerCommentDiscardDraft": {
-        "message": "Discard draft",
+        "message": "Discard edits",
         "description": "Annotation editor DiscardDraft"
-    },
-    "readerCommentDraftSaving": {
-        "message": "Saving draft…",
-        "description": "Annotation editor DraftSaving"
-    },
-    "readerCommentDraftSaved": {
-        "message": "Draft saved in this browser",
-        "description": "Annotation editor DraftSaved"
-    },
-    "readerCommentDraftSessionOnly": {
-        "message": "Draft kept for this page session",
-        "description": "Annotation editor DraftSessionOnly"
-    },
-    "readerCommentDraftFailed": {
-        "message": "Draft not saved. Keep this window open and retry.",
-        "description": "Annotation editor DraftFailed"
-    },
-    "readerCommentDraftConflict": {
-        "message": "This draft changed in another window. Your text is still here; copy it before reopening.",
-        "description": "Annotation editor DraftConflict"
-    },
-    "readerCommentDraftRestored": {
-        "message": "Saved draft restored",
-        "description": "Annotation editor DraftRestored"
-    },
-    "readerCommentRetryDraft": {
-        "message": "Retry saving draft",
-        "description": "Annotation editor RetryDraft"
     },
     "readerCommentDrag": {
         "message": "Move annotation window",
@@ -5575,16 +5547,8 @@
         "message": "Saving annotation…",
         "description": "Annotation editor Saving"
     },
-    "readerCommentCloseKeepDraft": {
-        "message": "Close and keep draft",
-        "description": "Annotation editor CloseKeepDraft"
-    },
-    "readerCommentDraftLimit": {
-        "message": "The draft is too long or storage is full. Your text is still here; copy it or save the annotation.",
-        "description": "Annotation editor DraftLimit"
-    },
     "readerCommentDiscardConfirm": {
-        "message": "Discard this draft?",
+        "message": "Discard these unsaved edits?",
         "description": "Annotation editor DiscardConfirm"
     },
     "readerCommentDeleteConfirm": {

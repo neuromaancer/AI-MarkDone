@@ -1,8 +1,5 @@
 import { messageSquareTextIcon, xIcon } from '../../../assets/workspaceIcons';
 import { minusIcon, maximizeIcon, minimizeIcon } from '../../../assets/icons';
-import type { AnnotationDraftIdentity } from '../../../contracts/annotationDrafts';
-import { AnnotationDraftSession, type AnnotationDraftState } from '../../../services/reader/annotationDraftSession';
-import { annotationDraftsClient } from '../../../drivers/shared/clients/annotationDraftsClient';
 import { createIcon } from '../components/Icon';
 import { installInputEventBoundary } from '../components/inputEventBoundary';
 import { markTransientRoot } from '../components/transientUi';
@@ -17,15 +14,10 @@ import { getAnnotationActionButtonCss } from '../pageAnnotations/annotationActio
 
 const editorMessages = {
     minimize: ['readerCommentMinimize', 'Minimize'], expand: ['readerCommentExpand', 'Expand'], restore: ['readerCommentRestore', 'Restore'],
-    discardDraft: ['readerCommentDiscardDraft', 'Discard draft'], draftSaving: ['readerCommentDraftSaving', 'Saving draft…'],
-    draftSaved: ['readerCommentDraftSaved', 'Draft saved in this browser'], draftSession: ['readerCommentDraftSessionOnly', 'Draft kept for this page session'],
-    draftFailed: ['readerCommentDraftFailed', 'Draft not saved. Keep this window open and retry.'],
-    draftConflict: ['readerCommentDraftConflict', 'This draft changed in another window. Your text is kept here; copy it before reopening.'],
-    draftLimit: ['readerCommentDraftLimit', 'Draft is too long or storage is full. Your text is kept here; copy it or save the annotation.'],
-    retryDraft: ['readerCommentRetryDraft', 'Retry saving draft'], drag: ['readerCommentDrag', 'Move annotation window'],
-    saving: ['readerCommentSaving', 'Saving annotation…'], closeKeepDraft: ['readerCommentCloseKeepDraft', 'Close and keep draft'],
+    discardDraft: ['readerCommentDiscardDraft', 'Discard edits'], drag: ['readerCommentDrag', 'Move annotation window'],
+    saving: ['readerCommentSaving', 'Saving annotation…'],
     saveFailed: ['readerCommentSaveFailed', 'Annotation not saved. Your text is kept here; try again.'],
-    discardConfirm: ['readerCommentDiscardConfirm', 'Discard this unsaved draft?'],
+    discardConfirm: ['readerCommentDiscardConfirm', 'Discard these unsaved edits?'],
     deleteConfirm: ['readerCommentDeleteConfirm', 'Delete this annotation?'], keepWriting: ['readerCommentKeepWriting', 'Keep writing'],
 } as const;
 export function getAnnotationEditorLabels(getLabel: (key: string, fallback: string) => string): Record<keyof typeof editorMessages, string> {
@@ -45,8 +37,6 @@ type OpenParams = {
         bottom: number;
     };
     initialText?: string;
-    draftIdentity?: AnnotationDraftIdentity | null;
-    runtimeDraftKey?: string;
     mode: 'create' | 'edit';
     labels?: Partial<Record<keyof typeof editorMessages, string>> & {
         addTitle?: string;
@@ -69,9 +59,7 @@ type ActiveCommentSurface = {
     popover: HTMLElement;
     session: SurfaceSession<AppearanceSnapshot>;
     onCancel?: () => void;
-    draft: AnnotationDraftSession;
     input: HTMLTextAreaElement;
-    dispose: () => void;
     resumeKeyboard?: () => void;
 };
 
@@ -285,9 +273,6 @@ export class ReaderCommentPopover {
     private active: ActiveCommentSurface | null = null;
     private readonly closing = new Set<ActiveCommentSurface>();
     private composing = false;
-    private static nextRuntimeId = 0;
-    private readonly runtimeId = ++ReaderCommentPopover.nextRuntimeId;
-    private runtimeSequence = 0;
 
     setAppearance(snapshot: AppearanceSnapshot): void {
         this.active?.session.setAppearance(snapshot);
@@ -349,7 +334,7 @@ export class ReaderCommentPopover {
             <div class="reader-comment-popover__tools">
             <button class="icon-btn annotation-action-button" type="button" data-action="minimize" aria-label="${labels.minimize}">${createIcon(minusIcon).outerHTML}</button>
             <button class="icon-btn annotation-action-button" type="button" data-action="expand" aria-label="${labels.expand}">${createIcon(maximizeIcon).outerHTML}</button>
-            <button class="icon-btn reader-comment-popover__close annotation-action-button" type="button" data-action="close" aria-label="${labels.closeKeepDraft}">${createIcon(xIcon).outerHTML}</button>
+            <button class="icon-btn reader-comment-popover__close annotation-action-button" type="button" data-action="close" aria-label="${labels.close}">${createIcon(xIcon).outerHTML}</button>
             </div>
           </div>
           <div class="reader-comment-popover__body">
@@ -360,8 +345,7 @@ export class ReaderCommentPopover {
             <textarea class="reader-comment-popover__input" data-role="input" placeholder="${labels.placeholder}"></textarea>
           </div>
           <div class="reader-comment-popover__actions">
-            <p class="reader-comment-popover__status" data-role="draft-status" role="status" aria-live="polite"></p>
-            <button class="secondary-btn reader-comment-popover__btn" type="button" data-action="retry-draft" hidden>${labels.retryDraft}</button>
+            <p class="reader-comment-popover__status" data-role="save-status" role="status" aria-live="polite"></p>
             <div class="reader-comment-popover__confirmation" data-role="confirmation" hidden></div>
             <button class="secondary-btn reader-comment-popover__btn" type="button" data-action="discard">${labels.discardDraft}</button>
             ${params.mode === 'edit' ? `<button class="secondary-btn reader-comment-popover__btn" type="button" data-action="delete">${labels.delete}</button>` : ''}
@@ -420,40 +404,12 @@ export class ReaderCommentPopover {
             });
         }
 
-        const status = popover.querySelector<HTMLElement>('[data-role="draft-status"]')!;
-        const retry = popover.querySelector<HTMLButtonElement>('[data-action="retry-draft"]')!;
-        const runtimeKey = params.runtimeDraftKey ?? `${this.runtimeId}:${++this.runtimeSequence}`;
-        const draft = new AnnotationDraftSession(params.draftIdentity ?? null, textarea.value, (state: AnnotationDraftState) => {
-            const text = { loading: labels.draftSaving, saving: labels.draftSaving, saved: labels.draftSaved, session: labels.draftSession, failed: labels.draftFailed, conflict: labels.draftConflict, limit: labels.draftLimit }[state];
-            status.textContent = text;
-            retry.hidden = state !== 'failed' && state !== 'limit';
-            status.dataset.state = state;
-        }, text => { textarea.value = text; syncSaveState(); }, annotationDraftsClient, runtimeKey);
-        const flushOnExit = () => { draft.update(textarea.value); void draft.flush(); };
-        window.addEventListener('pagehide', flushOnExit);
-        this.active = { layer, popover, session, onCancel: params.onCancel, draft, input: textarea,
-            dispose: () => { window.removeEventListener('pagehide', flushOnExit); void draft.flush(); } };
-        const cancelAndClose = async () => {
+        const status = popover.querySelector<HTMLElement>('[data-role="save-status"]')!;
+        this.active = { layer, popover, session, onCancel: params.onCancel, input: textarea };
+        const cancelAndClose = () => {
             if (saving) return;
-            saving = true;
-            textarea.disabled = true;
-            const mutationButtons = popover.querySelectorAll<HTMLButtonElement>('[data-action="save"], [data-action="close"], [data-action="discard"], [data-action="delete"], [data-action="confirm-discard"], [data-action="confirm-delete"]');
-            mutationButtons.forEach(button => { button.disabled = true; });
-            try {
-                // Await the latest input version, including a recovery read that finishes during Close.
-                while (this.active?.popover === popover) {
-                    const submitted = textarea.value;
-                    if (draft.value !== submitted) draft.update(submitted);
-                    if (!(await draft.flush())) return;
-                    if (textarea.value !== submitted || draft.value !== submitted) continue;
-                    params.onCancel?.();
-                    this.close(params.shadow, false);
-                    return;
-                }
-            } finally {
-                saving = false; textarea.disabled = false;
-                mutationButtons.forEach(button => { button.disabled = false; }); syncSaveState();
-            }
+            params.onCancel?.();
+            this.close(params.shadow, false);
         };
         const resumeKeyboard = () => session.syncEscapeScope({
             root: popover,
@@ -473,14 +429,12 @@ export class ReaderCommentPopover {
             if (!value || saving) return;
             saving = true;
             const submitted = textarea.value;
-            if (draft.value !== submitted) draft.update(submitted);
             textarea.disabled = true;
             status.textContent = labels.saving;
             const save = popover.querySelector<HTMLButtonElement>('[data-action="save"]');
             if (save) save.disabled = true;
             try {
                 await params.onSave(value);
-                await draft.clearSubmitted(submitted);
                 if (this.active?.popover === popover && textarea.value === submitted) this.close(params.shadow, false);
             } catch {
                 if (save) save.disabled = false;
@@ -496,13 +450,12 @@ export class ReaderCommentPopover {
             if (save) save.disabled = saving || !(textarea?.value.trim());
         };
 
-        textarea?.addEventListener('input', () => { draft.update(textarea.value); syncSaveState(); });
+        textarea?.addEventListener('input', syncSaveState);
         syncSaveState();
 
         popover.querySelector<HTMLButtonElement>('[data-action="close"]')?.addEventListener('click', () => {
             void cancelAndClose();
         });
-        retry.addEventListener('click', () => { void draft.flush(); });
         const confirmAction = (deleting: boolean) => {
             const confirmation = popover.querySelector<HTMLElement>('[data-role="confirmation"]')!;
             confirmation.replaceChildren(); confirmation.hidden = false;
@@ -521,7 +474,6 @@ export class ReaderCommentPopover {
                 accept.disabled = true;
                 try {
                     if (deleting) await params.onDelete?.();
-                    if (!(await draft.discard())) return;
                     textarea.value = '';
                     if (!deleting) params.onCancel?.();
                     if (this.active?.popover === popover) this.close(params.shadow, false);
@@ -608,7 +560,6 @@ export class ReaderCommentPopover {
         if (!active) return;
         this.active = null;
         this.closing.add(active);
-        active.dispose();
         if (callCancel) active.onCancel?.();
         active.session.clearEscapeScope();
         active.session.clearOutsideDismiss();
@@ -632,7 +583,6 @@ export class ReaderCommentPopover {
         const active = this.active;
         if (!active) return;
         this.active = null;
-        active.dispose();
         active.session.clearEscapeScope();
         active.session.clearOutsideDismiss();
         active.session.clearPositioner();

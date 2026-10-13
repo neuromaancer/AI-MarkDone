@@ -958,6 +958,7 @@ describe('ChatGPTPageAnnotationController', () => {
         expect(input).not.toBeNull();
         input!.value = 'Keep this context';
         input!.dispatchEvent(new Event('input', { bubbles: true }));
+        document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, composed: true }));
         document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
         expect(controller['commentPopover'].isOpen()).toBe(true);
         expect(controller['store'].listForConversation()).toHaveLength(0);
@@ -965,7 +966,10 @@ describe('ChatGPTPageAnnotationController', () => {
         await vi.waitFor(() => expect(controller['commentPopover'].isOpen()).toBe(false));
         dispatchPointerDown(320, 240); selectRange(range); dispatchPointerCancel(320, 240); await flushSelectionFrame();
         selectionToolbarButton('page-comment-add')!.click();
-        await vi.waitFor(() => expect(shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!.value).toBe('Keep this context'));
+        expect(shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!.value).toBe('');
+        expect(controller['store'].listForConversation()).toHaveLength(0);
+        const freshInput = shadow.querySelector<HTMLTextAreaElement>('[data-role="input"]')!;
+        freshInput.value = 'Explicitly saved note'; freshInput.dispatchEvent(new Event('input', { bubbles: true }));
         shadow.querySelector<HTMLButtonElement>('[data-action="save"]')?.click();
         await vi.waitFor(() => expect(controller['store'].listForConversation()).toHaveLength(1));
 

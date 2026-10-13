@@ -114,14 +114,15 @@
 
 > **Annotation drafts and content fidelity (2026-10-07)**
 >
-> Page and Reader share the nonmodal `ReaderCommentPopover` and its draft session.
-> Background serializes recovery writes through the existing storage queue into
-> `aimd:annotation_drafts:v1`, with revision compare-and-swap, bounded local
-> retention and fail-closed handling of unsupported/corrupt bundles. Drafts are
-> separate from formal annotation bundles and `reader.persistAnnotations`.
-> Canonical conversation/message/selection identity allows browser-local recovery;
-> page-only targets retain caller-scoped runtime drafts. No draft is included in
-> Library backups, saved annotation counts or annotation exports.
+> Page and Reader share the nonmodal `ReaderCommentPopover`. Following the
+> 2026-10-13 interaction correction, input remains only in the mounted textarea;
+> no automatic draft read, write, recovery or exit flush occurs. Explicit Save
+> (including the existing keyboard shortcut) invokes the owner mutation. Close,
+> Escape, teardown and source changes discard unsaved edits. Outside clicks,
+> minimize and expand retain the input; failed saves keep it available for retry.
+> Saved-annotation persistence still follows `reader.persistAnnotations`.
+> Legacy draft storage/protocol helpers remain dormant for compatibility; editor
+> callers no longer supply draft identities. Existing stored user data is not deleted.
 >
 > Markdown code source spans protect fenced, indented and inline code from
 > cleanup. The parser selects safe fences and preserves internal whitespace;

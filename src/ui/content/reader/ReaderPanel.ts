@@ -77,7 +77,6 @@ import {
 } from '../../../style/appearance';
 import { getKatexCssWithRuntimeFontUrls, getKatexRuntimeFontFaceCss, hasKatexMarkup } from '../../../core/export/katexAssets';
 import { ReaderCommentPopover, getAnnotationEditorLabels } from './ReaderCommentPopover';
-import { createAnnotationDraftIdentity, type AnnotationDraftIdentity } from '../../../contracts/annotationDrafts';
 import { ReaderCommentExportPopover } from './ReaderCommentExportPopover';
 import { ReaderCommentListPopover } from './ReaderCommentListPopover';
 import { ReaderAnnotationManagerPopover } from './ReaderAnnotationManagerPopover';
@@ -2142,8 +2141,6 @@ export class ReaderPanel {
                 anchorRect: commentButton.getBoundingClientRect(),
                 initialText: '',
                 selectedSource: sourceMarkdown,
-                draftIdentity: createAnnotationDraftIdentity(document, target?.assistantMessageId, { sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote, textPosition: record.selectors.textPosition }),
-                runtimeDraftKey: JSON.stringify([item.meta?.url ?? '', item.id, item.sourceContent ?? item.content, record.sourceMarkdown, record.selectors.textQuote, record.selectors.textPosition]),
                 sessionOnly: !this.annotationDocument || !this.persistAnnotations || !target,
                 onSave: (value) => {
                     if (readerAnnotationDocumentKeyOrNull(document) !== readerAnnotationDocumentKeyOrNull(this.annotationDocument)) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
@@ -2256,8 +2253,6 @@ export class ReaderPanel {
             anchorRect: contentAnchorRect ?? fallbackRect,
             initialText: record.comment,
             selectedSource: record.sourceMarkdown,
-            draftIdentity: createAnnotationDraftIdentity(document, record.target?.assistantMessageId ?? target?.assistantMessageId, { annotationId: record.id, sourceMarkdown: record.sourceMarkdown, textQuote: record.selectors.textQuote }),
-            runtimeDraftKey: JSON.stringify([item?.meta?.url ?? '', item?.id ?? record.itemId, item?.sourceContent ?? item?.content ?? '', record.id]),
             sessionOnly: !this.annotationDocument || !target || record.revision === undefined,
             onSave: async (value) => {
                 if (readerAnnotationDocumentKeyOrNull(document) !== readerAnnotationDocumentKeyOrNull(this.annotationDocument)) throw new Error(this.getLabel('pageAnnotationSelectionUnavailable', 'Selection unavailable. Select text again and try.'));
@@ -2309,8 +2304,6 @@ export class ReaderPanel {
         initialText: string;
         selectedSource: string;
         sessionOnly: boolean;
-        draftIdentity?: AnnotationDraftIdentity | null;
-        runtimeDraftKey?: string;
         onSave: (value: string) => void | Promise<void>;
         onDelete?: () => void;
         onCancel?: () => void;
@@ -2325,8 +2318,6 @@ export class ReaderPanel {
             selectedSource: params.selectedSource,
             anchorRect: params.anchorRect,
             initialText: params.initialText,
-            draftIdentity: params.draftIdentity,
-            runtimeDraftKey: params.runtimeDraftKey,
             mode: params.mode,
             labels: {
                 ...getAnnotationEditorLabels((key, fallback) => this.getLabel(key, fallback)),

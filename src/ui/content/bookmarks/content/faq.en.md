@@ -42,9 +42,9 @@ Browse annotations and highlights by conversation in Library, or open their sour
 
 ## What happens to unfinished annotations?
 
-Text is saved as a draft while you type. Closing the annotation window keeps the draft; Discard draft removes it. For an identified conversation and reply, you can recover a draft in this browser for 30 days after its last save, including after a refresh or restart. Otherwise, recovery lasts for the current page session. If saving fails, keep the window open and copy the text before leaving.
+Typing does not save automatically. Clicking outside lets you keep reading while the annotation window and its text stay open. Choose Save to submit the annotation. Closing, pressing Escape, discarding edits or refreshing the page discards unsaved changes.
 
-Reopen the annotation or select the original passage again to resume. The position must still match; changed text or an uncertain location may prevent automatic recovery. Drafts are separate from Save new annotations and stay out of annotation lists, copied annotations, and Library backups until you save the annotation.
+If saving fails, the window retains your text for retry. Saved annotations still follow Save new annotations, which is off by default for new records. Previously persisted annotations are unaffected by that setting.
 
 ## Can I copy just part of a reply as Markdown?
 

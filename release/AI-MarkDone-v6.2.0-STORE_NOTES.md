@@ -34,7 +34,7 @@
 复用常用提示词，使用公式预览和 LaTeX 片段，按自己的习惯调整按钮、字号、主题和主色。想了解更多入口，可以打开插件内的“功能全览”。
 
 保存规则
-高亮自动保存到当前浏览器。“保存新建的注释”默认关闭，开启后新注释可在刷新后继续查看；已有保存的注释不受开关影响。没写完的草稿会单独暂存，不等于正式注释，也不进入资料库备份。摘录区在刷新页面后清空。
+高亮自动保存到当前浏览器。“保存新建的注释”默认关闭，开启后新注释可在刷新后继续查看；已有保存的注释不受开关影响。注释只在点击“保存”后提交，主动关闭或刷新页面会丢弃未保存的修改。摘录区在刷新页面后清空。
 
 AI-MarkDone 免费、开源，围绕 ChatGPT 开发，提供 Chrome 和 Firefox 版本。感谢每一位提供反馈的朋友。
 
@@ -66,7 +66,7 @@ Input and settings
 Reuse prompts, preview formulas and call up LaTeX snippets. Adjust buttons, font size, theme and accent color. Feature overview explains the tools and where to find them.
 
 Saving behavior
-Highlights save in the current browser. Save new annotations is off by default; turn it on to keep new annotations after refreshes. Previously saved annotations are unaffected. Unfinished drafts are stored separately from saved annotations and excluded from Library backups. Refreshing clears the Excerpt tray.
+Highlights save in the current browser. Save new annotations is off by default; turn it on to keep new annotations after refreshes. Previously saved annotations are unaffected. Annotations submit only when you choose Save; closing the editor or refreshing discards unsaved edits. Refreshing clears the Excerpt tray.
 
 AI-MarkDone is free and open source, developed for ChatGPT, with Chrome and Firefox builds. Thanks to everyone who shares feedback.
 
@@ -81,7 +81,7 @@ Email: zhaoliangbin42@gmail.com
 
 ```text
 6.2.0 完善了注释、复制和导出：
-- 注释窗口可拖动、最小化和恢复草稿，点击框外不再关闭。
+- 注释窗口可拖动、最小化，点击框外不再关闭，点击“保存”才提交。
 - 支持的图表和卡片可保存为离线 Markdown ZIP，PDF／PNG 可选图片或文字占位。
 - 修复代码格式丢失、书签保存误报不可用，以及注释和高亮定位到错误段落的问题。
 - 修复已确认的 PDF 空白原因、切换会话后的目录和工具栏恢复，并统一常用窗口的样式。
@@ -90,7 +90,7 @@ Email: zhaoliangbin42@gmail.com
 
 ```text
 6.2.0 improves annotations, copying and exports:
-- Move or minimize the annotation window, recover drafts, and keep it open when clicking outside.
+- Move or minimize the annotation window and keep it open when clicking outside. Choose Save to submit your note.
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.
 - Fix lost code formatting, incorrect bookmark-save failures, and annotation/highlight jumps to the wrong passage.
 - Fix an identified cause of blank PDFs, restore the directory and controls after conversation switches, and unify smaller windows.
@@ -105,7 +105,7 @@ Thanks to @qds19100, @三分钟热度, @成长！ and everyone who reported code
 从 6.0.0 升级到 6.2.0：
 - 新的按钮设置页，可预览按钮效果并固定常用按钮；增加主题色和自定义颜色。
 - 改善目录导航、发送后的阅读位置恢复，以及公式输入预览；增加功能全览和独立的阅读器设置。
-- 注释窗口可拖动、最小化并恢复草稿，点击框外不关闭。
+- 注释窗口可拖动、最小化，点击框外不关闭，点击“保存”才提交。
 - 支持的图表和卡片可保存为离线 Markdown ZIP，PDF／PNG 可选图片或文字占位。
 - 修复共享链路中的代码复制、书签保存、注释与高亮定位、会话切换及 PDF 打印冲突问题。
 - 统一常用窗口样式，后续只围绕 ChatGPT 开发，浏览器目标为 Chrome 和 Firefox。
@@ -116,7 +116,7 @@ Thanks to @qds19100, @三分钟热度, @成长！ and everyone who reported code
 Updating from 6.0.0 to 6.2.0:
 - Preview and pin controls in the new Buttons settings, with more theme colors and custom accents.
 - Improved directory navigation, reading-position restoration after sending, and formula previews; added Feature overview and separate Reader settings.
-- Move or minimize the annotation window, recover drafts, and keep it open when clicking outside.
+- Move or minimize the annotation window and keep it open when clicking outside. Choose Save to submit your note.
 - Save supported charts/cards in an offline Markdown ZIP; choose images or placeholders in PDF/PNG.
 - Fixed shared code-copying, bookmark-save, annotation/highlight navigation, conversation-switching and PDF print-conflict paths.
 - Unified smaller windows. Future development focuses on ChatGPT, with Chrome and Firefox browser targets.

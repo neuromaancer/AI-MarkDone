@@ -7,7 +7,7 @@ Hello, friends! Version 6.2.0 focuses on the things we use often: writing annota
 
 Some smaller windows still looked different from the management panel, so I have brought them together too. As the extension grows, I want its everyday tools to feel consistent and easier to use.
 
-1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Unfinished text saves as a draft so you can continue at the same passage; drafts stay separate from saved annotations. Thanks to email user @qds19100.
+1. Write annotations in a movable in-page window with minimize, expand and explicit close controls. Clicking outside keeps it open. Text stays in the window while you write; only Save submits the annotation. Thanks to email user @qds19100.
 2. Save supported charts and cards in an offline Markdown ZIP with image attachments. Choose static images or text placeholders in PDF and PNG. Unavailable content keeps an explanation.
 3. Fix lost code fences, language labels, indentation, blank lines and inline code when copying Markdown, and prevent code from running into the following paragraph. Thanks for the email feedback.
 4. Fix bookmark saves reporting missing content when older messages load and reply numbers change while the save dialog is open.
@@ -15,7 +15,6 @@ Some smaller windows still looked different from the management panel, so I have
 6. Fix an identified printing conflict that caused blank message PDFs, and improve wide tables, long code and formula layout. Thanks to QQ user @成长！
 7. Restore the directory and reply controls after conversation switches, including delayed content/buttons and regenerated replies. New installations show the directory by default; existing settings are preserved.
 8. Unify the appearance of Prompt, export, Send, Reader settings, annotation, backup and popup windows. Improve text wrapping and button visibility in narrow windows, and tidy Chinese and English guidance.
-9. Continue with Chrome and Firefox only. Safari is no longer supported.
 
 # 6.1.0
 2026-10-02

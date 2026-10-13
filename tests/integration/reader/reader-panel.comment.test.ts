@@ -150,7 +150,9 @@ describe('ReaderPanel comments', () => {
         textarea!.value = 'Needs clarification';
         textarea!.dispatchEvent(new Event('input', { bubbles: true }));
 
+        document.body.dispatchEvent(new MouseEvent('pointerdown', { bubbles: true, composed: true }));
         document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, composed: true }));
+        expect(listReaderComments(scopeId, 'a')).toHaveLength(0);
         expect(textarea!.value).toBe('Needs clarification');
         expect((panel as any).commentPopover.isOpen()).toBe(true);
         shadow.querySelector<HTMLButtonElement>('.reader-comment-popover [data-action="close"]')!.click();
@@ -159,8 +161,11 @@ describe('ReaderPanel comments', () => {
         document.dispatchEvent(new Event('pointerup'));
         await Promise.resolve();
         shadow.querySelectorAll<HTMLButtonElement>('.reader-comment-action__button')[1]!.click();
-        await vi.waitFor(() => expect(shadow.querySelector<HTMLTextAreaElement>('.reader-comment-popover__input')!.value).toBe('Needs clarification'));
         const reopenedInput = shadow.querySelector<HTMLTextAreaElement>('.reader-comment-popover__input')!;
+        expect(reopenedInput.value).toBe('');
+        expect(listReaderComments(scopeId, 'a')).toHaveLength(0);
+        reopenedInput.value = 'Needs clarification';
+        reopenedInput.dispatchEvent(new Event('input', { bubbles: true }));
         (panel as any).toggleFullscreen();
         expect(shadow.querySelector('.reader-comment-popover__input')).toBe(reopenedInput);
         expect(reopenedInput.isConnected).toBe(true);
