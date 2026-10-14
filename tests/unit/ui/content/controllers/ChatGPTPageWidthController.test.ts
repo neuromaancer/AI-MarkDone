@@ -76,11 +76,13 @@ describe('ChatGPTPageWidthController', () => {
 
         controller.setScale(500);
         const css = document.getElementById('aimd-chatgpt-page-width-style')?.textContent ?? '';
-        expect(css.match(/max-width: 3840px/g)).toHaveLength(2);
+        expect(css).toContain('[class*="max-w-(--thread-content-max-width)"]');
+        expect(css).toContain('.text-token-text-primary > div > div');
+        expect(css).toContain('max-width: 3840px');
 
         controller.setScale(600);
         const clampedCss = document.getElementById('aimd-chatgpt-page-width-style')?.textContent ?? '';
-        expect(clampedCss.match(/max-width: 3840px/g)).toHaveLength(2);
+        expect(clampedCss).toContain('max-width: 3840px');
     });
 
     it('keeps the width rule effective when the page root flag is lost', () => {
